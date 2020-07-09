@@ -95,7 +95,7 @@ module.exports = {
         }
         if (!replies.includes(collected.first().content.toLowerCase()))
           message.channel.send(
-            `Only these responses are accepted: \`${replies.join(
+            `❌ Only these responses are accepted: \`${replies.join(
               ", "
             )}\`. Game canceled.`
           );
@@ -133,7 +133,7 @@ module.exports = {
         }
       })
       .catch(() => {
-        message.reply("No answer after 30 seconds, game canceled.");
+        message.reply("❌ No answer after 30 seconds, game canceled.");
       });
   }
 };

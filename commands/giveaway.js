@@ -10,25 +10,29 @@ const ownerid = require("../config.json");
 module.exports = {
   name: "giveaway",
   ownerOnly: true,
+  guildOnly: true,
+  disabled: true,
   async execute(message, args) {
-    
-/*    if (!args[0]) return message.channel.send(`You did not specify your time!`);
+    let time = args[0];
+    if (!time) return message.channel.send(`❌ You did not specify your time!`);
     if (
-      !args[0].endsWith("d") &&
-      !args[0].endsWith("h") &&
-      !args[0].endsWith("m") &&
-      !args[0].endsWith("s")
+      !time.endsWith("d") &&
+      !time.endsWith("h") &&
+      !time.endsWith("m") &&
+      !time.endsWith("s") ||
+      time <= 0
     )
       return message.channel.send(
-        `You did not use the correct formatting for the time!`
+        `❌ You did not use the correct formatting for the time!`
       );
-    if (isNaN(args[0][0])) return message.channel.send(`That is not a number!`);
     let prize = args.slice(1).join(" ");
-    if (!prize) return message.channel.send(`No prize specified!`);
+    if (!prize) return message.channel.send(`❌ No prize specified!`);
     let Embed = new Discord.MessageEmbed()
       .setTitle(`🎉🎉 New giveaway! 🎉🎉`)
       .setDescription(
-        `A giveaway has been started for the prize of **${prize}!**\nThe giveaway will end in **${(args[0])}!**`
+        `A giveaway has been started for the prize of **${prize}!**\nThe giveaway will end in **${ms(ms(time), {
+          long: true
+        })}!**`
       )
       .setTimestamp()
       .setColor(`GREEN`);
@@ -38,7 +42,7 @@ module.exports = {
       if (m.reactions.cache.get("🎉").count <= 1) {
         message.channel.send(`Reactions: ${m.reactions.cache.get("🎉").count}`);
         return message.channel.send(
-          `Not enough people reacted for me to start draw a winner!`
+          `❌ Not enough people reacted for me to start draw a winner!`
         );
       }
 
@@ -57,7 +61,7 @@ module.exports = {
           "https://cdn.discordapp.com/emojis/717925533265952832.png?v=1"
         );
 
-      channel.send({ embed: winnerE });
-    }, ms(args[0])); */
+      message.channel.send({ embed: winnerE });
+    }, ms(time)); 
   }
 };

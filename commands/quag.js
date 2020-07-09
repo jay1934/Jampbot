@@ -90,7 +90,8 @@ const randQuags = [
   "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/81686557_136747818011345_5041779367638072839_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=105&_nc_ohc=kqkK85XyBgEAX8XjA29&oh=a93c5020c6abeb347d2e2aff50b31f61&oe=5F007DCA",
   "https://ci.memecdn.com/9799751.gif",
   "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRRy2SFYw1DntC1swS3W5bCqIitAj_jYbcKi71RViogZB8mJHfT&usqp=CAU",
-  "https://66.media.tumblr.com/95db9028a20f8beb6a4b6f2f10abe873/9e9f118cb492c342-9f/s1280x1920/23b7cd63f03b505a0ac58f60a3385737405b34e5.png"
+  "https://66.media.tumblr.com/95db9028a20f8beb6a4b6f2f10abe873/9e9f118cb492c342-9f/s1280x1920/23b7cd63f03b505a0ac58f60a3385737405b34e5.png",
+  "https://cdn.discordapp.com/attachments/725035266703753460/728364467632603136/20200702_174008.jpg"
 ];
 
 let quagLol = randQuags[Math.floor(Math.random() * randQuags.length)];

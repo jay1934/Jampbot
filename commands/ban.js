@@ -3,12 +3,14 @@ const config = require("../config.json");
 module.exports = {
   name: "ban",
   modOnly: true,
+  guildOnly: true,
   async execute(message, args) {
+    const usage = "\nCorrect usage: ``!ban @user [reason]``"
     let reason = args.slice(1).join(" ");
     let user = message.mentions.users.first();
     if (message.mentions.users.size < 1)
       return message.channel
-        .send("❌ You must mention someone to ban them.")
+        .send(`❌ You must mention someone to ban them.${usage}`)
         .catch(console.error);
     if (message.mentions.users.first().id === message.author.id)
       return message.channel.send(
@@ -35,7 +37,7 @@ module.exports = {
       );
     if (!message.guild.member(user).bannable) {
       message.channel.send(
-        `I cannot ban that member. My role might not be high enough or it's an internal error.`
+        `❌ I cannot ban that member. My role might not be high enough or it's an internal error.`
       );
       return;
     } else {
@@ -57,7 +59,7 @@ module.exports = {
           message.member.ban();
           console.log(`Unsuccessfully sent ban message to ${user.tag}`);
         });
-      await message.guild.members.ban(user);
+      await message.guild.members.ban(user, reason);
 
       const banConfirmationEmbed = new Discord.MessageEmbed()
         .setColor("RED")

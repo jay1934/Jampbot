@@ -4,20 +4,21 @@ const Discord = require("discord.js");
 module.exports = {
   name: "timer",
   async execute(message, args) {
+    const usage = '\nCorrect usage: ``!timer duration[s/m/h/d] [description]``' 
     let Timer = args[0];
     let Description = args.slice(1).join(" ");
-    if (!Description) Description = "No Description Given";
+    if (!Description) Description = `No Description Given`;
     let Desc =
       Description.substring(0, 1).toUpperCase() + Description.substring(1);
     if (!args[0]) {
       return message.channel.send(
-        '❌ Please Enter a time period followed by "s or m or h"'
+        `❌ Please Enter a time period followed by "s or m or h".${usage}`
       );
     }
 
     if (args[0] <= 0) {
       return message.channel.send(
-        '❌ Please Enter a time period followed by "s or m or h"'
+        `❌ Please Enter a time period followed by "s or m or h".${usage}`
       );
     }
 
