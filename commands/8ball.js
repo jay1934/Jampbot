@@ -3,8 +3,9 @@ const prefix = require("../config");
 module.exports = {
   name: "8ball",
   blacklist: true,
+  noPing: true,
   execute(message, args) {
-    if (!args[0]) return message.channel.send("❌ Please ask a full question");
+    if (!args[0]) return message.channel.send("❌ Please ask a full question.\nCorrect usage: ``!8ball enter question here``");
     let replies = [
       "Maybe.",
       "Certainly not.",

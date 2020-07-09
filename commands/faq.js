@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const prefix = require ('../config.json')
+const prefix = require("../config.json");
 // bot-spam = <#701854096965238846>
 // important-links = <#701858631221772329>
 // level-clears = <#701856743021609072>
@@ -61,16 +61,6 @@ module.exports = {
         "https://cdn.discordapp.com/attachments/699230720392167482/716009530076561418/IMG_1590780366870.PNG"
       );
 
-    const roleEmbed = new Discord.MessageEmbed()
-      .setColor("RED")
-      .setTitle("How to get rank roles")
-      .setDescription(
-        "Everytime you reach a point milestone, you will rank up. You can find the ranks, and how many points you need to achieve them, in <#699315808777797683>. You can also get your current rank in the form of a discord role using ``!points role`` (or ``!points norole``) in <#701854096965238846>. Now you'll be able to show off your awesome rank <a:PogJamper:704670075667611648>"
-      )
-      .setImage(
-        "https://cdn.discordapp.com/attachments/699230720392167482/715298618596262018/InShot_20200527_162108291.jpg"
-      );
-
     // this will be referenced in a command which will show every other FAQ command for ease of navigation
     const menuEmbed = new Discord.MessageEmbed()
       .setColor("RED")
@@ -90,8 +80,8 @@ module.exports = {
 
     // if there is nothing after !faq, cancel the command and return an error message
     if (!args[0])
-      return message.reply(
-        "please input a number or keyword to reference a specific FAQ. To find all FAQ commands, use ``!faq menu`` or check the FAQ channel"
+      return message.channel.send(
+        "❌ Please input a number or keyword to reference a specific FAQ. To find all FAQ commands, use ``!faq menu`` or check the FAQ channel"
       );
 
     // if someone send a message !faq 1, then send the faq 1 embed. If someones send a message !faq 2, send the faq 2 embed, etc.
@@ -120,11 +110,6 @@ module.exports = {
       message.content === `${prefix}faq pending`
     ) {
       message.channel.send({ embed: pendingEmbed });
-    } else if (
-      message.content === `${prefix}faq 6` ||
-      message.content === `${prefix}faq roles`
-    ) {
-      message.channel.send({ embed: roleEmbed });
     } else if (message.content === `${prefix}faq menu`) {
       message.channel.send({ embed: menuEmbed });
     } else if (
@@ -134,8 +119,8 @@ module.exports = {
       message.channel.send("<a:pin:717834744523522139>");
     } else {
       // if none of these apply, cancel the command and send an error message
-      message.reply(
-        "please input a valid argument. Proper usage is: ``!faq <number or keyword>``. To find all FAQ commands, use ``!faq menu`` or check the FAQ channel"
+      message.channel.send(
+        "❌ Please input a valid argument. Proper usage is: ``!faq <number or keyword>``. To find all FAQ commands, use ``!faq menu`` or check the FAQ channel"
       );
     }
   }

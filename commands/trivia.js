@@ -5,7 +5,6 @@
 
 
 
-const usedCommandRecently = new Set();
 const { MessageEmbed } = require("discord.js");
 let questions = [
   {
@@ -92,13 +91,10 @@ let questions = [
 module.exports = {
   name: "trivia",
   modOnly: true,
+  guildOnly: true,
   blacklist: true,
+  disabled: true,
   async execute(message, args) {
-    if (usedCommandRecently.has(message.author.id)) {
-      message.channel.send(
-        "This command has a 5 minute cooldown! Please wait a bit before trying again."
-      );
-    } else {
       let q = questions[Math.floor(Math.random() * questions.length)];
       let i = 0;
       const Embed = new MessageEmbed()
@@ -133,10 +129,5 @@ module.exports = {
       } catch (e) {
         return message.channel.send(`You did not answer within ${q.time/1000} seconds!`);
       }
-      usedCommandRecently.add(message.author.id);
-      setTimeout(() => {
-        usedCommandRecently.delete(message.author.id);
-      }, 300000);
-    }
   }
 };

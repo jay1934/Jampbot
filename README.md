@@ -26,10 +26,13 @@
 
 ## Commands:
 
-- **Moderation commands** such as `(temp)mute, kick, ban, warn, purge, and lockdown`
+- **Moderation commands** such as `[temp/un]mute, kick, ban, warn, purge, and lockdown`
 
 - **Fun commands** such as `8ball, rps (rock, paper, scissors), trivia, and dadjoke`
 
 - **(Configurable) FAQ commands** such as `faq register, faq login, etc.`
 
 - **Misc commands** such as `timer, poll, and giveaway`
+
+
+

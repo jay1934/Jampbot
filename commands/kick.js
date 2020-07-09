@@ -3,13 +3,15 @@ const config = require("../config.json");
 module.exports = {
   name: "kick",
   modOnly: true,
+  guildOnly: true,
   async execute(message, args) {
+    const usage = '\nCorrect usage: ``!kick @user [reason]``'
     let reason = args.slice(1).join(" ");
     let user = message.mentions.users.first();
     let memberTest = message.mentions.members.first();
     if (message.mentions.users.size < 1)
       return message.channel
-        .send("❌ You must mention someone to kick them.")
+        .send(`❌ You must mention someone to kick them.${usage}`)
         .catch(console.error);
     if (message.mentions.users.first().id === message.author.id)
       return message.channel.send(

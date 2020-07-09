@@ -9,7 +9,7 @@ module.exports = {
     let user = message.mentions.users.first();
     if (message.mentions.users.size < 1)
       return message.channel.send(
-        "❌ You gotta mention someone to annoy them smh"
+        "❌ You gotta mention someone to annoy them smh.\nCorrect usage: ``!annoy @user [custom message]``"
       );
 
     if (message.mentions.users.size > 1)
