@@ -161,7 +161,16 @@ client.on("message", async message => {
 
 /* this was just a funny joke i made. if anyone says "Im" or "I am", Jampbot will take the rest of their message and form a response, "Hi [message
 remainder], I'm Jampbot++!" It's a bit more technical so that it can work... well. but that's the simplified version */
-client.on("message", message => {
+client.on("message", async message => {
+
+  // ignore
+  if(message.type === "PINS_ADD" && message.channel.id == config.channelID.notes) message.delete();
+
+  if(message.channel.id == config.channelID.initiation && message.author.id == config.deluxe) {
+    await message.react('699436048693985321')
+    await message.react('717925533265952832')
+  }
+
   // this function only works in general channels (in this case, the whitelisted channels), to prevent unneeded spam
   if (!whiteChannels.includes(message.channel.id)) return;
 
@@ -299,6 +308,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
     );
     await reaction.message.reactions.removeAll();
     await reaction.message.react("👎");
+    await reaction.message.unpin()
   }
 });
 
@@ -329,6 +339,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
     );
     await reaction.message.reactions.removeAll();
     await reaction.message.react("👍");
+    await reaction.message.pin();
   }
 });
 
