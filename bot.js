@@ -286,7 +286,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
   if (user.bot) return;
   if (
     !reaction.message.author.bot ||
-    reaction.message.channel.id != "726934182051315712"
+    reaction.message.channel.id != config.channelID.notes
   )
     return;
   if (reaction.emoji.name === "👍") {
