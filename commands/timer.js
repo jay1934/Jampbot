@@ -25,7 +25,7 @@ module.exports = {
     message.channel.send(
       ":white_check_mark: " +
         " Timer Started for: " +
-      `${ms(ms(Timer), {long: true})}$`
+      `${ms(ms(Timer), {long: true})}`
     );
 
     const embed = new Discord.MessageEmbed()
