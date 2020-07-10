@@ -34,5 +34,21 @@
 
 - **Misc commands** such as `timer, poll, and giveaway`
 
+---
+
+---
+
+## Planned Features:
+
+- [x] Create **note.js** for mods
+
+- [x] Create **report.js** (only works in DMs)
+
+- [ ] Create **warn.js, warnings.js, reset-warnings.js**
+
+- [ ] Continue questions in **trivia.js**
+
+- [ ] Make **help.js**, show moderation embed only if author is moderator. Send embeds in DM.
+
 
 
