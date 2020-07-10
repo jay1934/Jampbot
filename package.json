@@ -7,7 +7,10 @@
     "start": "node bot.js"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@types/ms": "^0.7.31",
+=======
+>>>>>>> 8b79b908662724e78164277833dddd402641300c
     "discord.js": "^12.2.0",
     "express": "^4.17.1",
     "give-me-a-joke": "^0.3.2",
@@ -18,6 +21,7 @@
     "node": "12.x"
   },
   "repository": {
+<<<<<<< HEAD
     "url": "git+https://github.com/Lioness100/jampbot.git"
   },
   "keywords": [
@@ -30,4 +34,14 @@
   "devDependencies": {},
   "author": "",
   "license": "ISC"
+=======
+    "url": "https://glitch.com/edit/#!/hello-express"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+>>>>>>> 8b79b908662724e78164277833dddd402641300c
 }
