@@ -217,6 +217,7 @@ client.on("guildMemberAdd", member => {
 **To gain access to the rest of the discord, please read <#699220667484078131> and agree to the message near the bottom**
 
 Have a great time and remember to contact a mod with any questions ${config.pogjamper}${config.pogjamper}${config.pogjamper}`);
+
 });
 
 // when a user leaves Team Jamp, just leave a message is the moderation logs in case it's a notable member
