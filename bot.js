@@ -7,6 +7,9 @@ const Discord = require("discord.js");
 
 const fs = require("fs"); // file save
 const ms = require("ms"); // milli seconds
+ 
+// creates environmental variables; variables I can keep secret (that are only stored on my environment)
+require('dotenv').config()
 
 // creating a new discord client (the bot)
 const client = new Discord.Client({

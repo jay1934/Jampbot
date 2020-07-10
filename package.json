@@ -9,6 +9,7 @@
   "dependencies": {
     "@types/ms": "^0.7.31",
     "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "give-me-a-joke": "^0.3.2",
@@ -19,7 +20,7 @@
     "node": "12.x"
   },
   "repository": {
-    "url": "https://github.com/Lioness100/Jampbot-VS-Code.git"
+    "url": "git+https://github.com/Lioness100/Jampbot-VS-Code.git"
   },
   "keywords": [
     "node"
