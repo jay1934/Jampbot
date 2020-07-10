@@ -7,10 +7,6 @@
     "start": "node bot.js"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@types/ms": "^0.7.31",
-=======
->>>>>>> 8b79b908662724e78164277833dddd402641300c
     "discord.js": "^12.2.0",
     "express": "^4.17.1",
     "give-me-a-joke": "^0.3.2",
@@ -21,27 +17,16 @@
     "node": "12.x"
   },
   "repository": {
-<<<<<<< HEAD
-    "url": "git+https://github.com/Lioness100/jampbot.git"
+    "url": "https://github.com/Lioness100/Jampbot-VS-Code.git"
   },
   "keywords": [
     "node"
   ],
   "bugs": {
-    "url": "https://github.com/Lioness100/jampbot/issues"
+    "url": "https://github.com/Lioness100/Jampbot-VS-Code/issues"
   },
-  "homepage": "https://github.com/Lioness100/jampbot#readme",
+  "homepage": "https://github.com/Lioness100/Jampbot-VS-Code#readme",
   "devDependencies": {},
   "author": "",
   "license": "ISC"
-=======
-    "url": "https://glitch.com/edit/#!/hello-express"
-  },
-  "license": "MIT",
-  "keywords": [
-    "node",
-    "glitch",
-    "express"
-  ]
->>>>>>> 8b79b908662724e78164277833dddd402641300c
 }

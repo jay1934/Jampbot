@@ -330,4 +330,4 @@ client.on("messageReactionAdd", async (reaction, user) => {
 });
 
 // this allows the bot to login with tokin
-client.login(process.env.TOKEN);
+client.login();
