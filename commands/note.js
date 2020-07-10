@@ -17,5 +17,6 @@ module.exports = {
     .setFooter('React to mark as resolved')
     let msg = await message.client.channels.cache.get(config.channelID.notes).send(embed);
     await msg.react(good)
+    await msg.pin()
     message.channel.send('Note added.')
   }};
