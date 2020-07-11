@@ -29,7 +29,9 @@
     "url": "https://github.com/Lioness100/Jampbot-VS-Code/issues"
   },
   "homepage": "https://github.com/Lioness100/Jampbot-VS-Code#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "2.0.5"
+  },
   "author": "",
   "license": "ISC"
 }
