@@ -27,17 +27,12 @@ module.exports = {
     if (time == "indefinite") indefinite = true;
 
     let question =
-      args
-        .slice(1)
-        .join(" ")
-        .substring(0, 1)
-        .toUpperCase() +
-      args
-        .slice(1)
-        .join(" ")
-        .substring(1);
+      args.slice(1).join(" ").substring(0, 1).toUpperCase() +
+      args.slice(1).join(" ").substring(1);
     if (!question)
-      return message.channel.send(`❌ You did not specify your question.${usage}`);
+      return message.channel.send(
+        `❌ You did not specify your question.${usage}`
+      );
 
     if (!question.endsWith("?")) question = question + "?";
 
@@ -57,7 +52,7 @@ module.exports = {
     } else {
       Embed.setFooter(
         `The poll will be open for ${ms(ms(time), {
-          long: true
+          long: true,
         })}. Please only vote once.`
       );
     }
@@ -68,7 +63,7 @@ module.exports = {
 
     if (indefinite === false) {
       const reactions = await msg.awaitReactions(
-        reaction =>
+        (reaction) =>
           reaction.emoji.name == agree || reaction.emoji.name == disagree,
         { time: ms(time), long: true }
       );
@@ -109,19 +104,19 @@ module.exports = {
         description: question,
         thumbnail: {
           url:
-            "https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp"
+            "https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp",
         },
         color: "RED",
         footer: {
           text: `The poll lasted ${ms(ms(time), {
-          long: true
-        })}`
-        }
+            long: true,
+          })}`,
+        },
       });
 
       // edit message with new embed
       // NOTE: can only edit messages you author
       msg.edit(newEmbed);
     }
-  }
+  },
 };
