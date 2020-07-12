@@ -61,17 +61,17 @@ const whiteChannels = require('./data/whiteChannels.json');
 // see a message, sends a message. event is triggered when a message is sent while the bot is online
 
 client.on('message', async (message) => {
-  // identify args (arguments) to use in the future for multy argument commands. for example, '!arg1 arg2' uses 2 arguments
+  // identify args (arguments) to use in the future for multi-argument commands. for example, '!arg1 arg2' uses 2 arguments
   const args = message.content.slice(config.prefix.length).split(/ +/);
 
-  // shift the name of the specificed command to lowercase so that it will not be case sensitive either way
+  // shift the name of the specified command to lowercase so that it will not be case sensitive either way
   const commandName = args.shift().toLowerCase();
 
   // basic command restrictions. if __, then cancel
   if (
     !message.content.startsWith(config.prefix) || // if the message does not start with the bot prefix, ruling out any messages that aren't commands
     blockedUsers.includes(message.author.id) || // if the message is sent by a blocked user
-    message.author.bot // if the user that sent the message is a bot. this prevents infinite loops among other thingd
+    message.author.bot // if the user that sent the message is a bot. this prevents infinite loops among other things
   )
     return;
 
@@ -185,7 +185,7 @@ client.on('message', async (message) => {
   // as an extra step to avoid unneeded spam and annoyance, I set the function to only fully trigger 20% of the time
   const dadChance = Math.random() * 100;
 
-  // if the 5% chance is succesful...
+  // if the 5% chance is successful...
   if (
     (message.author.id === '312019945913319424' && dadChance <= 10) ||
     dadChance <= 5
@@ -220,7 +220,7 @@ client.on('message', async (message) => {
       );
     }
 
-    // if the 20% chance is not succesful...
+    // if the 20% chance is not successful...
   } else {
   }
 });
@@ -260,7 +260,6 @@ about Jamping as you and I <:crii:715617335754621000>`
 client.on('messageDelete', async (message) => {
   if (message.channel.type !== 'text') return;
   const logs = await message.guild.fetchAuditLogs({ type: 72 });
-  const entry = logs.entries.first();
 
   // make the embed
   const embed = new Discord.MessageEmbed()
@@ -276,6 +275,7 @@ client.on('messageDelete', async (message) => {
     `Message ID: ${message.id} | Author ID: ${message.author.id}`
   );
   setTimeout(function () {
+    const entry = logs.entries.first();
     embed.addField('Executor', entry.executor);
 
     // send the embed in a private server
@@ -347,5 +347,5 @@ client.on('messageReactionAdd', async (reaction, user) => {
   }
 });
 
-// this allows the bot to login with tokin
+// this allows the bot to login with token
 client.login(process.env.TOKEN);
