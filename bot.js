@@ -6,7 +6,6 @@ const Discord = require('discord.js');
 // these packages are just helpful addons for commands, nothing important
 
 const fs = require('fs'); // file save
-const ms = require('ms'); // milli seconds
 
 // creates environmental variables; variables I can keep secret (that are only stored on my environment)
 require('dotenv').config();
@@ -105,7 +104,7 @@ client.on('message', async (message) => {
     return message.channel.send('❌ Insufficient permissions');
 
   // command can only be triggered by owner. I just put in my ID in this case, although there are specific functions to find owners of guilds
-  if (command.ownerOnly && message.author.id != '381490382183333899')
+  if (command.ownerOnly && message.author.id !== '381490382183333899')
     return message.channel.send('❌ Insufficient permissions');
 
   // command cannot be triggered in DMs
@@ -165,13 +164,13 @@ client.on('message', async (message) => {
   // ignore
   if (
     message.type === 'PINS_ADD' &&
-    message.channel.id == config.channelID.notes
+    message.channel.id === config.channelID.notes
   )
     message.delete();
 
   if (
-    message.channel.id == config.channelID.initiation &&
-    message.author.id == config.deluxe
+    message.channel.id === config.channelID.initiation &&
+    message.author.id === config.deluxe
   ) {
     await message.react('699436048693985321');
     await message.react('717925533265952832');
@@ -184,23 +183,23 @@ client.on('message', async (message) => {
   if (message.author.bot) return;
 
   // as an extra step to avoid unneeded spam and annoyance, I set the function to only fully trigger 20% of the time
-  var dadChance = Math.random() * 100;
+  const dadChance = Math.random() * 100;
 
   // if the 5% chance is succesful...
   if (
-    (message.author.id == '312019945913319424' && dadChance <= 10) ||
+    (message.author.id === '312019945913319424' && dadChance <= 10) ||
     dadChance <= 5
   ) {
-    let str = message.content;
+    const str = message.content;
 
-    let modified = str
+    const modified = str
       .toLowerCase()
       .replace(/i am/g, 'im')
       .replace(/[^a-z\.\?\! ]/g, '')
       .split(/\.|\?|\!/)
       .map((i) => {
-        i = ' ' + i;
-        let start = i.indexOf(' im ');
+        i = ` ${i}`;
+        const start = i.indexOf(' im ');
         if (start === -1) {
           return;
         }
@@ -223,7 +222,6 @@ client.on('message', async (message) => {
 
     // if the 20% chance is not succesful...
   } else {
-    return;
   }
 });
 
@@ -261,14 +259,12 @@ about Jamping as you and I <:crii:715617335754621000>`
 
 client.on('messageDelete', async (message) => {
   if (message.channel.type !== 'text') return;
-  let logs = await message.guild.fetchAuditLogs({ type: 72 });
-  let entry = logs.entries.first();
+  const logs = await message.guild.fetchAuditLogs({ type: 72 });
+  const entry = logs.entries.first();
 
   // make the embed
-  let embed = new Discord.MessageEmbed()
-    .setTitle('**Vulgar Message**')
+  const embed = new Discord.MessageEmbed()
     .setColor('#fc3c3c')
-    .setThumbnail(config.thumbnails.sad)
     .addField('Author', message.author.username, true)
     .addField('Channel', message.channel, true);
   try {
@@ -279,9 +275,12 @@ client.on('messageDelete', async (message) => {
   embed.setFooter(
     `Message ID: ${message.id} | Author ID: ${message.author.id}`
   );
+  setTimeout(function () {
+    embed.addField('Executor', entry.executor);
 
-  // send the embed in a private server
-  message.client.channels.cache.get(config.channelID.private).send({ embed });
+    // send the embed in a private server
+    message.client.channels.cache.get(config.channelID.private).send({ embed });
+  }, 5000);
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
@@ -300,7 +299,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
   if (user.bot) return;
   if (
     !reaction.message.author.bot ||
-    reaction.message.channel.id != config.channelID.notes
+    reaction.message.channel.id !== config.channelID.notes
   )
     return;
   if (reaction.emoji.name === '👍') {
@@ -333,7 +332,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
   if (user.bot) return;
   if (
     !reaction.message.author.bot ||
-    reaction.message.channel.id != config.channelID.notes
+    reaction.message.channel.id !== config.channelID.notes
   )
     return;
   if (reaction.emoji.name === '👎') {

@@ -1,27 +1,28 @@
-const Discord = require("discord.js");
-const config = require("../config.json");
-const ms = require("ms");
+const Discord = require('discord.js');
+const ms = require('ms');
+const config = require('../config.json');
+
 module.exports = {
-  name: "mute",
+  name: 'mute',
   guildOnly: true,
   modOnly: true,
-  aliases: ["unmute", "tempmute"],
+  aliases: ['unmute', 'tempmute'],
   async execute(message, args) {
-    const usage = "\nCorrect usage: ``!mute @user [reason]``";
-    const unusage = "\nCorrect usage: ``!unmute @user [reason]``";
+    const usage = '\nCorrect usage: ``!mute @user [reason]``';
+    const unusage = '\nCorrect usage: ``!unmute @user [reason]``';
     const tempusage =
-      "\nCorrect usage: ``!tempmute @user duration[s/m/h] [reason]";
-    if (message.content.includes("!mute")) {
-      let user =
+      '\nCorrect usage: ``!tempmute @user duration[s/m/h] [reason]';
+    if (message.content.includes('!mute')) {
+      const user =
         message.mentions.users.first() ||
         message.guild.members.cache.get(args[0]);
-      let mainRole = message.guild.roles.cache.find(
-        val => val.name === "Member"
+      const mainRole = message.guild.roles.cache.find(
+        (val) => val.name === 'Member'
       );
-      let muteRole = message.guild.roles.cache.find(
-        val => val.name === "Muted"
+      const muteRole = message.guild.roles.cache.find(
+        (val) => val.name === 'Muted'
       );
-      let reason = args.slice(1).join(" ");
+      let reason = args.slice(1).join(' ');
       if (!muteRole)
         return message.channel.send(
           "❌ There is no 'Muted' role on this server"
@@ -31,11 +32,11 @@ module.exports = {
           `❌ Please mention someone to mute them.${usage}`
         );
       if (message.guild.member(user).roles.cache.has(muteRole.id)) {
-        return message.channel.send("❌ That user is already been muted");
+        return message.channel.send('❌ That user is already been muted');
       }
       if (message.mentions.users.first().id === message.author.id)
         return message.channel.send(
-          "❌ Self-harm is bad smh <:WeirdChamp:699435969824161823>"
+          '❌ Self-harm is bad smh <:WeirdChamp:699435969824161823>'
         );
       if (user.id === message.client.user.id)
         return message.channel.send(
@@ -43,46 +44,46 @@ module.exports = {
         );
       if (message.mentions.users.first().id === config.ownerid)
         return message.channel.send("❌ You can't mute my Developer :wink:");
-      let botRolePossition = message.guild.member(message.client.user).roles
+      const botRolePossition = message.guild.member(message.client.user).roles
         .highest.position;
-      let rolePosition = message.guild.member(user).roles.highest.position;
-      let userRolePossition = message.member.roles.highest.position;
+      const rolePosition = message.guild.member(user).roles.highest.position;
+      const userRolePossition = message.member.roles.highest.position;
       if (userRolePossition <= rolePosition)
         return message.channel.send(
-          "❌**Error:** Cannor mute that member because they have roles that is higher or equal to you."
+          '❌**Error:** Cannor mute that member because they have roles that is higher or equal to you.'
         );
       if (botRolePossition <= rolePosition)
         return message.channel.send(
-          "❌**Error:** Cannor mute that member because they have roles that is higher or equal to me."
+          '❌**Error:** Cannor mute that member because they have roles that is higher or equal to me.'
         );
 
-      if (!reason) reason = "No reason supplied.";
+      if (!reason) reason = 'No reason supplied.';
 
       message.guild.member(user).roles.remove(mainRole);
       message.guild.member(user).roles.add(muteRole);
 
       const muteConfirmationEmbed = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setThumbnail(config.thumbnails.sad)
         .setDescription(`✅ **${user.tag}** has been successfully muted!`)
         .setFooter(
           `Please resort to #anti-softlock with questions or complaints on this mute`
         )
         .addField(
-          "Moderator:",
+          'Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
 
-        .addField("Reason", reason);
+        .addField('Reason', reason);
       message.channel.send({
-        embed: muteConfirmationEmbed
+        embed: muteConfirmationEmbed,
       });
       message.client.channels.cache
         .get(config.channelID.modlog)
         .send({ embed: muteConfirmationEmbed });
 
       const muteDM = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setThumbnail(config.thumbnails.sad)
         .setFooter(
           `Please resort to #anti-softlock with questions or complaints on this mute`
@@ -91,23 +92,23 @@ module.exports = {
           `You have been muted in Team Jamp indefinitely :confused:`
         )
         .addField(
-          "Original Moderator:",
+          'Original Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
 
-        .addField("Original Reason", reason);
+        .addField('Original Reason', reason);
 
       user.send({ embed: muteDM });
-    } else if (message.content.includes("!unmute")) {
-      const usage = "\nCorrect usage: ``!unmute @user [reason]``";
-      let user =
+    } else if (message.content.includes('!unmute')) {
+      const usage = '\nCorrect usage: ``!unmute @user [reason]``';
+      const user =
         message.mentions.users.first() ||
         message.guild.members.cache.get(args[0]);
-      let mainRole = message.guild.roles.cache.find(
-        val => val.name === "Member"
+      const mainRole = message.guild.roles.cache.find(
+        (val) => val.name === 'Member'
       );
-      let muteRole = message.guild.roles.cache.find(
-        val => val.name === "Muted"
+      const muteRole = message.guild.roles.cache.find(
+        (val) => val.name === 'Muted'
       );
       if (!message.mentions.users.first())
         return message.channel.send(
@@ -117,7 +118,7 @@ module.exports = {
         return message.channel.send(`❌ That user is not muted`);
       }
 
-      let reason = args.slice(1).join(" ");
+      let reason = args.slice(1).join(' ');
       if (!muteRole)
         return message.channel.send(
           "❌ There is no 'Muted' role on this server"
@@ -126,36 +127,36 @@ module.exports = {
         return message.channel.send(
           "❌ You can't unmute yourself smh <:WeirdChamp:699435969824161823>"
         );
-      let botRolePossition = message.guild.member(message.client.user).roles
+      const botRolePossition = message.guild.member(message.client.user).roles
         .highest.position;
-      let rolePosition = message.guild.member(user).roles.highest.position;
-      let userRolePossition = message.member.roles.highest.position;
+      const rolePosition = message.guild.member(user).roles.highest.position;
+      const userRolePossition = message.member.roles.highest.position;
       if (userRolePossition <= rolePosition)
         return message.channel.send(
-          "❌**Error:** Cannor unmute that member because they have roles that is higher or equal to you."
+          '❌**Error:** Cannor unmute that member because they have roles that is higher or equal to you.'
         );
       if (botRolePossition <= rolePosition)
         return message.channel.send(
-          "❌**Error:** Cannor unmute that member because they have roles that is higher or equal to me."
+          '❌**Error:** Cannor unmute that member because they have roles that is higher or equal to me.'
         );
 
-      if (!reason) reason = "No reason supplied.";
+      if (!reason) reason = 'No reason supplied.';
 
       message.guild.member(user).roles.remove(muteRole);
       message.guild.member(user).roles.add(mainRole);
 
       if (config.channelID.modlog.length !== 0) {
         const unmuteConfirmationEmbed = new Discord.MessageEmbed()
-          .setColor("RED")
+          .setColor('RED')
           .setDescription(`✅ **${user.tag}** has been successfully unmuted!`)
           .addField(
-            "Moderator:",
+            'Moderator:',
             `${message.author.username}#${message.author.discriminator}`
           )
 
-          .addField("Reason", reason);
+          .addField('Reason', reason);
         message.channel.send({
-          embed: unmuteConfirmationEmbed
+          embed: unmuteConfirmationEmbed,
         });
         message.client.channels.cache
           .get(config.channelID.modlog)
@@ -163,30 +164,30 @@ module.exports = {
       }
 
       const unmuteDM = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setDescription(
           `You have been unmuted from Team Jamp. Please discontinue the behavior that led to your mute :confused:`
         )
         .addField(
-          "Original Moderator:",
+          'Original Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
 
-        .addField("Original Reason", reason);
+        .addField('Original Reason', reason);
 
       user.send({ embed: unmuteDM });
-    } else if (message.content.includes("!tempmute")) {
-      let user =
+    } else if (message.content.includes('!tempmute')) {
+      const user =
         message.mentions.users.first() ||
         message.guild.members.cache.get(args[0]);
-      let mainRole = message.client.guilds.cache
+      const mainRole = message.client.guilds.cache
         .get(message.guild.id)
-        .roles.cache.find(val => val.name === "Member");
-      let muteRole = message.client.guilds.cache
+        .roles.cache.find((val) => val.name === 'Member');
+      const muteRole = message.client.guilds.cache
         .get(message.guild.id)
-        .roles.cache.find(val => val.name === "Muted");
-      let time = args[1];
-      let reason = args.slice(2).join(" ");
+        .roles.cache.find((val) => val.name === 'Muted');
+      const time = args[1];
+      let reason = args.slice(2).join(' ');
       if (!muteRole)
         return message.channel.send(
           `❌ There is no 'Muted' role on this server`
@@ -196,11 +197,11 @@ module.exports = {
           `❌ Please mention someone to mute them.${tempusage}`
         );
       if (message.guild.member(user).roles.cache.has(muteRole.id)) {
-        return message.channel.send("❌ That user is already been muted");
+        return message.channel.send('❌ That user is already been muted');
       }
       if (message.mentions.users.first().id === message.author.id)
         return message.channel.send(
-          "❌ Self-harm is bad smh <:WeirdChamp:699435969824161823>"
+          '❌ Self-harm is bad smh <:WeirdChamp:699435969824161823>'
         );
       if (user.id === message.client.user.id)
         return message.channel.send(
@@ -208,49 +209,49 @@ module.exports = {
         );
       if (message.mentions.users.first().id === config.ownerid)
         return message.channel.send("❌ You can't mute my Developer :wink:");
-      let botRolePossition = message.guild.member(message.client.user).roles
+      const botRolePossition = message.guild.member(message.client.user).roles
         .highest.position;
-      let rolePosition = message.guild.member(user).roles.highest.position;
-      let userRolePossition = message.member.roles.highest.position;
+      const rolePosition = message.guild.member(user).roles.highest.position;
+      const userRolePossition = message.member.roles.highest.position;
       if (userRolePossition <= rolePosition)
         return message.channel.send(
-          "❌**Error:** Cannor mute that member because they have roles that is higher or equal to you."
+          '❌**Error:** Cannor mute that member because they have roles that is higher or equal to you.'
         );
       if (botRolePossition <= rolePosition)
         return message.channel.send(
-          "❌**Error:** Cannor mute that member because they have roles that is higher or equal to me."
+          '❌**Error:** Cannor mute that member because they have roles that is higher or equal to me.'
         );
 
       if (!time || time <= 0)
         return message.channel.send(
           `❌ Please specify a value followed by ``s, m, or h`` to signify the time period this user will be muted.${tempusage}`
         );
-      if (!reason) reason = "No reason supplied.";
+      if (!reason) reason = 'No reason supplied.';
 
       message.guild.member(user).roles.remove(mainRole);
       message.guild.member(user).roles.add(muteRole);
 
       if (config.channelID.modlog.length !== 0) {
         const muteConfirmationEmbed = new Discord.MessageEmbed()
-          .setColor("RED")
+          .setColor('RED')
           .setThumbnail(config.thumbnails.sad)
           .setFooter(
             `Please resort to #anti-softlock with questions or complaints on this mute`
           )
           .setDescription(
             `✅ **${user.tag}** has been temp muted for ${ms(ms(time), {
-              long: true
+              long: true,
             })}!`
           )
           .addField(
-            "Moderator:",
+            'Moderator:',
             `${message.author.username}#${message.author.discriminator}`
           )
-          .addField("Mute Duration", time)
+          .addField('Mute Duration', time)
 
-          .addField("Reason", reason);
+          .addField('Reason', reason);
         message.channel.send({
-          embed: muteConfirmationEmbed
+          embed: muteConfirmationEmbed,
         });
         message.client.channels.cache
           .get(config.channelID.modlog)
@@ -258,7 +259,7 @@ module.exports = {
       }
 
       const muteDM = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setThumbnail(config.thumbnails.sad)
         .setFooter(
           `Please resort to #anti-softlock with questions or complaints on this mute`
@@ -267,40 +268,40 @@ module.exports = {
           `You have been temporarily muted in Team Jamp :confused:`
         )
         .addField(
-          "Moderator:",
+          'Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
-        .addField("Mute Duration", time)
+        .addField('Mute Duration', time)
 
-        .addField("Reason", reason);
+        .addField('Reason', reason);
 
       user.send({ embed: muteDM });
 
       const unmuteConfirmationEmbed = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setDescription(`✅ **${user.tag}** has been successfully unmuted!`)
         .addField(
-          "Original Moderator:",
+          'Original Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
-        .addField("Original Mute Duration", time)
+        .addField('Original Mute Duration', time)
 
-        .addField("Original Reason", reason);
+        .addField('Original Reason', reason);
 
       const unmuteDM = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setDescription(
           `You have been unmuted from Team Jamp. Please discontinue the behavior that led to your mute :confused:`
         )
         .addField(
-          "Original Moderator:",
+          'Original Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
-        .addField("Original Mute Duration", time)
+        .addField('Original Mute Duration', time)
 
-        .addField("Original Reason", reason);
+        .addField('Original Reason', reason);
 
-      setTimeout(function() {
+      setTimeout(function () {
         message.guild.member(user).roles.add(mainRole);
         message.guild.member(user).roles.remove(muteRole);
 
@@ -310,7 +311,7 @@ module.exports = {
           .send({ embed: unmuteConfirmationEmbed });
       }, ms(time));
     } else {
-      message.channel.send("There was a problem. Please try again later.");
+      message.channel.send('There was a problem. Please try again later.');
     }
-  }
+  },
 };

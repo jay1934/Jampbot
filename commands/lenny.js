@@ -1,7 +1,7 @@
 module.exports = {
-  name: "lenny",
+  name: 'lenny',
   async execute(message, args) {
     message.delete();
-    message.channel.send("( ͡° ͜ʖ ͡°)");
-  }
+    message.channel.send('( ͡° ͜ʖ ͡°)');
+  },
 };

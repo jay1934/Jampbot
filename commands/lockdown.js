@@ -1,57 +1,57 @@
-const Discord = require("discord.js");
-const config = require("../config.json");
-const ms = require("ms");
+const Discord = require('discord.js');
+const ms = require('ms');
+const config = require('../config.json');
+
 module.exports = {
-  name: "lockdown",
-  aliases: ["unlock", "templd"],
+  name: 'lockdown',
+  aliases: ['unlock', 'templd'],
   blacklist: true,
   modOnly: true,
   async execute(message, args) {
-    let channel = message.channel;
-    let reason = args.slice(0).join(" ");
-    if (!reason) reason = "No reason specified";
-    let Member = message.guild
-      .roles.cache.get('699232048644227115');
+    const { channel } = message;
+    let reason = args.slice(0).join(' ');
+    if (!reason) reason = 'No reason specified';
+    const Member = message.guild.roles.cache.get('699232048644227115');
 
-    if (message.content.includes("!unlock")) {
+    if (message.content.includes('!unlock')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
       const deLDembed = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setThumbnail(config.thumbnails.sad)
         .setDescription(`✅ **${channel}** has been successfully unlocked!`)
         .addField(
-          "Moderator:",
+          'Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
 
-        .addField("Reason", reason);
+        .addField('Reason', reason);
       message.channel.send({
-        embed: deLDembed
+        embed: deLDembed,
       });
       message.client.channels.cache
         .get(config.channelID.modlog)
         .send({ embed: deLDembed });
-    } else if (message.content.includes("!lockdown")) {
+    } else if (message.content.includes('!lockdown')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
       const LDembed = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setThumbnail(config.thumbnails.sad)
         .setDescription(`✅ **${channel}** has been successfully locked!`)
         .addField(
-          "Moderator:",
+          'Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
 
-        .addField("Reason", reason);
+        .addField('Reason', reason);
       message.channel.send({
-        embed: LDembed
+        embed: LDembed,
       });
       message.client.channels.cache
         .get(config.channelID.modlog)
         .send({ embed: LDembed });
-    } else if (message.content.includes("!templd")) {
-      const usage = "\nCorrect usage: ``!templd duration[s/m/h] [reason]``";
-      let reason = args.slice(1).join(" ");
+    } else if (message.content.includes('!templd')) {
+      const usage = '\nCorrect usage: ``!templd duration[s/m/h] [reason]``';
+      const reason = args.slice(1).join(' ');
       const time = args[0];
       if (!time || time <= 0)
         return message.channel.send(
@@ -59,46 +59,46 @@ module.exports = {
         );
       channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
       const tempLDembed = new Discord.MessageEmbed()
-        .setColor("RED")
+        .setColor('RED')
         .setThumbnail(config.thumbnails.sad)
         .setDescription(
           `✅ **${channel}** has been temporarily locked for ${ms(ms(time), {
-            long: true
+            long: true,
           })}!`
         )
         .addField(
-          "Moderator:",
+          'Moderator:',
           `${message.author.username}#${message.author.discriminator}`
         )
-        .addField("Reason", reason);
+        .addField('Reason', reason);
       message.channel.send({
-        embed: tempLDembed
+        embed: tempLDembed,
       });
       message.client.channels.cache
         .get(config.channelID.modlog)
         .send({ embed: tempLDembed });
-      setTimeout(function() {
-      channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
-      const deLDembed = new Discord.MessageEmbed()
-        .setColor("RED")
-        .setThumbnail(config.thumbnails.sad)
-        .setFooter(`Channel was locked for ${ms(ms(time), {long: true})}`)
-        .setDescription(`✅ **${channel}** has been successfully unlocked!`)
-        .addField(
-          "Original Moderator:",
-          `${message.author.username}#${message.author.discriminator}`
-        )
+      setTimeout(function () {
+        channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
+        const deLDembed = new Discord.MessageEmbed()
+          .setColor('RED')
+          .setThumbnail(config.thumbnails.sad)
+          .setFooter(`Channel was locked for ${ms(ms(time), { long: true })}`)
+          .setDescription(`✅ **${channel}** has been successfully unlocked!`)
+          .addField(
+            'Original Moderator:',
+            `${message.author.username}#${message.author.discriminator}`
+          )
 
-        .addField("Original Reason", reason);
-      message.channel.send({
-        embed: deLDembed
-      });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: deLDembed });
+          .addField('Original Reason', reason);
+        message.channel.send({
+          embed: deLDembed,
+        });
+        message.client.channels.cache
+          .get(config.channelID.modlog)
+          .send({ embed: deLDembed });
       }, ms(time));
     } else {
-      message.channel.send("❌ Something went wrong. Please try again later.");
+      message.channel.send('❌ Something went wrong. Please try again later.');
     }
-  }
+  },
 };

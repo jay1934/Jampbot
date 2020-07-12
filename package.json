@@ -1,36 +1,46 @@
 {
-  "name": "team-jamp",
-  "version": "1.3.3",
-  "description": "A simple bot for the Team Jamp discord",
-  "main": "bot.js",
-  "scripts": {
-    "start": "node bot.js"
-  },
-  "dependencies": {
-    "@types/ms": "^0.7.31",
-    "discord.js": "^12.2.0",
-    "dotenv": "^8.2.0",
-    "give-me-a-joke": "^0.3.2",
-    "moment": "^2.27.0",
-    "ms": "^2.1.2"
-  },
-  "engines": {
-    "node": "12.x"
-  },
-  "repository": {
-    "url": "git+https://github.com/Lioness100/Jampbot-VS-Code.git"
-  },
-  "keywords": [
-    "node"
-  ],
-  "bugs": {
-    "url": "https://github.com/Lioness100/Jampbot-VS-Code/issues"
-  },
-  "homepage": "https://github.com/Lioness100/Jampbot-VS-Code#readme",
-  "devDependencies": {
-    "eslint": "^7.4.0",
-    "prettier": "2.0.5"
-  },
-  "author": "Lioness100",
-  "license": "ISC"
+	"name": "team-jamp",
+	"version": "1.3.3",
+	"description": "A simple bot for the Team Jamp discord",
+	"main": "bot.js",
+	"scripts": {
+		"start": "node bot.js"
+	},
+	"dependencies": {
+		"@types/ms": "^0.7.31",
+		"discord.js": "^12.2.0",
+		"dotenv": "^8.2.0",
+		"give-me-a-joke": "^0.3.2",
+		"moment": "^2.27.0",
+		"ms": "^2.1.2"
+	},
+	"engines": {
+		"node": "12.x"
+	},
+	"repository": {
+		"url": "git+https://github.com/Lioness100/Jampbot-VS-Code.git"
+	},
+	"keywords": [
+		"node"
+	],
+	"bugs": {
+		"url": "https://github.com/Lioness100/Jampbot-VS-Code/issues"
+	},
+	"homepage": "https://github.com/Lioness100/Jampbot-VS-Code#readme",
+	"devDependencies": {
+		"eslint": "^7.2.0",
+		"eslint-config-airbnb": "^18.2.0",
+		"eslint-config-airbnb-base": "^14.2.0",
+		"eslint-config-node": "^4.1.0",
+		"eslint-config-prettier": "^6.11.0",
+		"eslint-plugin-import": "^2.21.2",
+		"eslint-plugin-jsx-a11y": "^6.3.0",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-prettier": "^3.1.4",
+		"eslint-plugin-react": "^7.20.0",
+		"eslint-plugin-react-hooks": "^4.0.0",
+		"prettier": "^2.0.5"
+	},
+	"author": "Lioness100",
+	"license": "ISC"
 }

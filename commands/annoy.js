@@ -1,26 +1,25 @@
 module.exports = {
-  name: "annoy",
+  name: 'annoy',
   execute(message, args) {
-
-    if (!message.member.hasPermission(["MANAGE_EMOJIS"]))
+    if (!message.member.hasPermission(['MANAGE_EMOJIS']))
       return message.channel.send(
-        "❌ Only higher-ups can annoy others :smiling_imp:"
+        '❌ Only higher-ups can annoy others :smiling_imp:'
       );
-    let user = message.mentions.users.first();
+    const user = message.mentions.users.first();
     if (message.mentions.users.size < 1)
       return message.channel.send(
-        "❌ You gotta mention someone to annoy them smh.\nCorrect usage: ``!annoy @user [custom message]``"
+        '❌ You gotta mention someone to annoy them smh.\nCorrect usage: ``!annoy @user [custom message]``'
       );
 
     if (message.mentions.users.size > 1)
       return message.channel.send(
-        "❌ I can only annoy one person at once gimme a break smh"
+        '❌ I can only annoy one person at once gimme a break smh'
       );
     if (user.id === message.client.user.id)
       return message.channel.send(
-        "❌ uh huh let me just annoy myself real quick :rolling_eyes:"
+        '❌ uh huh let me just annoy myself real quick :rolling_eyes:'
       );
-    if (user.id === "381490382183333899")
+    if (user.id === '381490382183333899')
       return message.channel.send(
         "❌ smh Lioness is perfect we mustn't annoy them"
       );
@@ -30,7 +29,7 @@ module.exports = {
         .send(`❌ You're already annoying me, don't annoy yourself as well 
 <:CmonBruh:717593939686982024>`);
 
-    let spam = args.slice(1).join(" ");
+    let spam = args.slice(1).join(' ');
 
     if (spam.length < 1) spam = `lol I pinged you :)`;
 
@@ -50,5 +49,5 @@ ${spam}`);
         `Okey dokey I annoyed **${user.username}** <:NotLikeThis:717575061468610560>`
       );
     }
-  }
+  },
 };

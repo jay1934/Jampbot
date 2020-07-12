@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+
 const prefix = '!';
 // bot-spam = <#701854096965238846>
 // important-links = <#701858631221772329>
@@ -88,21 +89,20 @@ module.exports = {
 
     if (msg.includes('!faq 1' || '!faq register'))
       return message.channel.send(registerEmbed);
-    else if (msg.includes('!faq 2' || 'faq website'))
+    if (msg.includes('!faq 2' || 'faq website'))
       return message.channel.send(websiteEmbed);
-    else if (msg.includes('faq 3' || '!faq clears'))
+    if (msg.includes('faq 3' || '!faq clears'))
       return message.channel.send(clearsEmbed);
-    else if (msg.includes('!faq 4' || '!faq levels'))
+    if (msg.includes('!faq 4' || '!faq levels'))
       return message.channel.send(levelsEmbed);
-    else if (msg.includes('faq 5' || '!faq pending'))
+    if (msg.includes('faq 5' || '!faq pending'))
       return message.channel.send(pendingEmbed);
-    else if (msg.includes('!faq menu')) return message.channel.send(menuEmbed);
-    else if (msg.includes('!faq pin'))
+    if (msg.includes('!faq menu')) return message.channel.send(menuEmbed);
+    if (msg.includes('!faq pin'))
       return message.channel.send('<a:pin:717834744523522139>');
     // if none of these apply, cancel the command and send an error message
-    else
-      message.channel.send(
-        '❌ Please input a valid argument. Proper usage is: ``!faq <number or keyword>``. To find all FAQ commands, use ``!faq menu`` or check the FAQ channel'
-      );
+    message.channel.send(
+      '❌ Please input a valid argument. Proper usage is: ``!faq <number or keyword>``. To find all FAQ commands, use ``!faq menu`` or check the FAQ channel'
+    );
   },
 };

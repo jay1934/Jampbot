@@ -1,10 +1,11 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js');
+
 module.exports = {
-  name: "purge",
+  name: 'purge',
   modOnly: true,
   guildOnly: true,
   async execute(message, args) {
-    const usage = '\nCorrect usage: ``!purge number(<100)``' 
+    const usage = '\nCorrect usage: ``!purge number(<100)``';
 
     const deleteCount = parseInt(args[0], 10);
 
@@ -16,17 +17,17 @@ module.exports = {
 
     // So we get our messages, and delete them. Simple enough, right?
     const fetched = await message.channel.messages.fetch({
-      limit: deleteCount
+      limit: deleteCount,
     });
     message.channel
       .bulkDelete(fetched)
-      .catch(error =>
+      .catch((error) =>
         message.channel.send(`❌ Couldn't delete messages because of: ${error}`)
       );
     message.channel
       .send(`✅ Succesfully deleted ${deleteCount} messages`)
-      .then(message => {
+      .then((message) => {
         message.delete({ timeout: 2000 });
       });
-  }
+  },
 };

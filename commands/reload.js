@@ -1,15 +1,17 @@
 module.exports = {
-  name: "reload",
+  name: 'reload',
   aliases: ['r'],
   ownerOnly: true,
   execute(message, args) {
     if (!args.length)
-      return message.channel.send("❌ You didn't pass any command to reload.\nCorrect usage: ``!reload <command name or alias>``");
+      return message.channel.send(
+        "❌ You didn't pass any command to reload.\nCorrect usage: ``!reload <command name or alias>``"
+      );
     const commandName = args[0].toLowerCase();
     const command =
       message.client.commands.get(commandName) ||
       message.client.commands.find(
-        cmd => cmd.aliases && cmd.aliases.includes(commandName)
+        (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
       );
 
     if (!command)
@@ -27,5 +29,5 @@ module.exports = {
       );
     }
     message.channel.send(`The command \`\`${command.name}\`\` was reloaded!`);
-  }
+  },
 };

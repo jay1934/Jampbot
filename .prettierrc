@@ -1,0 +1,7 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"endOfLine": "auto",
+	"singleQuote": true,
+	"semi": true
+}

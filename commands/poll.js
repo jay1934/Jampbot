@@ -1,49 +1,50 @@
-const Discord = require("discord.js");
-const ms = require("ms");
-const config = require("../config");
-const agree = "👍";
-const disagree = "👎";
+const Discord = require('discord.js');
+const ms = require('ms');
+const config = require('../config');
+
+const agree = '👍';
+const disagree = '👎';
 module.exports = {
-  name: "poll",
+  name: 'poll',
   guildOnly: true,
   ownerOnly: true,
   async execute(message, args) {
     const usage =
-      "\nCorrect usage: ``!poll duration[s/m/h/indefinite] question``";
-    var indefinite = false;
-    let time = args[0];
+      '\nCorrect usage: ``!poll duration[s/m/h/indefinite] question``';
+    let indefinite = false;
+    const time = args[0];
     if (!time) {
       return message.channel.send(
         `❌ Please enter a time period followed by \`\`s, m, or h\`\` *or* use \`\`indefinite\`\` instead.${usage}`
       );
     }
 
-    if (time <= 0 && time != "indefinite") {
+    if (time <= 0 && time !== 'indefinite') {
       return message.channel.send(
         `❌ Please Enter a time period followed by \`\`s, m, or h\`\`.${usage}`
       );
     }
 
-    if (time == "indefinite") indefinite = true;
+    if (time === 'indefinite') indefinite = true;
 
     let question =
-      args.slice(1).join(" ").substring(0, 1).toUpperCase() +
-      args.slice(1).join(" ").substring(1);
+      args.slice(1).join(' ').substring(0, 1).toUpperCase() +
+      args.slice(1).join(' ').substring(1);
     if (!question)
       return message.channel.send(
         `❌ You did not specify your question.${usage}`
       );
 
-    if (!question.endsWith("?")) question = question + "?";
+    if (!question.endsWith('?')) question += '?';
 
     message.delete();
     const Embed = new Discord.MessageEmbed()
       .setTitle(`New poll!`)
       .setThumbnail(
-        "https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp"
+        'https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp'
       )
       .setDescription(`${question}`)
-      .setFooter("Please only react once")
+      .setFooter('Please only react once')
       .setColor(`GREEN`)
       .setTimestamp();
 
@@ -56,7 +57,7 @@ module.exports = {
         })}. Please only vote once.`
       );
     }
-    let msg = await message.channel.send(Embed);
+    const msg = await message.channel.send(Embed);
     await msg.react(agree);
     await msg.react(disagree);
     await msg.pin();
@@ -64,15 +65,15 @@ module.exports = {
     if (indefinite === false) {
       const reactions = await msg.awaitReactions(
         (reaction) =>
-          reaction.emoji.name == agree || reaction.emoji.name == disagree,
+          reaction.emoji.name === agree || reaction.emoji.name === disagree,
         { time: ms(time), long: true }
       );
 
-      let resultsEmbed = new Discord.MessageEmbed()
-        .setColor("GREEN")
-        .setTitle("Poll Results")
+      const resultsEmbed = new Discord.MessageEmbed()
+        .setColor('GREEN')
+        .setTitle('Poll Results')
         .setThumbnail(
-          "https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp"
+          'https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp'
         )
         .setDescription(`Results for the Poll: ${question}`);
       try {
@@ -100,13 +101,13 @@ module.exports = {
 
       // create new embed with old title & description, new field
       const newEmbed = new Discord.MessageEmbed({
-        title: "Voting Closed",
+        title: 'Voting Closed',
         description: question,
         thumbnail: {
           url:
-            "https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp",
+            'https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp',
         },
-        color: "RED",
+        color: 'RED',
         footer: {
           text: `The poll lasted ${ms(ms(time), {
             long: true,

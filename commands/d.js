@@ -1,12 +1,12 @@
 module.exports = {
-  name: "d",
+  name: 'd',
   ownerOnly: true,
   guildOnly: true,
-  async execute (message, args) {
+  async execute(message, args) {
     if (!args[0]) return;
-    if (args[0] !== "bump") return;
-    setTimeout(function() {
+    if (args[0] !== 'bump') return;
+    setTimeout(function () {
       message.channel.bulkDelete(2);
-    }, 750); //time in milliseconds
-  }
+    }, 750); // time in milliseconds
+  },
 };
