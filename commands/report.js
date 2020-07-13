@@ -14,7 +14,7 @@ const ticketEmbed = new Discord.MessageEmbed()
   .setTitle('New Report')
   .setColor('RED')
   .setDescription(
-    "Thank you for helping us make Team Jamp a better place.\n\nPlease react with 📫 if you would like to create a dedicated a channel in Team Jamp where you can talk directly to our moderators about your report.\n\nOtherwise, please react with 📧 if you'd just like to send a quick, optionally anounomous, message to us through this DM channel.\n"
+    "Thank you for helping us make Team Jamp a better place.\n\nPlease react with 📫 if you would like to create a dedicated a channel in Team Jamp where you can talk directly to our moderators about your report.\n\nOtherwise, please react with 📧 if you'd just like to send a quick, optionally anonymous, message to us through this DM channel.\n"
   );
 
 module.exports = {
