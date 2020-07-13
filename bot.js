@@ -21,6 +21,9 @@ client.commands = new Discord.Collection();
 // creating a collection for our bot cooldowns
 const cooldowns = new Discord.Collection();
 
+// misc time counter; ignore
+const newTimeCounter = new Set();
+
 // reads files to see if they are in the commands folder and end in .js (reads all bot commands), then identifies them as such
 
 const commandFiles = fs
@@ -158,10 +161,7 @@ client.on('message', async (message) => {
   }
 });
 
-/* this was just a funny joke i made. if anyone says "Im" or "I am", Jampbot will take the rest of their message and form a response, "Hi [message
-remainder], I'm Jampbot++!" It's a bit more technical so that it can work... well. but that's the simplified version */
 client.on('message', async (message) => {
-  // ignore
   if (
     message.type === 'PINS_ADD' &&
     message.channel.id === config.channelID.notes
@@ -174,6 +174,110 @@ client.on('message', async (message) => {
   ) {
     await message.react('699436048693985321');
     await message.react('717925533265952832');
+  }
+});
+
+client.on('message', async (message) => {
+  if (
+    message.channel.id ===
+      ('701856743021609072' || '701854096965238846' || '699221099199594547') &&
+    message.author.id === config.deluxe
+  ) {
+    if (
+      message.content.includes('‣You have cleared') &&
+      message.content.includes('‣You have earned') &&
+      config.logClears
+    ) {
+      message.channel.messages
+        .fetch({ limit: 2 })
+        .then((messageMappings) => {
+          const messages = Array.from(messageMappings.values());
+          const previousMessage = messages[1];
+          const level = message.content
+            .match(/'.+'/g)
+            .toString()
+            .substring(1)
+            .slice(-1);
+          const creator = message.content
+            .match(/\s\sby\s[^\s]+/g)
+            .toString()
+            .substring(5);
+          const pointsEarned = message.content.match(/\d\.\d points?/g);
+          const gif = message.content.split(' ');
+          const emote = gif[0].match(/:\w+:/).toString().substring(1).slice(-1);
+          if (!level) return;
+          if (!creator) return;
+          if (!pointsEarned) return;
+          if (!emote) return;
+          if (pointsEarned.substring(0, 1) >= 5) {
+            message.client.channels.cache
+              .get(config.channelID.modlog)
+              .send(
+                `**${
+                  previousMessage.author.username
+                }**${client.guilds.cache
+                  .get('642447344050372608')
+                  .emojis.cache.find(
+                    (emoji) => emoji.name === emote
+                  )} submitted a clear for **${level}** by **${creator}** and has earned **${pointsEarned}**`
+              );
+          }
+        })
+        .catch((error) => console.log(error));
+    }
+  } else if (
+    message.content.includes('The level') &&
+    message.content.includes('has been added') &&
+    config.logLevels
+  ) {
+    message.channel.messages
+      .fetch({ limit: 2 })
+      .then((messageMappings) => {
+        const messages = Array.from(messageMappings.values());
+        const previousMessage = messages[1];
+        const gif = message.content.split(' ');
+        const emote = gif[0].match(/:\w+:/).toString().substring(1).slice(-1);
+        const level = message.content
+          .match(/level .+?(?=\(\w\w\w-\w\w\w-\w\w\w\))/)
+          .toString()
+          .substring(6)
+          .slice(-1);
+        const levelID = message.content.match(/\(\w\w\w-\w\w\w-\w\w\w\)/);
+        if (!emote) return;
+        if (!levelID) return;
+        if (!level) return;
+        message.client.channels.cache
+          .get(config.channelID.modlog)
+          .send(
+            `**${previousMessage.author.username}**${client.guilds.cache
+              .get('642447344050372608')
+              .emojis.cache.find(
+                (emoji) => emoji.name === emote
+              )} submitted **${level}** with the ID **${levelID}**`
+          );
+      })
+      .catch((error) => console.log(error));
+  } else {
+  }
+});
+
+/* this was just a funny joke i made. if anyone says "Im" or "I am", Jampbot will take the rest of their message and form a response, "Hi [message
+remainder], I'm Jampbot++!" It's a bit more technical so that it can work... well. but that's the simplified version */
+client.on('message', async (message) => {
+  // if message includes some form of 'im' bored, send a remind that *you can use !rps to play rock paper scissors* ;)
+  const found = message.content
+    .toLowerCase()
+    .match(/i.{0,10}b+\s*o+\s*r+\s*e+\s*d/g);
+  if (found && !newTimeCounter.has('cooldown')) {
+    // eslint-disable-next-line no-redeclare
+    newTimeCounter.add('cooldown');
+    message.channel.send(
+      `Are you bored? Try using \`\`!rps\`\` or \`\`quag\`\` in <#${config.channelID.spam}> <:BuzzyGoodMan:727242865322754139>`
+    );
+    setTimeout(function () {
+      newTimeCounter.delete('cooldown');
+    }, 1800000);
+    return;
   }
 
   // this function only works in general channels (in this case, the whitelisted channels), to prevent unneeded spam
@@ -259,28 +363,46 @@ about Jamping as you and I <:crii:715617335754621000>`
 
 client.on('messageDelete', async (message) => {
   if (message.channel.type !== 'text') return;
-  const logs = await message.guild.fetchAuditLogs({ type: 72 });
+  const fetchedLogs = await message.guild.fetchAuditLogs({
+    limit: 1,
+    type: 'MESSAGE_DELETE',
+  });
+  // Since we only have 1 audit log entry in this collection, we can simply grab the first one
+  const deletionLog = fetchedLogs.entries.first();
+
+  // Let's perform a sanity check here and make sure we got *something*
+  if (!deletionLog)
+    return message.client.channels.cache
+      .get(config.channelID.private)
+      .send(
+        `The message '${message.content}' by ${message.author.tag} was deleted, but no relevant audit logs were found.`
+      );
+
+  // We now grab the user object of the person who deleted the message
+  // Let us also grab the target of this action to double check things
+  const { executor, target } = deletionLog;
 
   // make the embed
   const embed = new Discord.MessageEmbed()
     .setColor('#fc3c3c')
-    .addField('Author', message.author.username, true)
+    .addField('Author', target.tag, true)
     .addField('Channel', message.channel, true);
   try {
     embed.addField('Message', message.content, true);
   } catch {
     embed.addField('Message', 'Message could not be accessed', true);
   }
-  embed.setFooter(
-    `Message ID: ${message.id} | Author ID: ${message.author.id}`
-  );
-  setTimeout(function () {
-    const entry = logs.entries.first();
-    embed.addField('Executor', entry.executor);
+
+  // And now we can update our output with a bit more information
+  // We will also run a check to make sure the log we got was for the same author's message
+  try {
+    embed.addField('Executor', executor.tag);
 
     // send the embed in a private server
     message.client.channels.cache.get(config.channelID.private).send({ embed });
-  }, 5000);
+  } catch {
+    message.client.channels.cache.get(config.channelID.private).send({ embed });
+  }
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
@@ -313,29 +435,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     await reaction.message.reactions.removeAll();
     await reaction.message.react('👎');
     await reaction.message.unpin();
-  }
-});
-
-client.on('messageReactionAdd', async (reaction, user) => {
-  // When we receive a reaction we check if the reaction is partial or not
-  if (reaction.partial) {
-    // If the message this reaction belongs to was removed the fetching might result in an API error, which we need to handle
-    try {
-      await reaction.fetch();
-    } catch (error) {
-      console.log('Something went wrong when fetching the message: ', error);
-      // Return as `reaction.message.author` may be undefined/null
-      return;
-    }
-  }
-  // Now the message has been cached and is fully available
-  if (user.bot) return;
-  if (
-    !reaction.message.author.bot ||
-    reaction.message.channel.id !== config.channelID.notes
-  )
-    return;
-  if (reaction.emoji.name === '👎') {
+  } else if (reaction.emoji.name === '👎') {
     reaction.message.embeds[0].setColor('GREEN');
     reaction.message.embeds[0].setFooter('React to mark as resolved');
     await reaction.message.edit(
