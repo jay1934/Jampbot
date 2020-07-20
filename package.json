@@ -8,11 +8,13 @@
 	},
 	"dependencies": {
 		"@types/ms": "^0.7.31",
+		"discord-tictactoe": "^2.0.4",
 		"discord.js": "^12.2.0",
 		"dotenv": "^8.2.0",
 		"give-me-a-joke": "^0.3.2",
 		"moment": "^2.27.0",
-		"ms": "^2.1.2"
+		"ms": "^2.1.2",
+		"wikifakt": "^1.0.3"
 	},
 	"engines": {
 		"node": "12.x"
