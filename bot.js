@@ -360,50 +360,6 @@ about Jamping as you and I <:crii:715617335754621000>`
     .send({ embed: memberLeave });
 });
 
-client.on('messageDelete', async (message) => {
-  if (message.channel.type !== 'text') return;
-  const fetchedLogs = await message.guild.fetchAuditLogs({
-    limit: 1,
-    type: 'MESSAGE_DELETE',
-  });
-  // Since we only have 1 audit log entry in this collection, we can simply grab the first one
-  const deletionLog = fetchedLogs.entries.first();
-
-  // Let's perform a sanity check here and make sure we got *something*
-  if (!deletionLog)
-    return client.channels.cache
-      .get(config.channelID.private)
-      .send(
-        `The message '${message.content}' by ${message.author.tag} was deleted, but no relevant audit logs were found.`
-      );
-
-  // We now grab the user object of the person who deleted the message
-  // Let us also grab the target of this action to double check things
-  const { executor, target } = deletionLog;
-
-  // make the embed
-  const embed = new Discord.MessageEmbed()
-    .setColor('#fc3c3c')
-    .addField('Author', target.tag, true)
-    .addField('Channel', message.channel, true);
-  try {
-    embed.addField('Message', message.content, true);
-  } catch {
-    embed.addField('Message', 'Message could not be accessed', true);
-  }
-
-  // And now we can update our output with a bit more information
-  // We will also run a check to make sure the log we got was for the same author's message
-  try {
-    embed.addField('Executor', executor.tag);
-
-    // send the embed in a private server
-    message.client.channels.cache.get(config.channelID.private).send({ embed });
-  } catch {
-    message.client.channels.cache.get(config.channelID.private).send({ embed });
-  }
-});
-
 client.on('messageReactionAdd', async (reaction, user) => {
   // When we receive a reaction we check if the reaction is partial or not
   if (reaction.partial) {
