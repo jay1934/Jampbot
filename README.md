@@ -39,6 +39,8 @@
 
 - [x] Create **report.js** (only works in DMs)
 
+- [ ] Add // notes to... everything
+
 - [ ] Create **warn.js, warnings.js, reset-warnings.js**
 
 - [ ] Continue questions in **trivia.js**
