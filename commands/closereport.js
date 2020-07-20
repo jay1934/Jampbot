@@ -13,6 +13,7 @@ module.exports = {
       return message.channel.send(
         'Please enter the report key (can be found at the top of the original report message) of the report you would like to close'
       );
+
     const reason = args.slice(1).join(' ');
     const closed = new Discord.MessageEmbed()
       .setTitle('Your ticket has been closed')
