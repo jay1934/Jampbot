@@ -183,7 +183,7 @@ module.exports = {
                         (channel) => channel.name === 'reports'
                       );
                     message.client.channels.cache.get(channel.id).send(report);
-                    message.channel.cache
+                    message.client.channels.cache
                       .get(config.channelID.private)
                       .send(message.author.id);
                   } else {
