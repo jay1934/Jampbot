@@ -1,9 +1,8 @@
 const Discord = require('discord.js');
 
 const prefix = '!';
-// bot-spam = <#701854096965238846>
+// bot-spam = <#701599142782304266>
 // important-links = <#701858631221772329>
-// level-clears = <#701856743021609072>
 // level-rules = <#699220818374295633>
 // level-submissions = <#699221099199594547>
 // ranks = <#699315808777797683>
@@ -16,7 +15,7 @@ module.exports = {
       .setColor('RED')
       .setTitle('How to register in Team Jamp')
       .setDescription(
-        "Before you're able to submit clears and levels, you must type ``!register nickname`` in <#701854096965238846>. Your nickname will then appear on our website under the members tab, and you're all set for the next step <a:PogJamper:704670075667611648>"
+        "Before you're able to submit clears and levels, you must type ``!register nickname`` in <#701599142782304266>. Your nickname will then appear on our website under the members tab, and you're all set for the next step <a:PogJamper:704670075667611648>"
       )
       .setImage(
         'https://cdn.discordapp.com/attachments/699939038601150510/713438819269083167/InShot_20200522_130748930.jpg'
@@ -26,7 +25,7 @@ module.exports = {
       .setColor('RED')
       .setTitle("How to login and use Team Jamp's website")
       .setDescription(
-        "Links to useful pages on our website can be found in <#701858631221772329>. There you can find Team Jamp levels, worlds, leaderboard, and more. If you would like to be able to submit clears on the website, and filter through levels you've already cleared, you'll need to log in to your account. First, make sure you're registered, then use the ``!login`` command in <#701854096965238846>. Make sure you have your DMs open so the bot can send you a link to your account <a:PogJamper:704670075667611648>"
+        "Links to useful pages on our website can be found in <#701858631221772329>. There you can find Team Jamp levels, worlds, leaderboard, and more. If you would like to be able to submit clears on the website, and filter through levels you've already cleared, you'll need to log in to your account. First, make sure you're registered, then use the ``!login`` command in <#701599142782304266>. Make sure you have your DMs open so the bot can send you a link to your account <a:PogJamper:704670075667611648>"
       )
       .setImage(
         'https://cdn.discordapp.com/attachments/699230720392167482/714805202602950747/InShot_20200526_074033748.jpg'
@@ -36,7 +35,7 @@ module.exports = {
       .setColor('RED')
       .setTitle('How to submit clears')
       .setDescription(
-        "To submit your clears, you can either use the Team Jamp website directly or use the ``!clear xxx-xxx-xxx`` command in <#701856743021609072>. You will also get points for your clears, which will be added to your profile on the leaderboard, and can help you reach higher ranks in the discord. In Team Jamp we use point scaling, meaning you might get a higher amount of points depending on how hard the level is. It's roughly graphed like so: ``1=1, 3.5=5, 10=20``. Additionally, check the pinned message in <#701856743021609072> for extra clear-related commands <a:PogJamper:704670075667611648>"
+        "To submit your clears, you can either use the Team Jamp website directly or use the ``!clear xxx-xxx-xxx`` command in <#701599142782304266>. You will also get points for your clears, which will be added to your profile on the leaderboard, and can help you reach higher ranks in the discord. In Team Jamp we use point scaling, meaning you might get a higher amount of points depending on how hard the level is. It's roughly graphed like so: ``1=1, 3.5=5, 10=20``. Additionally, check the pinned message in <#701599142782304266> for extra clear-related commands <a:PogJamper:704670075667611648>"
       )
       .setImage(
         'https://cdn.discordapp.com/attachments/699230720392167482/715284483208642580/Screenshot_20200527-152247.png'
@@ -87,18 +86,16 @@ module.exports = {
     const msg = message.content.toLowerCase();
     // if someone send a message !faq 1, then send the faq 1 embed. If someones send a message !faq 2, send the faq 2 embed, etc.
 
-    if (msg.includes('!faq 1' || '!faq register'))
+    if (/faq (?:1|register)/.test(msg))
       return message.channel.send(registerEmbed);
-    if (msg.includes('!faq 2' || 'faq website'))
+    if (/faq (?:2|website)/.test(msg))
       return message.channel.send(websiteEmbed);
-    if (msg.includes('faq 3' || '!faq clears'))
-      return message.channel.send(clearsEmbed);
-    if (msg.includes('!faq 4' || '!faq levels'))
-      return message.channel.send(levelsEmbed);
-    if (msg.includes('faq 5' || '!faq pending'))
+    if (/faq (?:3|clears)/.test(msg)) return message.channel.send(clearsEmbed);
+    if (/faq (?:4|levels)/.test(msg)) return message.channel.send(levelsEmbed);
+    if (/faq (?:5|pending)/.test(msg))
       return message.channel.send(pendingEmbed);
     if (msg.includes('!faq menu')) return message.channel.send(menuEmbed);
-    if (msg.includes('!faq pin'))
+    if (/faq pin(?:s|ned)?/.test(msg))
       return message.channel.send('<a:pin:717834744523522139>');
     // if none of these apply, cancel the command and send an error message
     message.channel.send(
