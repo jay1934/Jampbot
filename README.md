@@ -59,9 +59,11 @@ We have a **very active and growing community** who can help you feel right at h
 
 We also have a very complex discord bot (this is just a secondary fun bot, [here's the main one](https://github.com/TeamShellSMM/ShellBot3000)) and [website](https://makerteams.net/teamjamp) that can automatically track clears, new level submissions, and much **_much_** more!
 
-And of course, we have our own **design competitions and level races with unique prizes**! We hope to give everyone the Jamp experience they deserve, so come join!
+And of course, we have our own **design competitions and level races with unique prizes**! We hope to give everyone the Jamp experience they deserve, so [come join](https://discord.gg/STbuRN)!
 
-<iframe src="https://discordapp.com/widget?id=699220238801174558&theme=dark" width="500" height="400" allowtransparency="true" frameborder="0"></iframe>
+---
+
+---
 
 Team Jamp has been an incredible experience for me personally, with all of the countless hours just hanging out with all the members and chatting.
 
