@@ -9,7 +9,7 @@
 
 - A **dynamic command handler** with toggleable options for commands such as cooldowns, aliases, and permissions
 
-- A **config.json file** containting easily accessable and editable information and commonly used strings such as prefixes
+- A **config.json file** containting easily accessable and editable information such as the command prefix and commonly used strings
 
 - Blacklists for **users _and_ channels** allowing complete control over bot accessability
 
