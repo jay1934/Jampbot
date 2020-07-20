@@ -6,6 +6,7 @@ const Discord = require('discord.js');
 // these packages are just helpful addons for commands, nothing important
 
 const fs = require('fs'); // file save
+const TicTacToe = require('discord-tictactoe'); // tictactoe
 
 // creates environmental variables; variables I can keep secret (that are only stored on my environment)
 require('dotenv').config();
@@ -177,97 +178,98 @@ client.on('message', async (message) => {
   }
 });
 
+//* trigger when a message is sent
 client.on('message', async (message) => {
+  // if message is sent by Jampbot Deluxe
   if (
-    message.channel.id ===
-      ('701856743021609072' || '701854096965238846' || '699221099199594547') &&
-    message.author.id === config.deluxe
+    ////message.author.id === config.deluxe &&
+    message.content.includes('‣You have cleared') &&
+    message.content.includes('‣You have earned')
   ) {
-    if (
-      message.content.includes('‣You have cleared') &&
-      message.content.includes('‣You have earned') &&
-      config.logClears
-    ) {
-      message.channel.messages
-        .fetch({ limit: 2 })
-        .then((messageMappings) => {
-          const messages = Array.from(messageMappings.values());
-          const previousMessage = messages[1];
-          const level = message.content
-            .match(/'.+'/g)
-            .toString()
-            .substring(1)
-            .slice(-1);
-          const creator = message.content
-            .match(/\s\sby\s[^\s]+/g)
-            .toString()
-            .substring(5);
-          const pointsEarned = message.content.match(/\d\.\d points?/g);
-          const gif = message.content.split(' ');
-          const emote = gif[0].match(/:\w+:/).toString().substring(1).slice(-1);
-          if (!level) return;
-          if (!creator) return;
-          if (!pointsEarned) return;
-          if (!emote) return;
-          if (pointsEarned.substring(0, 1) >= 5) {
-            message.client.channels.cache
-              .get(config.channelID.modlog)
-              .send(
-                `**${
-                  previousMessage.author.username
-                }**${client.guilds.cache
-                  .get('642447344050372608')
-                  .emojis.cache.find(
-                    (emoji) => emoji.name === emote
-                  )} submitted a clear for **${level}** by **${creator}** and has earned **${pointsEarned}**`
-              );
-          }
-        })
-        .catch((error) => console.log(error));
-    }
-  } else if (
-    message.content.includes('The level') &&
-    message.content.includes('has been added') &&
-    config.logLevels
-  ) {
-    message.channel.messages
-      .fetch({ limit: 2 })
-      .then((messageMappings) => {
-        const messages = Array.from(messageMappings.values());
-        const previousMessage = messages[1];
-        const gif = message.content.split(' ');
-        const emote = gif[0].match(/:\w+:/).toString().substring(1).slice(-1);
-        const level = message.content
-          .match(/level .+?(?=\(\w\w\w-\w\w\w-\w\w\w\))/)
-          .toString()
-          .substring(6)
-          .slice(-1);
-        const levelID = message.content.match(/\(\w\w\w-\w\w\w-\w\w\w\)/);
-        if (!emote) return;
-        if (!levelID) return;
-        if (!level) return;
+    try {
+      // get the level name; everything within the single quotes
+      const level = message.content.match(/'(.+)'/);
+      const creator = message.content.match(/ by (.+?)(?=\s<a?:)+/);
+      if (/<@!?(\d+)>/.test(creator[1])) {
+        const noPingExec = creator[1].match(/<@!?(\d+)>/);
+        creator[1] = client.users.cache.get(noPingExec[1]).username;
+      }
+      const pointsEarned = message.content.match(
+        /((?:[0-6]\d|[0-9])(?:\.\d)?) points?/
+      );
+      let exec = message.content.match(/.+?(?=<a?:)/).toString();
+      if (/<@!?(\d+)>/.test(exec)) {
+        const noPingExec = exec.match(/<@!?(\d+)>/);
+        exec = client.users.cache.get(noPingExec[1]).username;
+      }
+      const emote = message.content.match(/:(\w+(?:Jamper|Jumper)):/);
+      if (pointsEarned[1] > 5.9) {
         message.client.channels.cache
           .get(config.channelID.modlog)
           .send(
-            `**${previousMessage.author.username}**${client.guilds.cache
+            `🔴 **${exec} **${message.client.guilds.cache
               .get('642447344050372608')
               .emojis.cache.find(
-                (emoji) => emoji.name === emote
-              )} submitted **${level}** with the ID **${levelID}**`
+                (emoji) => emoji.name === emote[1]
+              )} submitted a clear for **${level[1]}** by **${
+              creator[1]
+            }** and has earned **${pointsEarned[0]}** 🔴`
           );
-      })
-      .catch((error) => console.log(error));
-  } else {
+      } else {
+        console.log(
+          `🔴 **${exec} **${client.guilds.cache
+            .get('642447344050372608')
+            .emojis.cache.find(
+              (emoji) => emoji.name === emote[1]
+            )} submitted a clear for **${level[1]}** by **${
+            creator[1]
+          }** and has earned **${pointsEarned[0]}** 🔴`
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+});
+
+client.on('message', async (message) => {
+  if (
+    Math.random() < 0.001 &&
+    !message.author.bot &&
+    whiteChannels.includes(message.channel.id)
+  ) {
+    const args = message.content.split(' ');
+    var number = 0;
+    const numberOf = Math.floor(1 + (args.length / 1.5 - 1) * Math.random());
+    while (numberOf > number) {
+      const wordNumber = Math.floor(1 + (args.length - 1) * Math.random());
+      args[wordNumber - 1] = 'jamp';
+      number++;
+      console.log(numberOf);
+    }
+    console.log(args.join(' '));
+    message.channel.send(args.join(' '));
   }
 });
 
 /* this was just a funny joke i made. if anyone says "Im" or "I am", Jampbot will take the rest of their message and form a response, "Hi [message
 remainder], I'm Jampbot++!" It's a bit more technical so that it can work... well. but that's the simplified version */
 client.on('message', async (message) => {
+  if (message.content.toLowerCase() === 'jampbot yes')
+    message.channel.send(':)');
+  if (message.content.toLowerCase() === 'jampbot no') {
+    const lol = Math.random();
+    if (lol > 0.3) message.channel.send(':(');
+    else message.channel.send('sleep with one eye open');
+  }
+  if (message.content.toLowerCase() === 'jampbot why')
+    message.channel.send('O_o');
+  if (message.content.toLowerCase() === 'jampbot pls')
+    message.channel.send(';)');
   // if message includes some form of 'im' bored, send a remind that *you can use !rps to play rock paper scissors* ;)
   const found = message.content
     .toLowerCase()
-    .match(/i.{0,10}b+\s*o+\s*r+\s*e+\s*d/g);
+    .match(/i.{0,10}b+\s*o+\s*r+\s*e+\s*d/);
   if (found && !newTimeCounter.has('cooldown')) {
     // eslint-disable-next-line no-redeclare
     newTimeCounter.add('cooldown');
@@ -290,10 +292,7 @@ client.on('message', async (message) => {
   const dadChance = Math.random() * 100;
 
   // if the 5% chance is successful...
-  if (
-    (message.author.id === '312019945913319424' && dadChance <= 10) ||
-    dadChance <= 5
-  ) {
+  if (dadChance <= 5) {
     const str = message.content;
 
     const modified = str
@@ -372,7 +371,7 @@ client.on('messageDelete', async (message) => {
 
   // Let's perform a sanity check here and make sure we got *something*
   if (!deletionLog)
-    return message.client.channels.cache
+    return client.channels.cache
       .get(config.channelID.private)
       .send(
         `The message '${message.content}' by ${message.author.tag} was deleted, but no relevant audit logs were found.`
@@ -449,3 +448,12 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
 // this allows the bot to login with token
 client.login(process.env.TOKEN);
+
+new TicTacToe({
+  clientId: '713102337908015227',
+  token: process.env.TOKEN,
+  language: 'en',
+  command: '!ttt',
+})
+  .connect()
+  .catch(() => console.error('Cannot connect TicTacToe bot'));
