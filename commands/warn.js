@@ -1,16 +1,25 @@
+const Discord = require('discord.js');
+const config = require('../config.json');
+
 module.exports = {
   name: 'warn',
-  modOnly: true,
+  rolePermission: 'Jampolice',
   guildOnly: true,
-  disabled: true,
   async execute(message, args) {
-    const warns = 'placeholder';
+    console.log('yes');
+    const warns = require('../models/warns');
     const usage = '\nCorrect usage: ``!warn @user reason``';
     const user = message.mentions.users.first();
     if (!user)
       return message.channel.send(`❌ You did not mention a user.${usage}`);
     if (!args.slice(1).join(' '))
       return message.channel.send(`❌ You did not specify a reason.${usage}`);
+    const warnEmbed = new Discord.MessageEmbed()
+      .setColor('RED')
+      .setThumbnail(config.thumbnails.sad)
+      .setDescription(`✅ **${user.username}** has been successfully warned!`)
+      .addField('Moderator:', message.author.username)
+      .addField('Warning:', args.slice(1).join(' '));
     warns.findOne(
       { Guild: message.guild.id, User: user.id },
       async (err, data) => {
@@ -27,21 +36,23 @@ module.exports = {
             ],
           });
           newWarns.save();
-          message.channel.send(
-            `${user.tag} has been warned with the reason of ${args
-              .slice(1)
-              .join(' ')}. They now have 1 warn.`
-          );
+          warnEmbed.setFooter(`This is ${user.username}'s first warning`);
+          message.channel.send(warnEmbed);
         } else {
           data.Warns.unshift({
             Moderator: message.author.id,
             Reason: args.slice(1).join(' '),
           });
           data.save();
+          warnEmbed.setFooter(
+            `${user.username} now has ${data.Warns.length} warnings`
+          );
           message.channel.send(
-            `${user.tag} has been warned with the reason of ${args
+            `**${
+              user.username
+            }** has been warned with the reason of:\n**${args
               .slice(1)
-              .join(' ')}. They now have ${data.Warns.length} warns.`
+              .join(' ')}**\nThey now have ${data.Warns.length} warns.`
           );
         }
       }
