@@ -1,9 +1,16 @@
 const Discord = require('discord.js');
+const mongoose = require('mongoose');
 const config = require('../config.json');
+const reports = require('../models/reports');
+const {
+  getRandomInt,
+  getRandomArrElement,
+  makeID,
+  getChannel,
+  getGuild,
+} = require('../utils/functions');
 
-const x = 1000;
-const y = 9999;
-const val = `user-report-${Math.floor(x + (y - x) * Math.random())}`;
+const val = `user-report-${getRandomInt(1000, 9999)}`;
 const reportEmbed = new Discord.MessageEmbed()
   .setTitle('New Report')
   .setColor('RED')
@@ -22,26 +29,6 @@ module.exports = {
   async execute(message, args) {
     if (message.channel.type !== 'dm')
       return message.channel.send('This command can only be triggered in DMs.');
-    const random = ['!', '@', '#', '$', '%', '^', '&', '*', '?'];
-    const ran = random[Math.floor(Math.random() * random.length)];
-    const ran2 = random[Math.floor(Math.random() * random.length)];
-    const ran3 = random[Math.floor(Math.random() * random.length)];
-    const a = 10;
-    const b = 20;
-    const c = 100;
-    const d = 999;
-    const e = 0;
-    const f = 9;
-    const respondKey =
-      ran +
-      Math.floor(a + (b - a) * Math.random()) +
-      ran2 +
-      ran3 +
-      Math.floor(e + (f - e) * Math.random()) +
-      message.author.id +
-      Math.floor(c + (d - c) * Math.random());
-
-    const real = respondKey.slice(6, -3);
 
     let msg1 = await message.channel.send(ticketEmbed);
     msg1.react('📫').then(() => msg1.react('📧'));
@@ -83,7 +70,7 @@ module.exports = {
                   `Please use this channel to discuss with ${message.author.username} about their report.`
                 )
                 .addField('Report Overview', quickReportMessage);
-              const jamp = message.client.guilds.cache.get(config.jamp);
+              const jamp = getGuild('Team Jamp', message);
               await jamp.channels
                 .create(`${val}`, {
                   type: 'text',
@@ -106,12 +93,10 @@ module.exports = {
 
                 .then((channel) => {
                   channel.setParent('727561183921569832');
-                  channel.setTopic(`Creator ID: ${message.author.id}`);
+                  channel.setTopic(message.author.username`'s Report`);
                   channel.send(newTicket);
                 });
-              const newChannel = jamp.channels.cache.find(
-                (channel) => channel.name === val
-              );
+              const newChannel = getChannel(val, message);
               const ticketContinuation = new Discord.MessageEmbed()
                 .setTitle('New Report')
                 .setColor('RED')
@@ -119,6 +104,11 @@ module.exports = {
                   `Thank you for advancing your report; a new channel has been made. Please visit it [here](http://discord.com/channels/699220238801174558/${newChannel.id}) to continue.`
                 );
               msg1.edit(ticketContinuation);
+              const newReport = new reports({
+                CreatorID: message.author.id,
+                Report: quickReportMessage,
+              });
+              newReport.save();
             })
 
             .catch(() => {
@@ -137,13 +127,10 @@ module.exports = {
               // only accept messages by the user who sent the command
               // accept only 1 message, and return the promise after 30000ms = 30s
               const reportMessage = collected.first();
+              const key = makeID(4);
               const report = new Discord.MessageEmbed()
-                .setAuthor(`Message Key: ${respondKey}`)
-                .addField('\u200b', '\u200b')
-                .setDescription(reportMessage)
-                .setFooter(
-                  "To close this report, please use the command '!closereport messageKey [optional closing message]'"
-                );
+                .setAuthor(`Message Key: ${key}`)
+                .setDescription(reportMessage);
               const yes = '✅';
               const no = '❌';
               const anonymous = new Discord.MessageEmbed()
@@ -177,15 +164,7 @@ module.exports = {
                       )
                       .setFooter('We really appreciate your help <3');
                     message.channel.send(yesEmbed);
-                    const channel = message.client.guilds.cache
-                      .get(config.jamp)
-                      .channels.cache.find(
-                        (channel) => channel.name === 'reports'
-                      );
-                    message.client.channels.cache.get(channel.id).send(report);
-                    message.client.channels.cache
-                      .get(config.channelID.private)
-                      .send(message.author.id);
+                    getChannel('reports', message).send(report);
                   } else {
                     report.setTitle(
                       `New Report Sent by ${message.author.username}:`
@@ -199,30 +178,30 @@ module.exports = {
                       )
                       .setFooter('We really appreciate your help <3');
                     message.channel.send(yesEmbed);
-                    const channel = message.client.guilds.cache
-                      .get(config.jamp)
-                      .channels.cache.find(
-                        (channel) => channel.name === 'reports'
-                      );
-                    message.client.channels.cache.get(channel.id).send(report);
+                    getChannel('reports', message)
+                      .send(report)
+                      .then((msg) => msg.pin);
                   }
+                  const newReport = new reports({
+                    ReportID: key,
+                    CreatorID: message.author.id,
+                    Report: reportMessage,
+                  });
+                  newReport.save();
                 })
-                .catch((err) => {
+                .catch(() =>
                   message.channel.send(
                     '❌ No answer after 2 minutes; report canceled.'
-                  );
-                  console.log(message.author.id + err);
-                });
+                  )
+                );
             })
-            .catch((err) => {
-              message.reply('❌ No answer after 10 minutes; report canceled.');
-              console.log(message.author.id + err);
-            });
+            .catch(() =>
+              message.reply('❌ No answer after 10 minutes; report canceled.')
+            );
         }
       })
-      .catch((err) => {
-        message.channel.send('❌ No answer after 2 minutes; report canceled.');
-        console.log(message.author.id + err);
-      });
+      .catch(() =>
+        message.channel.send('❌ No answer after 2 minutes; report canceled.')
+      );
   },
 };
