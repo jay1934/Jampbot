@@ -6,9 +6,13 @@ const Discord = require('discord.js');
 // these packages are just helpful addons for commands, nothing important
 
 const fs = require('fs'); // file save
-const TicTacToe = require('discord-tictactoe'); // tictactoe
-
-// creates environmental variables; variables I can keep secret (that are only stored on my environment)
+const {
+  getRandomInt,
+  getUser,
+  getChannel,
+  getEmoji,
+  hasRole,
+} = require('./utils/functions');
 require('dotenv').config();
 
 // creating a new discord client (the bot)
@@ -18,7 +22,7 @@ const client = new Discord.Client({
 
 // creating a collection for our bot commands
 client.commands = new Discord.Collection();
-
+client.mongoose = require('./utils/mongoose');
 // creating a collection for our bot cooldowns
 const cooldowns = new Discord.Collection();
 
@@ -45,6 +49,7 @@ const config = require('./config.json');
 // this will send the log message 'Connected!' when the bot is turned online
 client.on('ready', () => {
   console.log('Connected!');
+  getChannel('tyv', client).send('Online');
   client.user.setActivity('Jamp levels', {
     type: 'PLAYING',
     url: 'https://makerteams.net/teamjamp',
@@ -100,11 +105,10 @@ client.on('message', async (message) => {
   )
     return message.channel.send('<:polite:699433623962648576>');
 
-  // command can only be triggered by mods (or with mod permissions)
-  if (command.modOnly && !message.member.hasPermission(['MANAGE_MESSAGES']))
-    return message.channel.send('❌ Insufficient permissions');
-
-  if (command.judgeOnly && !message.member.hasPermission(['MANAGE_EMOJIS']))
+  if (
+    command.rolePermission &&
+    !hasRole(message.member, command.rolePermission)
+  )
     return message.channel.send('❌ Insufficient permissions');
 
   // command can only be triggered by owner. I just put in my ID in this case, although there are specific functions to find owners of guilds
@@ -137,13 +141,13 @@ client.on('message', async (message) => {
     if (timestamps.has(message.author.id)) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
-      // finds how much longer the cooldown will be in effect by using the current time, the time the cooldown was started, and the cooldown length
+      // finds how much longer the cooldown will be in effect by considering the current time, the time the cooldown was started, and the cooldown length
       if (now < expirationTime) {
         const timeLeft = (expirationTime - now) / 1000;
         return message.channel.send(
           `❌ Please wait ${timeLeft.toFixed(
             1
-          )} more second(s) before reusing the \`${command.name}\` command.`
+          )} more second(s) before reusing the \`\`${command.name}\`\` command.`
         );
       }
     }
@@ -192,7 +196,7 @@ client.on('message', async (message) => {
       const creator = message.content.match(/ by (.+?)(?=\s<a?:)+/);
       if (/<@!?(\d+)>/.test(creator[1])) {
         const noPingExec = creator[1].match(/<@!?(\d+)>/);
-        creator[1] = client.users.cache.get(noPingExec[1]).username;
+        creator[1] = getUser(noPingExec[1], message).username;
       }
       const pointsEarned = message.content.match(
         /((?:[0-6]\d|[0-9])(?:\.\d)?) points?/
@@ -200,28 +204,24 @@ client.on('message', async (message) => {
       let exec = message.content.match(/.+?(?=<a?:)/).toString();
       if (/<@!?(\d+)>/.test(exec)) {
         const noPingExec = exec.match(/<@!?(\d+)>/);
-        exec = client.users.cache.get(noPingExec[1]).username;
+        exec = getUser(noPingExec[1], message).username;
       }
-      const emote = message.content.match(/:(\w+(?:Jamper|Jumper)):/);
+      const emote = message.content.match(/:((?:\w+Jamper|Jumper)):/);
       if (pointsEarned[1] > 5.9) {
-        message.client.channels.cache
-          .get(config.channelID.modlog)
-          .send(
-            `🔴 **${exec} **${message.client.guilds.cache
-              .get('642447344050372608')
-              .emojis.cache.find(
-                (emoji) => emoji.name === emote[1]
-              )} submitted a clear for **${level[1]}** by **${
-              creator[1]
-            }** and has earned **${pointsEarned[0]}** 🔴`
-          );
+        getChannel(config.channelID.modlog, message).send(
+          `🔴 **${exec} **${getEmoji(
+            emote[1],
+            message
+          )} submitted a clear for **${level[1]}** by **${
+            creator[1]
+          }** and has earned **${pointsEarned[0]}** 🔴`
+        );
       } else {
         console.log(
-          `🔴 **${exec} **${client.guilds.cache
-            .get('642447344050372608')
-            .emojis.cache.find(
-              (emoji) => emoji.name === emote[1]
-            )} submitted a clear for **${level[1]}** by **${
+          `🔴 **${exec} **${getEmoji(
+            emote[1],
+            message
+          )} submitted a clear for **${level[1]}** by **${
             creator[1]
           }** and has earned **${pointsEarned[0]}** 🔴`
         );
@@ -234,15 +234,15 @@ client.on('message', async (message) => {
 
 client.on('message', async (message) => {
   if (
-    Math.random() < 0.001 &&
+    Math.random() < 0.003 &&
     !message.author.bot &&
     whiteChannels.includes(message.channel.id)
   ) {
     const args = message.content.split(' ');
     var number = 0;
-    const numberOf = Math.floor(1 + (args.length / 1.5 - 1) * Math.random());
+    const numberOf = getRandomInt(1, args.length / 1.5);
     while (numberOf > number) {
-      const wordNumber = Math.floor(1 + (args.length - 1) * Math.random());
+      const wordNumber = getRandomInt(1, args.length);
       args[wordNumber - 1] = 'jamp';
       number++;
       console.log(numberOf);
@@ -258,8 +258,7 @@ client.on('message', async (message) => {
   if (message.content.toLowerCase() === 'jampbot yes')
     message.channel.send(':)');
   if (message.content.toLowerCase() === 'jampbot no') {
-    const lol = Math.random();
-    if (lol > 0.3) message.channel.send(':(');
+    if (Math.random() > 0.3) message.channel.send(':(');
     else message.channel.send('sleep with one eye open');
   }
   if (message.content.toLowerCase() === 'jampbot why')
@@ -289,10 +288,10 @@ client.on('message', async (message) => {
   if (message.author.bot) return;
 
   // as an extra step to avoid unneeded spam and annoyance, I set the function to only fully trigger 20% of the time
-  const dadChance = Math.random() * 100;
+  const dadChance = Math.random();
 
   // if the 5% chance is successful...
-  if (dadChance <= 5) {
+  if (dadChance <= 0.05) {
     const str = message.content;
 
     const modified = str
@@ -322,15 +321,12 @@ client.on('message', async (message) => {
           .join(' ')}, I'm Jampbot++!`
       );
     }
-
-    // if the 20% chance is not successful...
-  } else {
   }
 });
 
 // when a new user joins Team Jamp, send a welcome message in our welcome channel. this message is easily configurable to suit individual needs
 client.on('guildMemberAdd', (member) => {
-  client.channels.cache.get(config.channelID.welcome)
+  getChannel(config.channelID.welcome, client)
     .send(`Hey ${member}, welcome to **Team Jamp!** 
 
 **To gain access to the rest of the discord, please read <#699220667484078131> and agree to the message near the bottom**
@@ -355,9 +351,7 @@ about Jamping as you and I <:crii:715617335754621000>`
     .setFooter('Big RIP');
 
   // send the embed in mod logs
-  client.channels.cache
-    .get(config.channelID.modlog)
-    .send({ embed: memberLeave });
+  getChannel(config.channelID.modlog, client).send({ embed: memberLeave });
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
@@ -403,13 +397,5 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 // this allows the bot to login with token
+client.mongoose.init();
 client.login(process.env.TOKEN);
-
-new TicTacToe({
-  clientId: '713102337908015227',
-  token: process.env.TOKEN,
-  language: 'en',
-  command: '!ttt',
-})
-  .connect()
-  .catch(() => console.error('Cannot connect TicTacToe bot'));
