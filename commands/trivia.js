@@ -1,6 +1,7 @@
 // In development
 
 const { MessageEmbed } = require('discord.js');
+const { getRandomArrElement } = require('../utils/functions');
 
 const questions = [
   {
@@ -76,12 +77,12 @@ const questions = [
 ];
 module.exports = {
   name: 'trivia',
-  modOnly: true,
+  rolePermission: 'Jampolice',
   guildOnly: true,
   blacklist: true,
   disabled: true,
   async execute(message, args) {
-    const q = questions[Math.floor(Math.random() * questions.length)];
+    const q = getRandomArrElement(questions);
     let i = 0;
     const Embed = new MessageEmbed()
       .setTitle(q.title)

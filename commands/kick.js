@@ -1,13 +1,14 @@
 const Discord = require('discord.js');
 const config = require('../config.json');
+const { getChannel } = require('../utils/functions');
 
 module.exports = {
   name: 'kick',
-  modOnly: true,
+  rolePermission: 'Jampolice',
   guildOnly: true,
   async execute(message, args) {
     const usage = '\nCorrect usage: ``!kick @user [reason]``';
-    let reason = args.slice(1).join(' ');
+    const reason = args.slice(1).join(' ') || 'No Reason Supplied';
     const user = message.mentions.users.first();
     if (message.mentions.users.size < 1)
       return message.channel
@@ -23,7 +24,6 @@ module.exports = {
       );
     if (message.mentions.users.first().id === config.ownerid)
       return message.channel.send("❌ You can't kick my Developer:wink:");
-    if (reason.length < 1) reason = 'No reason supplied.';
     const botRolePossition = message.guild.member(message.client.user).roles
       .highest.position;
     const rolePosition = message.guild.member(user).roles.highest.position;
@@ -76,9 +76,9 @@ module.exports = {
       message.channel.send({
         embed: kickConfirmationEmbed,
       });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: kickConfirmationEmbed });
+      getChannel(config.channelID.modlog, message).send({
+        embed: kickConfirmationEmbed,
+      });
     }
   },
 };

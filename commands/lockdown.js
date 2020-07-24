@@ -1,17 +1,16 @@
 const Discord = require('discord.js');
 const ms = require('ms');
 const config = require('../config.json');
+const { getRole, getChannel } = require('../utils/functions');
 
 module.exports = {
   name: 'lockdown',
   aliases: ['unlock', 'templd'],
-  blacklist: true,
-  modOnly: true,
+  rolePermission: 'Jampolice',
   async execute(message, args) {
     const { channel } = message;
-    let reason = args.slice(0).join(' ');
-    if (!reason) reason = 'No reason specified';
-    const Member = message.guild.roles.cache.get('699232048644227115');
+    const reason = args.slice(0).join(' ') || 'No Reason Specified';
+    const Member = getRole('Member', message);
 
     if (message.content.includes('!unlock')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
@@ -28,9 +27,7 @@ module.exports = {
       message.channel.send({
         embed: deLDembed,
       });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: deLDembed });
+      getChannel(config.channelID.modlog, message).send({ embed: deLDembed });
     } else if (message.content.includes('!lockdown')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
       const LDembed = new Discord.MessageEmbed()
@@ -46,12 +43,10 @@ module.exports = {
       message.channel.send({
         embed: LDembed,
       });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: LDembed });
+      getChannel(config.channelID.modlog, message).send({ embed: LDembed });
     } else if (message.content.includes('!templd')) {
       const usage = '\nCorrect usage: ``!templd duration[s/m/h] [reason]``';
-      const reason = args.slice(1).join(' ');
+      const reason = args.slice(1).join(' ') || 'No Reason Supplied';
       const time = args[0];
       if (!time || time <= 0)
         return message.channel.send(
@@ -74,9 +69,7 @@ module.exports = {
       message.channel.send({
         embed: tempLDembed,
       });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: tempLDembed });
+      getChannel(config.channelID.modlog, message).send({ embed: tempLDembed });
       setTimeout(function () {
         channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
         const deLDembed = new Discord.MessageEmbed()
@@ -93,9 +86,7 @@ module.exports = {
         message.channel.send({
           embed: deLDembed,
         });
-        message.client.channels.cache
-          .get(config.channelID.modlog)
-          .send({ embed: deLDembed });
+        getChannel(config.channelID.modlog, message).send({ embed: deLDembed });
       }, ms(time));
     } else {
       message.channel.send('❌ Something went wrong. Please try again later.');

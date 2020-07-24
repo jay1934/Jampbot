@@ -1,4 +1,5 @@
 const compliments = require('../data/compliments.json');
+const { getRandomArrElement } = require('../utils/functions');
 
 module.exports = {
   name: 'compliment',
@@ -14,9 +15,7 @@ module.exports = {
       );
     }
     return message.channel.send(
-      `**<@${user.username}>**, ${
-        compliments[Math.floor(Math.random() * compliments.length)]
-      } :heart:`
+      `**<@${user.username}>**, ${getRandomArrElement(compliments)} :heart:`
     );
   },
 };

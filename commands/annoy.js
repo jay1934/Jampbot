@@ -29,9 +29,7 @@ module.exports = {
         .send(`❌ You're already annoying me, don't annoy yourself as well 
 <:CmonBruh:717593939686982024>`);
 
-    let spam = args.slice(1).join(' ');
-
-    if (spam.length < 1) spam = `lol I pinged you :)`;
+    const spam = args.slice(1).join(' ') || 'lol I pinged you :)';
 
     user.send(`${spam}
 *Message sent by* ***${message.author.username}***`);

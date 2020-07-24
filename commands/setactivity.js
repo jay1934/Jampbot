@@ -11,7 +11,7 @@ module.exports = {
       return message.channel.send(
         '❌ I can only use the ``playing`` status <:NotLikeThis:717575061468610560>'
       );
-    const actividade = args.slice(1).join(' ');
+    const actividade = args.slice(1).join(' ') || 'Jamp Levels';
     if (actividade) {
       message.client.user.setActivity(actividade, {
         type: 'PLAYING',

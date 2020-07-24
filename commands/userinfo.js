@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
+const func = require('../utils/functions.js');
 
 module.exports = {
   name: 'userinfo',
@@ -7,10 +8,7 @@ module.exports = {
   blacklist: true,
   guildOnly: true,
   async execute(message, args) {
-    const target =
-      message.mentions.members.first() ||
-      message.guild.members.cache.get(args[0]) ||
-      message.member;
+    const target = message.mentions.members.first() || message.member;
     const createdAt = moment(target.user.createdAt).format(
       'D MMM YYYY, h:mm a'
     );
@@ -24,29 +22,29 @@ module.exports = {
       .addField('**Joined Server**', `**${joinedAt}**`, false)
       .setTimestamp();
 
-    if (target.roles.cache.has('703287854226473021')) {
+    if (func.hasRole(target, 'Jumper')) {
       embed.addField('Jamper Rank', '**Jumper**', false);
-    } else if (target.roles.cache.has('699581332065353779')) {
+    } else if (func.hasRole(target, 'Rookie Jamper')) {
       embed.addField('Jamper Rank', '**Rookie Jamper**', false);
-    } else if (target.roles.cache.has('699581483471601806')) {
+    } else if (func.hasRole(target, 'Amateur Jamper')) {
       embed.addField('Jamper Rank', '**Amateur Jamper**', false);
-    } else if (target.roles.cache.has('699581657300336750')) {
+    } else if (func.hasRole(target, 'Trained Jamper')) {
       embed.addField('Jamper Rank', '**Trained Jamper**', false);
-    } else if (target.roles.cache.has('699581735008075786')) {
+    } else if (func.hasRole(target, 'Experienced Jamper')) {
       embed.addField('Jamper Rank', '**Experienced Jamper**', false);
-    } else if (target.roles.cache.has('699581842847826018')) {
+    } else if (func.hasRole(target, 'Pro Jamper')) {
       embed.addField('Jamper Rank', '**Pro Jamper**', false);
-    } else if (target.roles.cache.has('699582010833764373')) {
+    } else if (func.hasRole(target, 'Master Jamper')) {
       embed.addField('Jamper Rank', '**Master Jamper**', false);
-    } else if (target.roles.cache.has('703291564608454676')) {
+    } else if (func.hasRole(target, 'Elite Jamper')) {
       embed.addField('Jamper Rank', '**Elite Jamper**', false);
-    } else if (target.roles.cache.has('703286855587725332')) {
+    } else if (func.hasRole(target, 'Divine Jamper')) {
       embed.addField('Jamper Rank', '**Divine Jamper**', false);
-    } else if (target.roles.cache.has('703292006440370197')) {
+    } else if (func.hasRole(target, 'Eternal Jamper')) {
       embed.addField('Jamper Rank', '**Eternal Jamper**', false);
-    } else if (target.roles.cache.has('699582087598047372')) {
+    } else if (func.hasRole(target, 'PogJamper')) {
       embed.addField('Jamper Rank', '**PogJamper**', false);
-    } else if (target.roles.cache.has('703321161177628783')) {
+    } else if (func.hasRole(target, 'Almighty PogJamper')) {
       embed.addField('Jamper Rank', '**Almighty PogJamper**', false);
     } else {
       embed.addField('Jamper Rank', '**Unranked**', false);

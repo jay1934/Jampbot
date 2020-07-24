@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { getRandomArrElement } = require('../utils/functions');
 
 const randQuags = [
   'https://media.discordapp.net/attachments/720850648740134994/720850757511020554/image0.png?width=721&height=406',
@@ -161,14 +162,13 @@ const randQuags = [
   'https://media.discordapp.net/attachments/719694477027180544/733033957570117742/20200715_132959.jpg',
 ];
 
-const quagLol = randQuags[Math.floor(Math.random() * randQuags.length)];
 module.exports = {
   name: 'quag',
   blacklist: true,
   async execute(message, args) {
     const embed = new Discord.MessageEmbed()
       .setTitle('Quag Intensifies')
-      .setImage(`${randQuags[Math.floor(Math.random() * randQuags.length)]}`);
+      .setImage(getRandomArrElement(randQuags));
     message.channel.send({ embed });
   },
 };

@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const prefix = require('../config');
+const { getRandomArrElement } = require('../utils/functions');
 
 module.exports = {
   name: '8ball',
@@ -41,7 +42,6 @@ module.exports = {
       'All I know is madlad go brrrrrr',
       'I ethically disagree',
     ];
-    const result = Math.floor(Math.random() * replies.length);
     const question = args.slice(0).join(' ');
     const questionsLower = question.toLowerCase();
     const questionsTest =
@@ -64,7 +64,7 @@ module.exports = {
       .setTitle('The 8Ball has Spoken')
       .setColor('RED')
       .addField('Question:', questionsTest)
-      .addField('Answer:', replies[result]);
+      .addField('Answer:', getRandomArrElement(replies));
     if (
       questionsLower === 'is creamy creepy' ||
       questionsLower === 'is creamy creepy?'

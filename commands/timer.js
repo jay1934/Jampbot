@@ -6,9 +6,8 @@ module.exports = {
   async execute(message, args) {
     const usage = '\nCorrect usage: ``!timer duration[s/m/h/d] [description]``';
     const Timer = args[0];
-    let Description = args.slice(1).join(' ');
-    if (!Description) Description = `No Description Given`;
-    const Desc =
+    var Description = args.slice(1).join(' ') || 'No Description Given';
+    Description =
       Description.substring(0, 1).toUpperCase() + Description.substring(1);
     if (!args[0]) {
       return message.channel.send(
@@ -21,7 +20,6 @@ module.exports = {
         `❌ Please Enter a time period followed by "s or m or h".${usage}`
       );
     }
-
     message.channel.send(
       ':white_check_mark: ' +
         ' Timer Started for: ' +
@@ -35,7 +33,7 @@ module.exports = {
       )
       .setTitle(`Your Timer Finished`)
       .addField('Duration', ms(ms(Timer), { long: true }))
-      .addField('Description', Desc);
+      .addField('Description', Description);
 
     setTimeout(function () {
       message.channel.send(`<@${message.author.id}>`);

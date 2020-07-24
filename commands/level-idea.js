@@ -1,4 +1,5 @@
 const pogjamper = require('../config.json');
+const { getRandomInt } = require('../utils/functions');
 
 let i;
 
@@ -7,12 +8,6 @@ module.exports = {
   blacklist: true,
   async execute(message, args) {
     function randomLevelIdea() {
-      function getRandomInt(pMin, pMax) {
-        const min = Math.ceil(pMin);
-        const max = Math.floor(pMax);
-        return Math.floor(Math.random() * (max - min)) + min;
-      }
-
       const data = {
         styles: ['SMB1', 'SMB3', 'SMW', 'NSMBU', '3DW'],
         night: [
@@ -167,7 +162,7 @@ module.exports = {
       };
 
       function randomElement(arr) {
-        return arr[getRandomInt(0, arr.length - 1)];
+        return arr[getRandomInt(0, arr.length - 1, true)];
       }
 
       function filterElement(styles) {
@@ -199,7 +194,7 @@ module.exports = {
       const num =
         !(chosen.style || chosen.night || chosen.clearCondition) ||
         Math.random() < 0.9
-          ? getRandomInt(1, 4)
+          ? getRandomInt(1, 4, true)
           : 0;
       const others = [];
       for (i = 0; i < num; i++) {

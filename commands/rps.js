@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { getRandomArrElement } = require('../utils/functions');
 
 const paperWin = new Discord.MessageEmbed()
   .setColor('GREEN')
@@ -67,7 +68,7 @@ module.exports = {
   blacklist: true,
   async execute(message, args) {
     const replies = ['rock', 'paper', 'scissors'];
-    const result = Math.floor(Math.random() * replies.length);
+    const result = getRandomArrElement(replies);
     const embed = new Discord.MessageEmbed()
       .setColor('RED')
       .setTitle('You have been challenged to a game of\nRock Paper Scissors')
@@ -102,37 +103,37 @@ module.exports = {
         // if (message.author.id === "551775030954950672") return message.channel.send({embed: devilishEmbed})
 
         if (collected.first().content.toLowerCase() === 'rock') {
-          if (replies[result] === 'rock') {
+          if (result === 'rock') {
             return message.channel.send({ embed: rpsTie });
           }
-          if (replies[result] === 'scissors') {
+          if (result === 'scissors') {
             return message.channel.send({ embed: rockWin });
           }
-          if (replies[result] === 'paper') {
+          if (result === 'paper') {
             return message.channel.send({ embed: rockLose });
           }
         }
 
         if (collected.first().content.toLowerCase() === 'scissors') {
-          if (replies[result] === 'scissors') {
+          if (result === 'scissors') {
             return message.channel.send({ embed: rpsTie });
           }
-          if (replies[result] === 'paper') {
+          if (result === 'paper') {
             return message.channel.send({ embed: scissorWin });
           }
-          if (replies[result] === 'rock') {
+          if (result === 'rock') {
             return message.channel.send({ embed: scissorLose });
           }
         }
 
         if (collected.first().content.toLowerCase() === 'paper') {
-          if (replies[result] === 'paper') {
+          if (result === 'paper') {
             return message.channel.send({ embed: rpsTie });
           }
-          if (replies[result] === 'rock') {
+          if (result === 'rock') {
             return message.channel.send({ embed: paperWin });
           }
-          if (replies[result] === 'scissors') {
+          if (result === 'scissors') {
             return message.channel.send({ embed: paperLose });
           }
         }

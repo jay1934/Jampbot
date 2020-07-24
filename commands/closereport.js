@@ -1,4 +1,6 @@
 const Discord = require('discord.js');
+const reports = require('../models/reports.js');
+const { getUser } = require('../utils/functions.js');
 
 module.exports = {
   name: 'closereport',
@@ -24,21 +26,27 @@ module.exports = {
       .setFooter(
         'Please contact a moderator or submit another report with any further questions or concerns'
       );
-    try {
-      const decoded = id.slice(6, -3);
-      const confirmation = new Discord.MessageEmbed()
-        .setTitle('Report Closed')
-        .setColor('GREEN');
-      if (reason) {
-        closed.addField('Closing Message', reason, true);
-        confirmation.addField('Closing Message', reason, true);
-      }
-      message.client.users.cache.get(decoded).send(closed);
-      message.channel.send(confirmation);
-    } catch {
-      message.channel.send(
-        "There was an error. Double check you're using a valid report key"
-      );
+    const confirmation = new Discord.MessageEmbed()
+      .setTitle('Report Closed')
+      .setColor('GREEN');
+    if (reason) {
+      closed.addField('Closing Message', reason, true);
+      confirmation.addField('Closing Message', reason, true);
     }
+    reports.findOne({ ReportID: args[0] }, async (err, data) => {
+      if (err) console.log(err);
+      if (!data)
+        return message.channel.send(
+          "There was an error. Double check you're using a valid report key"
+        );
+      if (data.Closed)
+        return message.channel.send('This report is already closed');
+      data.unshift({
+        Closed: true,
+      });
+      data.save();
+      getUser(data.CreatorID, message).send(closed);
+      message.channel.send(confirmation);
+    });
   },
 };

@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
+const { getUser } = require('../utils/functions');
 
 module.exports = {
   name: 'closeticket',
-  modOnly: true,
+  rolePermission: 'Jampolice',
   guildOnly: true,
   async execute(message, args) {
     if (
@@ -12,7 +13,7 @@ module.exports = {
     )
       return message.channel.send('This channel is not a ``ticket``');
     const reason = args.slice(0).join(' ');
-    const creator = message.channel.topic.slice(12);
+    const creator = message.channel.topic.match(/^.+(?='s Report)/);
     const closed = new Discord.MessageEmbed()
       .setTitle('Your ticket has been closed')
       .setColor('GREEN')
@@ -26,7 +27,7 @@ module.exports = {
       closed.addField('Closing Message', reason, true);
     }
 
-    await message.client.users.cache.get(creator).send(closed);
+    await getUser(creator, message).send(closed);
     await message.channel.delete();
   },
 };

@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 
 module.exports = {
   name: 'purge',
-  modOnly: true,
+  rolePermission: 'Jampolice',
   guildOnly: true,
   async execute(message, args) {
     const usage = '\nCorrect usage: ``!purge number(<100)``';

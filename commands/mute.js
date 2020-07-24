@@ -1,28 +1,23 @@
 const Discord = require('discord.js');
 const ms = require('ms');
 const config = require('../config.json');
+const { getRole, hasRole, getChannel } = require('../utils/functions');
 
 module.exports = {
   name: 'mute',
   guildOnly: true,
-  modOnly: true,
+  rolePermission: 'Jampolice',
   aliases: ['unmute', 'tempmute'],
   async execute(message, args) {
     const usage = '\nCorrect usage: ``!mute @user [reason]``';
     const unusage = '\nCorrect usage: ``!unmute @user [reason]``';
     const tempusage =
       '\nCorrect usage: ``!tempmute @user duration[s/m/h] [reason]';
+    const user = message.mentions.users.first();
+    const mainRole = getRole('Member', message);
+    const muteRole = getRole('Muted', message);
     if (message.content.includes('!mute')) {
-      const user =
-        message.mentions.users.first() ||
-        message.guild.members.cache.get(args[0]);
-      const mainRole = message.guild.roles.cache.find(
-        (val) => val.name === 'Member'
-      );
-      const muteRole = message.guild.roles.cache.find(
-        (val) => val.name === 'Muted'
-      );
-      let reason = args.slice(1).join(' ');
+      const reason = args.slice(1).join(' ') || 'No Reason Supplied';
       if (!muteRole)
         return message.channel.send(
           "❌ There is no 'Muted' role on this server"
@@ -31,7 +26,7 @@ module.exports = {
         return message.channel.send(
           `❌ Please mention someone to mute them.${usage}`
         );
-      if (message.guild.member(user).roles.cache.has(muteRole.id)) {
+      if (hasRole(user, 'Muted')) {
         return message.channel.send('❌ That user is already been muted');
       }
       if (message.mentions.users.first().id === message.author.id)
@@ -57,8 +52,6 @@ module.exports = {
           '❌**Error:** Cannor mute that member because they have roles that is higher or equal to me.'
         );
 
-      if (!reason) reason = 'No reason supplied.';
-
       message.guild.member(user).roles.remove(mainRole);
       message.guild.member(user).roles.add(muteRole);
 
@@ -78,12 +71,12 @@ module.exports = {
       message.channel.send({
         embed: muteConfirmationEmbed,
       });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: muteConfirmationEmbed });
+      getChannel(config.channelID.modlog, message).send({
+        embed: muteConfirmationEmbed,
+      });
 
       const muteDM = new Discord.MessageEmbed()
-        .setColor('RED')
+        .setColor('RED ')
         .setThumbnail(config.thumbnails.sad)
         .setFooter(
           `Please resort to #anti-softlock with questions or complaints on this mute`
@@ -100,25 +93,15 @@ module.exports = {
 
       user.send({ embed: muteDM });
     } else if (message.content.includes('!unmute')) {
-      const usage = '\nCorrect usage: ``!unmute @user [reason]``';
-      const user =
-        message.mentions.users.first() ||
-        message.guild.members.cache.get(args[0]);
-      const mainRole = message.guild.roles.cache.find(
-        (val) => val.name === 'Member'
-      );
-      const muteRole = message.guild.roles.cache.find(
-        (val) => val.name === 'Muted'
-      );
       if (!message.mentions.users.first())
         return message.channel.send(
           `❌ Please mention someone to mute them.${unusage}`
         );
-      if (!message.guild.member(user).roles.cache.has(muteRole.id)) {
+      if (!hasRole(user, 'Muted')) {
         return message.channel.send(`❌ That user is not muted`);
       }
 
-      let reason = args.slice(1).join(' ');
+      const reason = args.slice(1).join(' ') || 'No Reason Supplied';
       if (!muteRole)
         return message.channel.send(
           "❌ There is no 'Muted' role on this server"
@@ -140,8 +123,6 @@ module.exports = {
           '❌**Error:** Cannor unmute that member because they have roles that is higher or equal to me.'
         );
 
-      if (!reason) reason = 'No reason supplied.';
-
       message.guild.member(user).roles.remove(muteRole);
       message.guild.member(user).roles.add(mainRole);
 
@@ -158,9 +139,9 @@ module.exports = {
         message.channel.send({
           embed: unmuteConfirmationEmbed,
         });
-        message.client.channels.cache
-          .get(config.channelID.modlog)
-          .send({ embed: unmuteConfirmationEmbed });
+        getChannel(config.channelID.modlog, message).send({
+          embed: unmuteConfirmationEmbed,
+        });
       }
 
       const unmuteDM = new Discord.MessageEmbed()
@@ -177,17 +158,8 @@ module.exports = {
 
       user.send({ embed: unmuteDM });
     } else if (message.content.includes('!tempmute')) {
-      const user =
-        message.mentions.users.first() ||
-        message.guild.members.cache.get(args[0]);
-      const mainRole = message.client.guilds.cache
-        .get(message.guild.id)
-        .roles.cache.find((val) => val.name === 'Member');
-      const muteRole = message.client.guilds.cache
-        .get(message.guild.id)
-        .roles.cache.find((val) => val.name === 'Muted');
       const time = args[1];
-      let reason = args.slice(2).join(' ');
+      const reason = args.slice(2).join(' ') || 'No Reason Supplied';
       if (!muteRole)
         return message.channel.send(
           `❌ There is no 'Muted' role on this server`
@@ -196,7 +168,7 @@ module.exports = {
         return message.channel.send(
           `❌ Please mention someone to mute them.${tempusage}`
         );
-      if (message.guild.member(user).roles.cache.has(muteRole.id)) {
+      if (hasRole(user, 'Muted')) {
         return message.channel.send('❌ That user is already been muted');
       }
       if (message.mentions.users.first().id === message.author.id)
@@ -226,7 +198,6 @@ module.exports = {
         return message.channel.send(
           `❌ Please specify a value followed by ``s, m, or h`` to signify the time period this user will be muted.${tempusage}`
         );
-      if (!reason) reason = 'No reason supplied.';
 
       message.guild.member(user).roles.remove(mainRole);
       message.guild.member(user).roles.add(muteRole);
@@ -253,9 +224,9 @@ module.exports = {
         message.channel.send({
           embed: muteConfirmationEmbed,
         });
-        message.client.channels.cache
-          .get(config.channelID.modlog)
-          .send({ embed: muteConfirmationEmbed });
+        getChannel(config.channelID.modlog, message).send({
+          embed: muteConfirmationEmbed,
+        });
       }
 
       const muteDM = new Discord.MessageEmbed()
@@ -306,9 +277,9 @@ module.exports = {
         message.guild.member(user).roles.remove(muteRole);
 
         user.send({ embed: unmuteDM });
-        message.client.channels.cache
-          .get(config.channelID.modlog)
-          .send({ embed: unmuteConfirmationEmbed });
+        getChannel(config.channelID.modlog, message).send({
+          embed: unmuteConfirmationEmbed,
+        });
       }, ms(time));
     } else {
       message.channel.send('There was a problem. Please try again later.');

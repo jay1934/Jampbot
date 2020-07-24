@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const ms = require('ms');
 const config = require('../config');
+const { getChannel } = require('../utils/functions');
 
 const agree = '👍';
 const disagree = '👎';
@@ -95,9 +96,9 @@ module.exports = {
       resultsEmbed.setTimestamp();
       msg.unpin();
       message.channel.send({ embed: resultsEmbed });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: resultsEmbed });
+      getChannel(config.channelID.modlog, message).send({
+        embed: resultsEmbed,
+      });
 
       // create new embed with old title & description, new field
       const newEmbed = new Discord.MessageEmbed({

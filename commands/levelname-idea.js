@@ -1,3 +1,5 @@
+const { getRandomArrElement } = require('../utils/functions');
+
 module.exports = {
   name: 'levelname-idea',
   blacklist: true,
@@ -62,11 +64,9 @@ module.exports = {
       ],
     };
 
-    const result = `${
-      names.word1[Math.floor(Math.random() * names.word1.length)]
-    } ${names.word2[Math.floor(Math.random() * names.word2.length)]} ${
-      names.word3[Math.floor(Math.random() * names.word3.length)]
-    } `;
+    const result = `${getRandomArrElement(names.word1)} ${getRandomArrElement(
+      names.word2
+    )} ${getRandomArrElement(names.word3)}`;
     message.channel.send(result);
   },
 };

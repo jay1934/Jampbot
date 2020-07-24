@@ -1,15 +1,16 @@
 const Discord = require('discord.js');
 const config = require('../config.json');
+const { getChannel } = require('../utils/functions');
 
 module.exports = {
   name: 'ban',
-  modOnly: true,
+  rolePermission: 'Jampolice',
   guildOnly: true,
   async execute(message, args) {
     const usage =
       "\nCorrect usage: ``!ban @user [days worth of user's messages to delete (0-7)] [reason]``";
     const day = args[1];
-    let reason = args.slice(2).join(' ');
+    const reason = args.slice(2).join(' ') || 'No Reason Supplied';
     const user =
       message.mentions.users.first() || message.guild.members.get(args[0]);
     if (message.mentions.users.size < 1)
@@ -30,7 +31,7 @@ module.exports = {
       return message.channel.send(
         `You didn't enter the number of days worth of messages to delete.${usage}`
       );
-    if (reason.length < 1) reason = 'No reason supplied.';
+
     const botRolePossition = message.guild.member(message.client.user).roles
       .highest.position;
     const rolePosition = message.guild.member(user).roles.highest.position;
@@ -82,9 +83,9 @@ module.exports = {
       message.channel.send({
         embed: banConfirmationEmbed,
       });
-      message.client.channels.cache
-        .get(config.channelID.modlog)
-        .send({ embed: banConfirmationEmbed });
+      getChannel(config.channelID.modlog, message).send({
+        embed: banConfirmationEmbed,
+      });
     }
   },
 };

@@ -1,10 +1,11 @@
 const discord = require('discord.js');
 const config = require('../config.json');
+const { getChannel } = require('../utils/functions');
 
 module.exports = {
   name: 'note',
   guildOnly: true,
-  judgeOnly: true,
+  rolePermission: 'Jamp Judge',
   async execute(message, args) {
     const good = '👍';
     const Note = args.slice(0).join(' ');
@@ -24,9 +25,7 @@ module.exports = {
       .setColor('GREEN')
       .setDescription(Note)
       .setFooter('React to mark as resolved');
-    const msg = await message.client.channels.cache
-      .get(config.channelID.notes)
-      .send(embed);
+    const msg = await getChannel(config.channelID.notes, message).send(embed);
     await msg.react(good);
     await msg.pin();
     message.channel.send('Note added.');
