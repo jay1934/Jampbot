@@ -1,6 +1,5 @@
 ![](https://media.discordapp.net/attachments/722174152357707776/724385495378821170/20200416_063556_0000.png?width=1023&height=256)
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d076614b5b064326bea01d528c504766)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=Lioness100/Jampbot-VS-Code&utm_campaign=Badge_Grade)
 [![Discord](https://img.shields.io/discord/699220238801174558.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/STbuRN)
 
 # Jampbot++ is a discord.js bot I made for my Discord server, [Team Jamp](https://discord.gg/STbuRN)
@@ -41,7 +40,7 @@
 
 - [ ] Add // notes to... everything
 
-- [ ] Create **warn.js, warnings.js, reset-warnings.js**
+- [x] Create **warn.js and warnings.js**
 
 - [ ] Continue questions in **trivia.js**
 
@@ -59,7 +58,7 @@ If you want a more traditional platforming kaizo experience without tons of toug
 
 We have a **very active and growing community** who can help you feel right at home!
 
-We also have a very complex discord bot (this is just a secondary fun bot, [here's the main one](https://github.com/TeamShellSMM/ShellBot3000)) and [website](https://makerteams.net/teamjamp) that can automatically track clears, new level submissions, and much **_much_** more!
+We also have a very complex discord bot (this is just a secondary fun bot; [here's the main one](https://github.com/TeamShellSMM/ShellBot3000)) and [website](https://makerteams.net/teamjamp) that can automatically track clears, new level submissions, and much **_much_** more!
 
 And of course, we have our own **design competitions and level races with unique prizes**! We hope to give everyone the Jamp experience they deserve, so [come join](https://discord.gg/STbuRN)!
 
