@@ -1,6 +1,7 @@
 module.exports = {
   name: 'reload',
   aliases: ['r'],
+  helpIgnore: true,
   ownerOnly: true,
   execute(message, args) {
     if (!args.length)

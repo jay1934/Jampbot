@@ -6,6 +6,9 @@ module.exports = {
   name: '8ball',
   blacklist: true,
   noPing: true,
+  category: 'fun',
+  usage: '!8ball <question>',
+  description: 'Ask almighty 8ball a question',
   execute(message, args) {
     if (!args[0])
       return message.channel.send(

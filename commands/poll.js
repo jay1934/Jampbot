@@ -9,21 +9,16 @@ module.exports = {
   name: 'poll',
   guildOnly: true,
   ownerOnly: true,
+  helpIgnore: true,
   async execute(message, args) {
-    const usage =
-      '\nCorrect usage: ``!poll duration[s/m/h/indefinite] question``';
     let indefinite = false;
     const time = args[0];
     if (!time) {
-      return message.channel.send(
-        `❌ Please enter a time period followed by \`\`s, m, or h\`\` *or* use \`\`indefinite\`\` instead.${usage}`
-      );
+      return message.delete();
     }
 
     if (time <= 0 && time !== 'indefinite') {
-      return message.channel.send(
-        `❌ Please Enter a time period followed by \`\`s, m, or h\`\`.${usage}`
-      );
+      return message.delete();
     }
 
     if (time === 'indefinite') indefinite = true;
@@ -31,10 +26,7 @@ module.exports = {
     let question =
       args.slice(1).join(' ').substring(0, 1).toUpperCase() +
       args.slice(1).join(' ').substring(1);
-    if (!question)
-      return message.channel.send(
-        `❌ You did not specify your question.${usage}`
-      );
+    if (!question) return message.delete();
 
     if (!question.endsWith('?')) question += '?';
 

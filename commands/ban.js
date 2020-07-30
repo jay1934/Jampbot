@@ -6,16 +6,23 @@ module.exports = {
   name: 'ban',
   rolePermission: 'Jampolice',
   guildOnly: true,
+  category: 'moderation',
+  usage: "!ban @user <days worth of user's messages to delete (0-7)> [reason]",
+  description: 'Bans a user',
   async execute(message, args) {
-    const usage =
-      "\nCorrect usage: ``!ban @user [days worth of user's messages to delete (0-7)] [reason]``";
     const day = args[1];
+    if (day < 0 || day > 7)
+      return message.channel.send(
+        `Specify how many day's worth of user's messages to delete.\nCorrect usage: \`\`${this.usage}\`\`\``
+      );
     const reason = args.slice(2).join(' ') || 'No Reason Supplied';
     const user =
       message.mentions.users.first() || message.guild.members.get(args[0]);
     if (message.mentions.users.size < 1)
       return message.channel
-        .send(`❌ You must mention someone to ban them.${usage}`)
+        .send(
+          `❌ You must mention someone to ban them.\nCorrect usage: \`\`${this.usage}\`\`\``
+        )
         .catch(console.error);
     if (message.mentions.users.first().id === message.author.id)
       return message.channel.send(
@@ -29,7 +36,7 @@ module.exports = {
       return message.channel.send("You can't ban my Developer :wink:");
     if (!day || day > 7)
       return message.channel.send(
-        `You didn't enter the number of days worth of messages to delete.${usage}`
+        `You didn't enter the number of days worth of messages to delete.\nCorrect usage: \`\`${this.usage}\`\`\``
       );
 
     const botRolePossition = message.guild.member(message.client.user).roles

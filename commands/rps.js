@@ -66,6 +66,9 @@ const rpsTie = new Discord.MessageEmbed()
 module.exports = {
   name: 'rps',
   blacklist: true,
+  category: 'fun',
+  usage: '!rps',
+  description: 'Starts a rock-paper-scissor game with Jampbot++',
   async execute(message, args) {
     const replies = ['rock', 'paper', 'scissors'];
     const result = getRandomArrElement(replies);

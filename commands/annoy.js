@@ -1,6 +1,7 @@
 module.exports = {
   name: 'annoy',
-  execute(message, args) {
+  helpIgnore: true,
+  async execute(message, args) {
     if (!message.member.hasPermission(['MANAGE_EMOJIS']))
       return message.channel.send(
         '❌ Only higher-ups can annoy others :smiling_imp:'

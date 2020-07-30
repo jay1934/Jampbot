@@ -10,6 +10,7 @@ const dikdik = [
 module.exports = {
   name: 'dikdik',
   blacklist: true,
+  helpIgnore: true,
   async execute(message, args) {
     if (
       message.author.id === '592950968354865162' ||

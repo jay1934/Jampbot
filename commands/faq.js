@@ -9,6 +9,9 @@ const prefix = '!';
 
 module.exports = {
   name: 'faq',
+  category: 'info',
+  usage: '!faq <number or keyword>',
+  description: 'Sends answers and examples for FAQs',
   execute(message, args) {
     // these are the different embeds that will be referenced in the commands
     const registerEmbed = new Discord.MessageEmbed()
@@ -25,7 +28,7 @@ module.exports = {
       .setColor('RED')
       .setTitle("How to login and use Team Jamp's website")
       .setDescription(
-        "Links to useful pages on our website can be found in <#701858631221772329>. There you can find Team Jamp levels, worlds, leaderboard, and more. If you would like to be able to submit clears on the website, and filter through levels you've already cleared, you'll need to log in to your account. First, make sure you're registered, then use the ``!login`` command in <#701599142782304266>. Make sure you have your DMs open so the bot can send you a link to your account <a:PogJamper:704670075667611648>"
+        "Links to useful pages on our website can be found in <#701858631221772329>. There you can find Team Jamp levels, worlds, leaderboard, and more. If you would like to be able to submit clears on the website, and filter through levels you've already cleared, you'll need to log in to your account.\n\nFirst, make sure you're registered, then use the ``!login`` command in <#701599142782304266>. Make sure you have your DMs open so the bot can send you a link to your account <a:PogJamper:704670075667611648>"
       )
       .setImage(
         'https://cdn.discordapp.com/attachments/699230720392167482/714805202602950747/InShot_20200526_074033748.jpg'
@@ -35,7 +38,7 @@ module.exports = {
       .setColor('RED')
       .setTitle('How to submit clears')
       .setDescription(
-        "To submit your clears, you can either use the Team Jamp website directly or use the ``!clear xxx-xxx-xxx`` command in <#701599142782304266>. You will also get points for your clears, which will be added to your profile on the leaderboard, and can help you reach higher ranks in the discord. In Team Jamp we use point scaling, meaning you might get a higher amount of points depending on how hard the level is. It's roughly graphed like so: ``1=1, 3.5=5, 10=20``. Additionally, check the pinned message in <#701599142782304266> for extra clear-related commands <a:PogJamper:704670075667611648>"
+        "To submit your clears, you can either use the Team Jamp website directly or use the ``!clear xxx-xxx-xxx`` command in <#701599142782304266>. You will also get points for your clears, which will be added to your profile on the leaderboard, and can help you reach higher ranks in the discord.\n\nIn Team Jamp we use point scaling, meaning you might get a higher amount of points depending on how hard the level is. It's roughly graphed like so: ``1=1, 3.5=5, 10=20``.\n\nAdditionally, check the pinned message in <#701599142782304266> for extra clear-related commands <a:PogJamper:704670075667611648>"
       )
       .setImage(
         'https://cdn.discordapp.com/attachments/699230720392167482/715284483208642580/Screenshot_20200527-152247.png'
@@ -45,7 +48,7 @@ module.exports = {
       .setColor('RED')
       .setTitle('How to submit levels')
       .setDescription(
-        "First, you should read <#699220818374295633> so you know what is required in a Team Jamp level. Then use the ``!add xxx-xxx-xxx level name`` command in <#699221099199594547>. Your level will then be displayed on the website as 'pending'. Once the judges review the level and hopefully approve it, you will be notified and your level will be officially welcomed into Team Jamp. Additionally, check the pinned message in <#699221099199594547> for extra level-submission-related commands <a:PogJamper:704670075667611648>"
+        "First, you should read <#699220818374295633> so you know what is required in a Team Jamp level. Then use the ``!add xxx-xxx-xxx level name`` command in <#699221099199594547>. Your level will then be displayed on the website as 'pending'.\n\nOnce the judges review the level and hopefully approve it, you will be notified and your level will be officially welcomed into Team Jamp. Additionally, check the pinned message in <#699221099199594547> for extra level-submission-related commands <a:PogJamper:704670075667611648>"
       )
       .setImage(
         'https://cdn.discordapp.com/attachments/699230720392167482/715289245178265740/Screenshot_20200527-154113.png'
@@ -55,7 +58,7 @@ module.exports = {
       .setColor('RED')
       .setTitle('What is a pending level')
       .setDescription(
-        "When somebody adds a level, it will be added to the pending queue until 3 Jamp Judges review it. They will each either cast an approve, reject, or fix vote. Note that it might take a while for your level to be reviewed, as we have a lot of levels in the queue. If you submit a clear for a pending level, you won't get any points. However, if/when the level is approved, points will automatically be distributed <a:PogJamper:704670075667611648>"
+        "When somebody submits a level, it will be added to the pending queue until 3 Jamp Judges review it. They will each either cast an approve, reject, or fix vote. Note that it might take a while for your level to be reviewed, as we have a lot of levels in the queue.\n\nIf you submit a clear for a pending level, you won't get any points. However, if/when the level is approved, points will automatically be distributed <a:PogJamper:704670075667611648>"
       )
       .setImage(
         'https://cdn.discordapp.com/attachments/699230720392167482/716009530076561418/IMG_1590780366870.PNG'

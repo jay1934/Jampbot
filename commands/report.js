@@ -26,9 +26,21 @@ const ticketEmbed = new Discord.MessageEmbed()
 
 module.exports = {
   name: 'report',
+  category: 'info',
+  usage: '!report',
+  description: 'Report something/someone',
   async execute(message, args) {
-    if (message.channel.type !== 'dm')
-      return message.channel.send('This command can only be triggered in DMs.');
+    if (message.channel.type !== 'dm') {
+      message.delete();
+      message.channel
+        .send('❌ This command can only be triggered in DMs.')
+        .then((msg) => {
+          setTimeout(() => {
+            msg.delete();
+          }, 5000);
+        });
+      return;
+    }
 
     let msg1 = await message.channel.send(ticketEmbed);
     msg1.react('📫').then(() => msg1.react('📧'));

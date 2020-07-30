@@ -24,6 +24,9 @@ const randPokes = [
 module.exports = {
   name: 'slowpoke',
   blacklist: true,
+  category: 'fun',
+  usage: 'slowpoke',
+  description: 'Sends a random image of slowpoke',
   async execute(message, args) {
     const embed = new Discord.MessageEmbed()
       .setTitle('Slowpoke Intensifies')

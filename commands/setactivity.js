@@ -1,6 +1,7 @@
 module.exports = {
   name: 'setactivity',
   ownerOnly: true,
+  helpIgnore: true,
   async execute(message, args) {
     const playing = args[0];
     if (!playing)
@@ -18,7 +19,7 @@ module.exports = {
         url: 'https://makerteams.net/teamjamp',
       });
       message.channel.send(
-        `Succesfully changed my activity status to **Playing ${actividade}**`
+        `Successfully changed my activity status to **Playing ${actividade}**`
       );
     } else {
       message.channel.send('❌ smh something went wrong');

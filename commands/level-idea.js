@@ -6,6 +6,9 @@ let i;
 module.exports = {
   name: 'level-idea',
   blacklist: true,
+  category: 'fun',
+  usage: '!level-idea',
+  description: 'Gets a random level idea',
   async execute(message, args) {
     function randomLevelIdea() {
       const data = {

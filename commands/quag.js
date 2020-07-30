@@ -165,6 +165,9 @@ const randQuags = [
 module.exports = {
   name: 'quag',
   blacklist: true,
+  category: 'fun',
+  usage: '!quag',
+  description: 'Displays a random quagsire image',
   async execute(message, args) {
     const embed = new Discord.MessageEmbed()
       .setTitle('Quag Intensifies')

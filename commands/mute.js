@@ -8,6 +8,10 @@ module.exports = {
   guildOnly: true,
   rolePermission: 'Jampolice',
   aliases: ['unmute', 'tempmute'],
+  category: 'moderation',
+  usage:
+    '![un]mute @user [reason]\n!tempmute @user <duration(10s, 12h, etc)> [reason]',
+  description: 'Mutes a user',
   async execute(message, args) {
     const usage = '\nCorrect usage: ``!mute @user [reason]``';
     const unusage = '\nCorrect usage: ``!unmute @user [reason]``';

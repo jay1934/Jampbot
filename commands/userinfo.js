@@ -7,6 +7,9 @@ module.exports = {
   aliases: ['uinfo'],
   blacklist: true,
   guildOnly: true,
+  category: 'info',
+  usage: '!userinfo [@user]',
+  descriptions: "Gets a user's info",
   async execute(message, args) {
     const target = message.mentions.members.first() || message.member;
     const createdAt = moment(target.user.createdAt).format(

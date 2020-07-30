@@ -5,6 +5,7 @@ module.exports = {
   name: 'closeticket',
   rolePermission: 'Jampolice',
   guildOnly: true,
+  helpIgnore: true,
   async execute(message, args) {
     if (
       !message.channel.name.includes('user-report-') ||

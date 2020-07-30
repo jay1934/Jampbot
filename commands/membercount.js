@@ -3,6 +3,7 @@ const { getGuild, getEmoji } = require('../utils/functions');
 module.exports = {
   name: 'membercount',
   blacklist: true,
+  helpIgnore: true,
   async execute(message, args) {
     message.channel.send(
       `Team Jamp has \`\`${

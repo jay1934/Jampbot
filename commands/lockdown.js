@@ -7,6 +7,10 @@ module.exports = {
   name: 'lockdown',
   aliases: ['unlock', 'templd'],
   rolePermission: 'Jampolice',
+  category: 'moderation',
+  usage:
+    '!lockdown [reason]\n!unlock [reason]\n!templd <duration(10s, 12h, etc)> [reason]',
+  description: 'Restricts message-sending permissions in channel',
   async execute(message, args) {
     const { channel } = message;
     const reason = args.slice(0).join(' ') || 'No Reason Specified';

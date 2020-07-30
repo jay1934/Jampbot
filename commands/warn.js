@@ -5,15 +5,21 @@ module.exports = {
   name: 'warn',
   rolePermission: 'Jampolice',
   guildOnly: true,
+  category: 'moderation',
+  usage: '!warn @user <warn message>',
+  descriptions: 'Warns a user',
   async execute(message, args) {
     console.log('yes');
     const warns = require('../models/warns');
-    const usage = '\nCorrect usage: ``!warn @user reason``';
     const user = message.mentions.users.first();
     if (!user)
-      return message.channel.send(`❌ You did not mention a user.${usage}`);
+      return message.channel.send(
+        `❌ You did not mention a user.\nCorrect usage: \`\`${this.usage}\`\``
+      );
     if (!args.slice(1).join(' '))
-      return message.channel.send(`❌ You did not specify a reason.${usage}`);
+      return message.channel.send(
+        `❌ You did not specify a reason.\nCorrect usage: \`\`${this.usage}\`\``
+      );
     const warnEmbed = new Discord.MessageEmbed()
       .setColor('RED')
       .setThumbnail(config.thumbnails.sad)

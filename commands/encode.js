@@ -2,12 +2,14 @@ module.exports = {
   name: 'encode',
   aliases: ['decode'],
   blacklist: true,
+  category: 'fun',
+  usage: '![en/de]code <text>',
+  description: 'Encode text to binary, or decode binary to text',
   async execute(message, args) {
-    const usage = '\nCorrect usage: ``![en/de]code text``';
     const str = args.slice(0).join(' ');
     if (!str)
       return message.channel.send(
-        `❌ You did not give a string to convert.${usage}`
+        `❌ You did not give a string to convert.\nCorrect usage: \`\`${this.usage}\`\`\``
       );
 
     if (message.content.includes('encode')) {
@@ -24,12 +26,10 @@ module.exports = {
       }
       const yes = stringToBinary(str, spaceSeparatedOctets);
 
-      if (yes.length > 2000) {
-        message.channel.send(
-          "Your message is too long; the corresponding binary exceeds Discord's character limit"
-        );
+      if (yes.length > 4000) {
+        message.channel.send('Your message is too long; try to shorten it.');
       }
-      message.channel.send(yes);
+      message.channel.send(yes, { split: true });
     }
     if (message.content.includes('decode')) {
       function binaryToString(str) {

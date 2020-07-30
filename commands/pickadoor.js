@@ -3,15 +3,18 @@ const { getRandomInt, getEmoji } = require('../utils/functions');
 module.exports = {
   name: 'pickadoor',
   blacklist: true,
+  category: 'fun',
+  usage: '!pickadoor <door> [number of doors]',
+  description: 'Play a quick game of pick-a-path',
   async execute(message, args) {
     if (!args[0])
       return message.channel.send(
-        "You didn't pick a door (1-4)\nYou can raise the limit by specifying a second value\n``!pickadoor <door> [number of doors]``"
+        `You didn't pick a door (1-4)\nCorrect usage: \`\`${this.usage}\`\``
       );
     var doors = args[1] || 4;
     if (parseInt(doors) > 9999999999999999999999)
       return message.channel.send(
-        `To many doors; you're going to lag out the game${getEmoji(
+        `To many doors; you're going to lag out the game ${getEmoji(
           'What',
           message
         )}`

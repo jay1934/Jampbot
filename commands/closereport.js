@@ -4,7 +4,8 @@ const { getUser } = require('../utils/functions.js');
 
 module.exports = {
   name: 'closereport',
-  modOnly: true,
+  rolePermission: 'Jampolice',
+  helpIgnore: true,
   guildOnly: true,
   blacklist: true,
   async execute(message, args) {
