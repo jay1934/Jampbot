@@ -233,12 +233,13 @@ client.on('message', async (message) => {
 });
 
 client.on('message', async (message) => {
+  const args = message.content.split(' ');
   if (
     Math.random() < 0.003 &&
     !message.author.bot &&
-    whiteChannels.includes(message.channel.id)
+    whiteChannels.includes(message.channel.id) &&
+    args.length > 4
   ) {
-    const args = message.content.split(' ');
     var number = 0;
     const numberOf = getRandomInt(1, args.length / 1.5);
     while (numberOf > number) {
