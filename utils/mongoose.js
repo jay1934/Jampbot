@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 module.exports = {
-  init: () => {
+  init: async () => {
     const dbOptions = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -16,8 +16,8 @@ module.exports = {
     mongoose.set('useFindAndModify', false);
     mongoose.Promise = global.Promise;
 
-    mongoose.connection.on('connected', () => {
-      console.log('Mongoose has successfully connected!');
+    await mongoose.connection.on('connected', async () => {
+      await console.log('Mongoose Module Connected!');
     });
 
     mongoose.connection.on('err', (err) => {
