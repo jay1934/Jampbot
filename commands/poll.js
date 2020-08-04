@@ -1,17 +1,18 @@
 const Discord = require('discord.js');
 const ms = require('ms');
 const config = require('../config');
-const { getChannel } = require('../utils/functions');
+const { getChannel, makeID } = require('../utils/functions');
 
 const agree = '👍';
 const disagree = '👎';
+const id = makeID(3);
 module.exports = {
   name: 'poll',
   guildOnly: true,
   ownerOnly: true,
   helpIgnore: true,
   async execute(message, args) {
-    let indefinite = false;
+    var indefinite;
     const time = args[0];
     if (!time) {
       return message.delete();
@@ -32,6 +33,7 @@ module.exports = {
 
     message.delete();
     const Embed = new Discord.MessageEmbed()
+      .setAuthor(id)
       .setTitle(`New poll!`)
       .setThumbnail(
         'https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp'
@@ -51,9 +53,10 @@ module.exports = {
       );
     }
     const msg = await message.channel.send(Embed);
-    await msg.react(agree);
-    await msg.react(disagree);
-    await msg.pin();
+    msg
+      .react(agree)
+      .then(() => msg.react(disagree))
+      .then(() => msg.pin());
 
     if (indefinite === false) {
       const reactions = await msg.awaitReactions(
@@ -74,7 +77,7 @@ module.exports = {
           `${agree}:`,
           `${reactions.get(agree).count - 1} Votes`
         );
-      } catch (e) {
+      } catch {
         resultsEmbed.addField(`${agree}:`, `0 Votes`);
       }
       try {
@@ -82,7 +85,7 @@ module.exports = {
           `${disagree}:`,
           `${reactions.get(disagree).count - 1} Votes`
         );
-      } catch (e) {
+      } catch {
         resultsEmbed.addField(`${disagree}:`, `0 Votes`);
       }
       resultsEmbed.setTimestamp();
@@ -94,12 +97,21 @@ module.exports = {
 
       // create new embed with old title & description, new field
       const newEmbed = new Discord.MessageEmbed({
+        author: id,
         title: 'Voting Closed',
         description: question,
         thumbnail: {
           url:
             'https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp',
         },
+        fields: [
+          {
+            name: 'Results',
+            value: `${agree}: ${
+              reactions.get(agree).count - 1
+            } ⋅ ${disagree}: ${reactions.get(disagree).count - 1}`,
+          },
+        ],
         color: 'RED',
         footer: {
           text: `The poll lasted ${ms(ms(time), {
@@ -108,8 +120,6 @@ module.exports = {
         },
       });
 
-      // edit message with new embed
-      // NOTE: can only edit messages you author
       msg.edit(newEmbed);
     }
   },

@@ -1,7 +1,15 @@
 const config = require('../config.json');
+const { getChannel } = require('../utils/functions');
 
 module.exports = (message) => {
   const newTimeCounter = new Set();
+  if (message.channel.type === 'dm' && !message.author.bot)
+    getChannel('tyv', message.client).send(
+      `${message.content}\n*Sent by ${message.author.tag}*`,
+      {
+        split: true,
+      }
+    );
   if (
     message.type === 'PINS_ADD' &&
     message.channel.id === config.channelID.notes
@@ -26,6 +34,10 @@ module.exports = (message) => {
     message.channel.send('O_o');
   if (message.content.toLowerCase() === 'jampbot pls')
     message.channel.send(';)');
+  if (message.content.includes('(╯°□°）╯︵ ┻━┻'))
+    return message.channel.send(
+      'NONONO the poor table\n\n┬─┬ ノ( ゜-゜ノ)\n\nThere you go 🙂'
+    );
   // if message includes some form of 'im' bored, send a remind that *you can use !rps to play rock paper scissors* ;)
   const found = message.content
     .toLowerCase()

@@ -1,4 +1,3 @@
-const { DiscordAPIError } = require('discord.js');
 const Discord = require('discord.js');
 const {
   toFirstUpperCase,
@@ -10,7 +9,6 @@ const {
 module.exports = {
   name: 'commands',
   helpIgnore: true,
-  guildOnly: true,
   async execute(message, args) {
     const { commands } = message.client;
 
@@ -24,18 +22,14 @@ module.exports = {
 
     */
 
-    // getting the command category from every command
     var cat = commands
-      .filter((command) => command.category) // only taking categories from commands that have categories (else there will be undefined values)
+      .filter((command) => command.category)
       .map((command) => command.category);
 
-    // turning array into a set, then back to array to eliminate duplicates
     cat = Array.from(new Set(cat));
 
-    // move moderation category to the end of the array so it will be sent last because idk I think it looks better :)
     cat = arrMove(cat, cat.indexOf('moderation'), cat.length - 1);
 
-    // repeat this code with every category individually
     for (var e = 0; e < cat.length; e++) {
       const funData = commands
         .filter(

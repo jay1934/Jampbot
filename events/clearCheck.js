@@ -22,11 +22,11 @@ module.exports = async (message) => {
       let exec = message.content.match(/.+?(?=<a?:)/).toString();
       if (/<@!?(\d+)>/.test(exec)) {
         const noPingExec = exec.match(/<@!?(\d+)>/);
-        exec = getUser(noPingExec[1], message).username;
+        exec = getUser(noPingExec[1], message.client).username;
       }
       const emote = message.content.match(/:((?:\w+Jamper|Jumper)):/);
       if (pointsEarned[1] > 5.9) {
-        getChannel(config.channelID.modlog, message).send(
+        getChannel(config.channelID.modlog, message.client).send(
           `🔴 **${exec} **${getEmoji(
             emote[1],
             message
