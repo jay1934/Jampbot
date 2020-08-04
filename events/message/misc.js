@@ -1,5 +1,5 @@
-const config = require('../config.json');
-const { getChannel } = require('../utils/functions');
+const config = require('../../config.json');
+const { getChannel } = require('../../utils/functions');
 
 module.exports = (message) => {
   const newTimeCounter = new Set();

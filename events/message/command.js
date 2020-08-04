@@ -1,20 +1,20 @@
 const Discord = require('discord.js');
-const { hasRole } = require('../utils/functions');
+const { hasRole } = require('../../utils/functions');
 
 module.exports = async (message) => {
   const cooldowns = new Discord.Collection();
 
-  const config = require('../config.json');
+  const config = require('../../config.json');
   // requires these .json files to control accessability later
 
   // blockedChannels includes channel IDs for any channel we don't want 'fun' category commands in to prevent spam. works as a blacklist
-  const blockedChannels = require('../data/channelBlocks.json');
+  const blockedChannels = require('../../data/channelBlocks.json');
 
   // blockedUsers includes user IDs for any user we don't want to be able to use commands, usually as a punishment for abusing the bot. works as a blacklist
-  const blockedUsers = require('../data/userBlocks.json');
+  const blockedUsers = require('../../data/userBlocks.json');
 
   // whiteChannels includes channel IDs for any channels we want specific commands to work in, usually for mod specific commands. works as a whitelist
-  const whiteChannels = require('../data/whiteChannels.json');
+  const whiteChannels = require('../../data/whiteChannels.json');
 
   // see a message, sends a message. event is triggered when a message is sent while the bot is online
 

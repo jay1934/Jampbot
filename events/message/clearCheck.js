@@ -1,5 +1,5 @@
-const { getUser, getChannel, getEmoji } = require('../utils/functions');
-const config = require('../config.json');
+const { getUser, getChannel, getEmoji } = require('../../utils/functions');
+const config = require('../../config.json');
 
 module.exports = async (message) => {
   // if message is sent by Jampbot Deluxe

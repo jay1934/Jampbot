@@ -1,4 +1,4 @@
-const whiteChannels = require('../data/whiteChannels.json');
+const whiteChannels = require('../../data/whiteChannels.json');
 
 module.exports = async (message) => {
   // this function only works in general channels (in this case, the whitelisted channels), to prevent unneeded spam

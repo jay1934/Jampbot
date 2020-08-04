@@ -1,5 +1,5 @@
-const whiteChannels = require('../data/whiteChannels.json');
-const { getRandomInt } = require('../utils/functions');
+const whiteChannels = require('../../data/whiteChannels.json');
+const { getRandomInt } = require('../../utils/functions');
 
 module.exports = async (message) => {
   const args = message.content.split(' ');
