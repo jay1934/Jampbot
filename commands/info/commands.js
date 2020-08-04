@@ -4,7 +4,7 @@ const {
   hasRole,
   getGuild,
   arrMove,
-} = require('../utils/functions');
+} = require('../../utils/functions');
 
 module.exports = {
   name: 'commands',
@@ -30,12 +30,12 @@ module.exports = {
 
     cat = arrMove(cat, cat.indexOf('moderation'), cat.length - 1);
 
-    for (var e = 0; e < cat.length; e++) {
+    for (var category of cat) {
       const funData = commands
         .filter(
           // eslint-disable-next-line no-loop-func
           (command) =>
-            command.category === cat[e] &&
+            command.category === category &&
             !command.disabled &&
             !command.helpIgnore &&
             command.usage &&
@@ -63,14 +63,14 @@ module.exports = {
         }
       }
       var embed = new Discord.MessageEmbed()
-        .setTitle(`${toFirstUpperCase(cat[e])} Commands`)
+        .setTitle(`${toFirstUpperCase(category)} Commands`)
         .setColor('RANDOM')
         .setFooter(
           'Everything within <> is necessary, anything in [] is optional. Do not include the symbols in the command.'
         );
       if (
-        cat[e] !== 'moderation' ||
-        (cat[e] === 'moderation' &&
+        category !== 'moderation' ||
+        (category === 'moderation' &&
           hasRole(
             getGuild('Team Jamp', message).members.cache.get(message.author.id),
             'Jampolice'

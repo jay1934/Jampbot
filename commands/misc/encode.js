@@ -2,7 +2,7 @@ module.exports = {
   name: 'encode',
   aliases: ['decode'],
   blacklist: true,
-  category: 'fun',
+  category: 'misc',
   usage: '![en/de]code <text>',
   description: 'Encode text to binary, or decode binary to text',
   async execute(message, args) {

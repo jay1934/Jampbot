@@ -3,7 +3,7 @@ const {
   getRandomArrElement,
   getReactions,
   getNextMessage,
-} = require('../utils/functions');
+} = require('../../utils/functions');
 
 module.exports = {
   name: 'rps',

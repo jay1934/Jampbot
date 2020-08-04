@@ -38,13 +38,11 @@
 
 - [x] Create **report.js** (only works in DMs)
 
-- [ ] Add // notes to... everything
-
 - [x] Create **warn.js and warnings.js**
 
 - [ ] Continue questions in **trivia.js**
 
-- [ ] Make **help.js**; send embeds in DM.
+- [x] Make **help.js**; send embeds in DM.
 
 ---
 

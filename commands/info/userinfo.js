@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
-const { hasRole, getUser } = require('../utils/functions.js');
+const { hasRole, getUser } = require('../../utils/functions.js');
 
 module.exports = {
   name: 'userinfo',

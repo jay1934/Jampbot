@@ -2,9 +2,10 @@ const fs = require('fs');
 const { getChannel, toFirstUpperCase } = require('../utils/functions');
 
 module.exports = async (client) => {
-  const commandFiles = fs
-    .readdirSync('./commands') // read all files in the commands folder
-    .filter((file) => file.endsWith('.js')); // only consider .js files
+  const commandFolders = fs.readdirSync('./commands');
+  for (const folder of commandFolders) {
+    var commandFiles = fs.readdirSync(`./commands/${folder}`);
+  }
   getChannel('tyv', client).send('Online');
   client.user.setActivity('Jamp levels', {
     type: 'PLAYING',

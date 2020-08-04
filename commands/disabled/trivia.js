@@ -1,7 +1,7 @@
 // In development
 
 const { MessageEmbed } = require('discord.js');
-const { getRandomArrElement } = require('../utils/functions');
+const { getRandomArrElement } = require('../../utils/functions');
 
 const questions = [
   {

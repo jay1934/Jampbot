@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { getRandomArrElement } = require('../utils/functions');
+const { getRandomArrElement } = require('../../utils/functions');
 
 const randQuags = [
   'https://media.discordapp.net/attachments/720850648740134994/720850757511020554/image0.png?width=721&height=406',

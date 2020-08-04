@@ -1,14 +1,14 @@
 const Discord = require('discord.js');
 const mongoose = require('mongoose');
-const config = require('../config.json');
-const reports = require('../models/reports');
+const config = require('../../config.json');
+const reports = require('../../models/reports');
 const {
   getRandomInt,
   getRandomArrElement,
   makeID,
   getChannel,
   getGuild,
-} = require('../utils/functions');
+} = require('../../utils/functions');
 
 const val = `user-report-${getRandomInt(1000, 9999)}`;
 const reportEmbed = new Discord.MessageEmbed()

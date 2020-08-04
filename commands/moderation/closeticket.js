@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { getUser } = require('../utils/functions');
+const { getUser } = require('../../utils/functions');
 
 module.exports = {
   name: 'closeticket',

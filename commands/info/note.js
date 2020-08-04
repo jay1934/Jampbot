@@ -1,6 +1,6 @@
 const discord = require('discord.js');
-const config = require('../config.json');
-const { getChannel } = require('../utils/functions');
+const config = require('../../config.json');
+const { getChannel } = require('../../utils/functions');
 
 module.exports = {
   name: 'note',

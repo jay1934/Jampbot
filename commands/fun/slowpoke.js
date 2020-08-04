@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { getRandomArrElement } = require('../utils/functions');
+const { getRandomArrElement } = require('../../utils/functions');
 
 const randPokes = [
   'https://cdn.discordapp.com/attachments/699222200787402762/734191842014527508/554-5549243_079slowpoke-ag-anime-slowpoke-pokemon.png',

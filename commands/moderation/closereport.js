@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const reports = require('../models/reports.js');
-const { getUser } = require('../utils/functions.js');
+const reports = require('../../models/reports.js');
+const { getUser } = require('../../utils/functions.js');
 
 module.exports = {
   name: 'closereport',

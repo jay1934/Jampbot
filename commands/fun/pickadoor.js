@@ -1,4 +1,4 @@
-const { getRandomInt, getEmoji } = require('../utils/functions');
+const { getRandomInt, getEmoji } = require('../../utils/functions');
 
 module.exports = {
   name: 'pickadoor',

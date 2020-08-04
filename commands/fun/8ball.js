@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const prefix = require('../config');
-const { getRandomArrElement } = require('../utils/functions');
+const prefix = require('../../config');
+const { getRandomArrElement } = require('../../utils/functions');
 
 module.exports = {
   name: '8ball',

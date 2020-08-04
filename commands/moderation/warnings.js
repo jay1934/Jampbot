@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const { getUser } = require('../utils/functions');
-const config = require('../config.json');
+const { getUser } = require('../../utils/functions');
+const config = require('../../config.json');
 
 module.exports = {
   name: 'warnings',
@@ -9,7 +9,7 @@ module.exports = {
   usage: '!warnings @user',
   description: "Displays user's warning's in Team Jamp",
   async execute(message, args) {
-    const warns = require('../models/warns');
+    const warns = require('../../models/warns');
     const user = message.mentions.members.first();
     if (!user) return message.channel.send(`No user specified!`);
     warns.find(

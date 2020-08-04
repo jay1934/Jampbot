@@ -1,5 +1,5 @@
-const pogjamper = require('../config.json');
-const { getRandomInt } = require('../utils/functions');
+const pogjamper = require('../../config.json');
+const { getRandomInt } = require('../../utils/functions');
 
 let i;
 

@@ -1,4 +1,4 @@
-const { getGuild, getEmoji } = require('../utils/functions');
+const { getGuild, getEmoji } = require('../../utils/functions');
 
 module.exports = {
   name: 'membercount',

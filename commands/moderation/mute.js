@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const ms = require('ms');
-const config = require('../config.json');
-const { getRole, hasRole, getChannel } = require('../utils/functions');
+const config = require('../../config.json');
+const { getRole, hasRole, getChannel } = require('../../utils/functions');
 
 module.exports = {
   name: 'mute',

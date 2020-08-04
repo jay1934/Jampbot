@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const ms = require('ms');
-const config = require('../config');
-const { getChannel, makeID } = require('../utils/functions');
+const config = require('../../config');
+const { getChannel, makeID } = require('../../utils/functions');
 
 const agree = '👍';
 const disagree = '👎';

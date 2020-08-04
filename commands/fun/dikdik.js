@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { getRandomArrElement } = require('../utils/functions');
+const { getRandomArrElement } = require('../../utils/functions');
 
 const dikdik = [
   'https://cdn.discordapp.com/attachments/699612856018272289/735301972420329530/266px-Dik-dik.png',

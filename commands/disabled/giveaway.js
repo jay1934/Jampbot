@@ -2,7 +2,7 @@
 
 const Discord = require('discord.js');
 const ms = require('ms');
-const ownerid = require('../config.json');
+const ownerid = require('../../config.json');
 
 module.exports = {
   name: 'giveaway',

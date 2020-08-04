@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const config = require('../config.json');
+const config = require('../../config.json');
 
 module.exports = {
   name: 'warn',
@@ -10,7 +10,7 @@ module.exports = {
   descriptions: 'Warns a user',
   async execute(message, args) {
     console.log('yes');
-    const warns = require('../models/warns');
+    const warns = require('../../models/warns');
     const user = message.mentions.users.first();
     if (!user)
       return message.channel.send(

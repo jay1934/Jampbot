@@ -1,4 +1,4 @@
-const { getRandomArrElement, getUser } = require('../utils/functions');
+const { getRandomArrElement, getUser } = require('../../utils/functions');
 
 module.exports = {
   name: 'compliment',
