@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
+const Levels = require('discord-xp');
 const { hasRole, getUser } = require('../../utils/functions.js');
 
 module.exports = {
@@ -12,6 +13,7 @@ module.exports = {
   descriptions: "Gets a user's info",
   async execute(message, args) {
     const target = message.mentions.members.first() || message.member;
+    const user = await Levels.fetch(target.id, message.guild.id);
     const createdAt = moment(target.user.createdAt).format(
       'D MMM YYYY, h:mm a'
     );
@@ -23,8 +25,9 @@ module.exports = {
       .addField('**Username**', `**${target.user.username}**`, false)
       .addField('**Account Created**', `**${createdAt}**`, false)
       .addField('**Joined Server**', `**${joinedAt}**`, false)
+      .addField('**EXP Level**', `**${user.level || 0}**`)
       .addField(
-        'Jamper Rank',
+        '**Jamper Rank**',
         `**${message.member.roles.cache
           .filter((x) => /J[au]mper/.test(x.name))
           .map((r) => r.name)
