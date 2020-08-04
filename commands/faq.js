@@ -100,6 +100,10 @@ module.exports = {
     if (msg.includes('!faq menu')) return message.channel.send(menuEmbed);
     if (/faq pin(?:s|ned)?/.test(msg))
       return message.channel.send('<a:pin:717834744523522139>');
+    if (/faq jo/.test(msg))
+      return message.channel.send(
+        "**TWO** slices of the enemy wheels...\nThat's it <:WeirdChamp:699435969824161823>"
+      );
     // if none of these apply, cancel the command and send an error message
     message.channel.send(
       '❌ Please input a valid argument. Proper usage is: ``!faq <number or keyword>``. To find all FAQ commands, use ``!faq menu`` or check the FAQ channel'
