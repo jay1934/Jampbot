@@ -89,18 +89,18 @@ module.exports = {
     const msg = message.content.toLowerCase();
     // if someone send a message !faq 1, then send the faq 1 embed. If someones send a message !faq 2, send the faq 2 embed, etc.
 
-    if (/faq (?:1|register)/.test(msg))
+    if (/faq (?:1|register)/i.test(msg))
       return message.channel.send(registerEmbed);
-    if (/faq (?:2|website)/.test(msg))
+    if (/faq (?:2|website)/i.test(msg))
       return message.channel.send(websiteEmbed);
-    if (/faq (?:3|clears)/.test(msg)) return message.channel.send(clearsEmbed);
-    if (/faq (?:4|levels)/.test(msg)) return message.channel.send(levelsEmbed);
-    if (/faq (?:5|pending)/.test(msg))
+    if (/faq (?:3|clears)/i.test(msg)) return message.channel.send(clearsEmbed);
+    if (/faq (?:4|levels)/i.test(msg)) return message.channel.send(levelsEmbed);
+    if (/faq (?:5|pending)/i.test(msg))
       return message.channel.send(pendingEmbed);
     if (msg.includes('!faq menu')) return message.channel.send(menuEmbed);
-    if (/faq pin(?:s|ned)?/.test(msg))
+    if (/faq pin(?:s|ned)?/i.test(msg))
       return message.channel.send('<a:pin:717834744523522139>');
-    if (/faq jo/.test(msg))
+    if (/faq jo/i.test(msg))
       return message.channel.send(
         "**TWO** slices of the enemy wheels...\nThat's it <:WeirdChamp:699435969824161823>"
       );
