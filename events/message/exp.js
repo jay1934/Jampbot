@@ -1,14 +1,21 @@
 const Levels = require('discord-xp');
 const { getRandomInt, hasRole } = require('../../utils/functions');
 
+const newTimeCounter = new Set();
 module.exports = async (message) => {
   if (
     message.author.bot || // bots
     message.channel.parentID === '701852801646723302' || // jampbot
-    /699612856018272289|699230720392167482/.test(message.channel.id) || // quaglad-spam and mod-stuff
-    message.content.startsWith('!') // commands
+    /699612856018272289|699230720392167482|701597700621074513/.test(
+      message.channel.id
+    ) || // quaglad-spam, jampbot-dev and mod-stuff
+    message.content.startsWith('!') || // commands
+    message.content.length < 10 || // really short messages
+    newTimeCounter.has(message.author.id) // max once per minute
   )
     return;
+
+  newTimeCounter.add(message.author.id);
 
   var randomAmountOfXp = hasRole(message.member, 'True Homie')
     ? getRandomInt(1, 30) * 2
@@ -25,4 +32,7 @@ module.exports = async (message) => {
       `Congratulations <@${message.author.id}>! You have leveled up to **level ${user.level}** <:JuzHype:717925533265952832>`
     );
   }
+  setTimeout(() => {
+    newTimeCounter.delete(message.author.id);
+  }, 60000);
 };
