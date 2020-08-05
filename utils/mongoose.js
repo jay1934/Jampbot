@@ -17,7 +17,7 @@ module.exports = {
     mongoose.Promise = global.Promise;
 
     await mongoose.connection.on('connected', async () => {
-      await console.log('Mongoose Module Connected!');
+      console.log('Mongoose Module Connected');
     });
 
     mongoose.connection.on('err', (err) => {
