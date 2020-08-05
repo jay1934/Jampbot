@@ -6,6 +6,12 @@ require('dotenv').config();
 const client = new Discord.Client({
   partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
   disableMentions: 'everyone',
+  presence: {
+    activity: {
+      name: 'Jamp Levels',
+      type: 'PLAYING',
+    },
+  },
 });
 require('./utils/eventLoader.js')(client);
 
