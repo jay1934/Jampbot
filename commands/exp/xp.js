@@ -1,9 +1,9 @@
 const Levels = require('discord-xp');
 
 module.exports = {
-  name: 'level',
+  name: 'exp',
   category: 'EXP',
-  usage: '!rank [@user]',
+  usage: '!exp [@user]',
   blacklist: true,
   description: 'Displays your XP rank or the XP rank of another user.',
   async execute(message, args) {
