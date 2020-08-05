@@ -10,7 +10,7 @@ module.exports = async (message) => {
       message.channel.id
     ) || // quaglad-spam, jampbot-dev and mod-stuff
     message.content.startsWith('!') || // commands
-    message.content.length < 10 || // really short messages
+    message.content.replace(/<a?:\w+:\d+>/, ' ').length < 10 || // really short messages
     newTimeCounter.has(message.author.id) // max once per minute
   )
     return;
