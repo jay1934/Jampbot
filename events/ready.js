@@ -8,10 +8,6 @@ module.exports = async (client) => {
     var commandFiles = fs.readdirSync(`./commands/${folder}`);
   }
   getChannel('tyv', client).send('Online');
-  client.user.setActivity('Jamp levels', {
-    type: 'PLAYING',
-    url: 'https://makerteams.net/teamjamp',
-  });
   console.log(
     commandFiles
       .map(

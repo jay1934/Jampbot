@@ -97,7 +97,6 @@ module.exports = {
 
       // create new embed with old title & description, new field
       const newEmbed = new Discord.MessageEmbed({
-        author: id,
         title: 'Voting Closed',
         description: question,
         thumbnail: {
