@@ -102,7 +102,8 @@ module.exports = {
       "You're a gift to those around you",
       "You don't deserve it",
     ];
-    const user = message.mentions.users.first() || getUser(args[0], message);
+    const user =
+      message.mentions.users.first() || getUser(args[0], message.client);
     if (!user)
       return message.channel.send('❌ Tag someone to send them a compliment!');
 

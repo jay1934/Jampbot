@@ -80,7 +80,7 @@ module.exports = {
       message.channel.send({
         embed: kickConfirmationEmbed,
       });
-      getChannel(config.channelID.modlog, message).send({
+      getChannel(config.channelID.modlog, message.client).send({
         embed: kickConfirmationEmbed,
       });
     }

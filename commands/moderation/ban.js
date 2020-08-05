@@ -73,7 +73,7 @@ module.exports = {
     message.channel.send({
       embed: banConfirmationEmbed,
     });
-    getChannel(config.channelID.modlog, message).send({
+    getChannel(config.channelID.modlog, message.client).send({
       embed: banConfirmationEmbed,
     });
   },

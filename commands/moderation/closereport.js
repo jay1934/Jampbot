@@ -42,11 +42,11 @@ module.exports = {
         );
       if (data.Closed)
         return message.channel.send('This report is already closed');
-      data.unshift({
+      Object.values(data).unshift({
         Closed: true,
       });
       data.save();
-      getUser(data.CreatorID, message).send(closed);
+      getUser(data.CreatorID, message.client).send(closed);
       message.channel.send(confirmation);
     });
   },

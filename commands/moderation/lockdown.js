@@ -14,7 +14,7 @@ module.exports = {
   async execute(message, args) {
     const { channel } = message;
     const reason = args.slice(0).join(' ') || 'No Reason Specified';
-    const Member = getRole('Member', message);
+    const Member = getRole('Member', message.client);
 
     if (message.content.includes('!unlock')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
@@ -31,7 +31,9 @@ module.exports = {
       message.channel.send({
         embed: deLDembed,
       });
-      getChannel(config.channelID.modlog, message).send({ embed: deLDembed });
+      getChannel(config.channelID.modlog, message.client).send({
+        embed: deLDembed,
+      });
     } else if (message.content.includes('!lockdown')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
       const LDembed = new Discord.MessageEmbed()
@@ -47,7 +49,9 @@ module.exports = {
       message.channel.send({
         embed: LDembed,
       });
-      getChannel(config.channelID.modlog, message).send({ embed: LDembed });
+      getChannel(config.channelID.modlog, message.client).send({
+        embed: LDembed,
+      });
     } else if (message.content.includes('!templd')) {
       const usage = '\nCorrect usage: ``!templd duration[s/m/h] [reason]``';
       const reason = args.slice(1).join(' ') || 'No Reason Supplied';
@@ -73,7 +77,9 @@ module.exports = {
       message.channel.send({
         embed: tempLDembed,
       });
-      getChannel(config.channelID.modlog, message).send({ embed: tempLDembed });
+      getChannel(config.channelID.modlog, message.client).send({
+        embed: tempLDembed,
+      });
       setTimeout(function () {
         channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
         const deLDembed = new Discord.MessageEmbed()
@@ -90,7 +96,9 @@ module.exports = {
         message.channel.send({
           embed: deLDembed,
         });
-        getChannel(config.channelID.modlog, message).send({ embed: deLDembed });
+        getChannel(config.channelID.modlog, message.client).send({
+          embed: deLDembed,
+        });
       }, ms(time));
     } else {
       message.channel.send('❌ Something went wrong. Please try again later.');

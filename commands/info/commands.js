@@ -72,7 +72,9 @@ module.exports = {
         category !== 'moderation' ||
         (category === 'moderation' &&
           hasRole(
-            getGuild('Team Jamp', message).members.cache.get(message.author.id),
+            getGuild('Team Jamp', message.client).members.cache.get(
+              message.author.id
+            ),
             'Jampolice'
           ))
       ) {

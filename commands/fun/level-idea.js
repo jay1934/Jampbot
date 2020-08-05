@@ -165,7 +165,7 @@ module.exports = {
       };
 
       function randomElement(arr) {
-        return arr[getRandomInt(0, arr.length - 1, true)];
+        return arr[getRandomInt(0, arr.length - 2)];
       }
 
       function filterElement(styles) {
@@ -197,7 +197,7 @@ module.exports = {
       const num =
         !(chosen.style || chosen.night || chosen.clearCondition) ||
         Math.random() < 0.9
-          ? getRandomInt(1, 4, true)
+          ? getRandomInt(1, 3)
           : 0;
       const others = [];
       for (i = 0; i < num; i++) {

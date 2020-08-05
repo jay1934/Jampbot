@@ -91,7 +91,7 @@ module.exports = {
       resultsEmbed.setTimestamp();
       msg.unpin();
       message.channel.send({ embed: resultsEmbed });
-      getChannel(config.channelID.modlog, message).send({
+      getChannel(config.channelID.modlog, message.client).send({
         embed: resultsEmbed,
       });
 

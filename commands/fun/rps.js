@@ -154,7 +154,7 @@ module.exports = {
                   `Please be patient while **${message.author.username}** makes their move.`
                 );
                 const results = await getNextMessage(
-                  msg,
+                  msg.channel,
                   message.author,
                   '30s'
                 );
@@ -194,7 +194,11 @@ module.exports = {
             await player2
               .send(embed)
               .then(async (msg) => {
-                const results = await getNextMessage(msg, player2, '30s');
+                const results = await getNextMessage(
+                  msg.channel,
+                  player2,
+                  '30s'
+                );
 
                 if (!replies.includes(results.toLowerCase())) {
                   player2.send(

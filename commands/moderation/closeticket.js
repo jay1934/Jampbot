@@ -28,7 +28,7 @@ module.exports = {
       closed.addField('Closing Message', reason, true);
     }
 
-    await getUser(creator, message).send(closed);
+    await getUser(creator, message.client).send(closed);
     await message.channel.delete();
   },
 };

@@ -29,7 +29,7 @@ module.exports = {
               return d.Warns.map(
                 (w, i) =>
                   `**Warn ${i + 1}.**\n\t**Moderator:** ${
-                    getUser(w.Moderator, message).username
+                    getUser(w.Moderator, message.client).username
                   }\n\t**Reason:** ${w.Reason}`
               ).join('\n\n');
             })

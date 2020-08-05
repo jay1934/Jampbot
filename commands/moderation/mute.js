@@ -18,8 +18,8 @@ module.exports = {
     const tempusage =
       '\nCorrect usage: ``!tempmute @user duration[s/m/h] [reason]';
     const user = message.mentions.users.first();
-    const mainRole = getRole('Member', message);
-    const muteRole = getRole('Muted', message);
+    const mainRole = getRole('Member', message.client);
+    const muteRole = getRole('Muted', message.client);
     if (message.content.includes('!mute')) {
       const reason = args.slice(1).join(' ') || 'No Reason Supplied';
       if (!muteRole)
@@ -75,7 +75,7 @@ module.exports = {
       message.channel.send({
         embed: muteConfirmationEmbed,
       });
-      getChannel(config.channelID.modlog, message).send({
+      getChannel(config.channelID.modlog, message.client).send({
         embed: muteConfirmationEmbed,
       });
 
@@ -143,7 +143,7 @@ module.exports = {
         message.channel.send({
           embed: unmuteConfirmationEmbed,
         });
-        getChannel(config.channelID.modlog, message).send({
+        getChannel(config.channelID.modlog, message.client).send({
           embed: unmuteConfirmationEmbed,
         });
       }
@@ -228,7 +228,7 @@ module.exports = {
         message.channel.send({
           embed: muteConfirmationEmbed,
         });
-        getChannel(config.channelID.modlog, message).send({
+        getChannel(config.channelID.modlog, message.client).send({
           embed: muteConfirmationEmbed,
         });
       }
@@ -281,7 +281,7 @@ module.exports = {
         message.guild.member(user).roles.remove(muteRole);
 
         user.send({ embed: unmuteDM });
-        getChannel(config.channelID.modlog, message).send({
+        getChannel(config.channelID.modlog, message.client).send({
           embed: unmuteConfirmationEmbed,
         });
       }, ms(time));

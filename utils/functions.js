@@ -13,155 +13,137 @@ module.exports = {
     }
     return result;
 
-    /*
-      Example Input: 
-      console.log(makeID(5))
-
-      Example Output: 
-      DWw24
-    */
+    /**
+     * @param {string} [length] - length of substring
+     * @returns {string}
+     *
+     * @example
+     * makeID(5) => DWw24
+     */
   },
 
   // convert first letter of specified string to uppercase (if lowercase)
   toFirstUpperCase(string) {
     return string.substring(0, 1).toUpperCase() + string.substring(1);
 
-    /*
-      Example Input: 
-      console.log(toFirstUpperCase('hello world'))
-
-      Example Output: 
-      Hello world
-    */
+    /**
+     * @param {string} [string] - string to edit
+     * @returns {string}
+     *
+     * @example
+     * toFirstUpperCase('hello world') => Hello world
+     */
   },
 
   // check if specified user (object) has specified role (access via role name or ID)
   hasRole(user, roleNameOrID) {
-    if (/\D/.test(roleNameOrID)) {
-      if (user.roles.cache.some((role) => role.name === roleNameOrID)) {
-        return true;
-      }
-    }
-    if (/^\d+$/.test(roleNameOrID)) {
-      if (user.roles.cache.has(roleNameOrID)) {
-        return true;
-      }
-    }
+    return (
+      user.roles.cache.some((role) => role.name === roleNameOrID) ||
+      user.roles.cache.has(roleNameOrID)
+    );
 
-    /*
-      Example Input: 
-      console.log(hasRole(message.member, 'Member'))
-
-      Example Output: 
-      false
-    */
+    /**
+     * @param {object} [user] - user to check
+     * @param {string} [roleNameOrID] - either the name or ID of the role
+     * @returns {boolean}
+     *
+     * @example
+     * hasRole(message.member, 'Member') => false
+     */
   },
 
   // get role (object) via role name or ID
-  getRole(roleNameOrID, messageOrClient) {
-    var message = messageOrClient.client || messageOrClient;
-    if (/\D/.test(roleNameOrID)) {
-      return message.guilds.cache
-        .get(messageOrClient.guild.id || '642447344050372608')
-        .roles.cache.find((role) => role.name === roleNameOrID);
-    }
-    if (/^\d+$/.test(roleNameOrID)) {
-      return message.guilds.cache
-        .get(messageOrClient.guild.id || '642447344050372608')
-        .roles.cache.get(roleNameOrID);
-    }
+  getRole(roleNameOrID, client) {
+    return (
+      client.guilds.cache
+        .get(client.guild.id || '642447344050372608')
+        .roles.cache.find((role) => role.name === roleNameOrID) ||
+      client.guilds.cache
+        .get(client.guild.id || '642447344050372608')
+        .roles.cache.get(roleNameOrID)
+    );
 
-    /*
-      Example Input: 
-      console.log(getRole('Member', message).name)
-
-      Example Output: 
-      Member
-    */
+    /**
+     * @param {string} [rolNameOrID] - either the name or ID of the role
+     * @param {object} [client] - discord.js client
+     * @returns {object}
+     *
+     * @example
+     * getRole('Member', message.client).name => Member
+     */
   },
 
   // get user (object) via user name or ID
-  getUser(userNameOrID, messageOrClient) {
-    var message = messageOrClient.client || messageOrClient;
-    if (/\D/.test(userNameOrID)) {
-      return message.users.cache.find((user) => user.username === userNameOrID);
-    }
-    if (/^\d+$/.test(userNameOrID)) {
-      return message.users.cache.get(userNameOrID);
-    }
+  getUser(userNameOrID, client) {
+    return (
+      client.users.cache.find((user) => user.username === userNameOrID) ||
+      client.users.cache.get(userNameOrID)
+    );
 
-    /*
-      Example Input: 
-      console.log(getUser('Lioness100', message).id + 'is the ID of a super awesome person >:3')
-
-      Example Output: 
-      381490382183333899 is the ID of a super awesome person >:3
-    */
+    /**
+     * @param {string} [userNameOrID] - either name or ID of user
+     * @param {object} [client] - discord.js client
+     * @returns {object}
+     *
+     * @example
+     * getUser('Lioness100', message.client).id => 381490382183333899
+     */
   },
 
   // get channel (object) via channel name or ID
-  getChannel(channelNameOrID, messageOrClient) {
-    var message = messageOrClient.client || messageOrClient;
-    if (/\D/.test(channelNameOrID)) {
-      return message.channels.cache.find(
+  getChannel(channelNameOrID, client) {
+    return (
+      client.channels.cache.find(
         (channel) => channel.name === channelNameOrID
-      );
-    }
-    if (/^\d+$/.test(channelNameOrID)) {
-      return message.channels.cache.get(channelNameOrID);
-    }
+      ) || client.channels.cache.get(channelNameOrID)
+    );
 
-    /*
-      Example Input: 
-      console.log(getChannel('699222200787402762', message).name)
-
-      Example Output: 
-      off-topic
-    */
+    /**
+     * @param {string} [channelNameOrID] - either name or ID of channel
+     * @param {object} [client] - discord.js client
+     * @returns {object}
+     *
+     * @example
+     * getChannel('699222200787402762', message.client).name => off-topic
+     */
   },
 
   // get emoji (object) via channel name or ID
-  getEmoji(emojiNameOrID, messageOrClient) {
-    var message = messageOrClient.client || messageOrClient;
-    if (/\D/.test(emojiNameOrID)) {
-      try {
-        return message.emojis.cache.find(
-          (emoji) => emoji.name === emojiNameOrID
-        );
-      } catch (err) {
-        console.log('There may be more than one emojis by that name', err);
-      }
-    }
-    if (/^\d+$/.test(emojiNameOrID)) {
-      return message.emojis.cache.get(emojiNameOrID);
+  getEmoji(emojiNameOrID, client) {
+    try {
+      return (
+        client.emojis.cache.find((emoji) => emoji.name === emojiNameOrID) ||
+        client.emojis.cache.get(emojiNameOrID)
+      );
+    } catch (err) {
+      console.log('There may be more than one emojis by that name', err);
     }
 
-    /*
-      Example Input: 
-      console.log(getEmoji('x', message))
-
-      Example Output: 
-      ❌
-    */
+    /**
+     * @param {string} [emojiNameOrID] - either name or ID of emoji
+     * @param {object} [client] - discord.js client
+     * @returns {object}
+     *
+     * @example
+     * getEmoji('x', message) => ❌
+     */
   },
 
   // get guild (object) via channel name or ID
-  getGuild(guildNameOrID, messageOrClient) {
-    var message = messageOrClient.client || messageOrClient;
-    if (/\D/.test(guildNameOrID)) {
-      return message.guilds.cache.find((guild) => guild.name === guildNameOrID);
-    }
-    if (/^\d+$/.test(guildNameOrID)) {
-      return message.guilds.cache.get(guildNameOrID);
-    }
+  getGuild(guildNameOrID, client) {
+    return (
+      client.guilds.cache.find((guild) => guild.name === guildNameOrID) ||
+      client.guilds.cache.get(guildNameOrID)
+    );
 
-    /*
-      Example Input: 
-      console.log(getGuild('Team Jamp', message).name)
-
-      Example Output: 
-      Team Jamp
-    */
+    /**
+     * @param {string} [guildNameOrID] - either name or ID of guild
+     * @param {object} [client] - discord.js client
+     * @returns {object}
+     *
+     * @example
+     * getGuild('Team Jamp', message).name => Team Jamp
+     */
   },
 
   async getReactions(message, author, time, validReactions) {
@@ -179,42 +161,37 @@ module.exports = {
         console.log(err);
       });
 
-    /*
-      Example Input: 
-      await message.channel.send('hello').then(async msg => {
-            const emoji = await getReactions(msg, message.author, 30s, ["✅", "❌"]);
-
-            if (emoji === "✅") console.log(true)
-      });
-
-       //* react '✅'
-
-      Example Output: 
-      true
-    */
+    /**
+     * @param {object} [message] - message to react on
+     * @param {object} [author] - user to accept reactions from (usually message.author)
+     * @param {string} [time] - time given to react
+     * @param {string[]} [validReactions] - emojis to accept
+     * @returns {object}
+     *
+     * @example
+     * await message.channel.send('hello').then(async msg => {
+     *       const emoji = await getReactions(msg, message.author, 30s, ["✅", "❌"]);
+     */
   },
 
-  async getNextMessage(message, author, time) {
-    return message.channel
+  async getNextMessage(channel, author, time) {
+    return channel
       .awaitMessages((m) => m.author.id === author.id, {
         max: 1,
         time: ms(time),
       })
       .then((collected) => collected.first() && collected.first().content);
 
-    /*
-      Example Input: 
-      await message.channel.send('hello').then(async () => {
-            const results = await promptMessage(message, message.author, 30s);
-
-            message.channel.send(results)
-      });
-
-       //* send 'hello'
-
-      Example Output: 
-      hello
-    */
+    /**
+     * @param {object} [channel] - channel to get message from
+     * @param {object} [author] - user to accept message from
+     * @param {string} [time] - time given to send a message
+     * @returns {object}
+     *
+     * @example
+     * await message.channel.send('hello').then(async () => {
+     *       const results = await promptMessage(message, message.author, 30s);
+     */
   },
 
   // move array element from one index to another
@@ -223,39 +200,44 @@ module.exports = {
     array.splice(fromIndex, 1);
     array.splice(toIndex, 0, element);
     return array;
+
+    /**
+     * @param {array} [array] - array to use
+     * @param {number} [fromIndex] - original index of element
+     * @param {number} [toIndex] - new index of element
+     * @returns {array}
+     *
+     * @example
+     * arrMove(['first', 'second', 'third'], 1, 2) => ['first', 'third', 'second']
+     */
   },
 
   // get random integer in specified min-max range (optionally using an exclusive max value)
-  getRandomInt(min, max, exclusive) {
-    if (!exclusive) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+  getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 
-    /*
-      Example Input: 
-      console.log(getRandomInt(15, 20))
-
-      Example Output: 
-      17
-    */
+    /**
+     * @param {number} [min] - minimum number in range
+     * @param {number} [max] - maximum number in range (inclusive)
+     * @returns {number}
+     *
+     * @example
+     * console.log(getRandomInt(15, 20)) => 17
+     */
   },
 
   // get random element from specified array
   getRandomArrElement(array) {
     return array[Math.floor(Math.random() * array.length)];
 
-    /*
-      Example Input:
-      var colors = ['blue', 'red', 'orange', 'green']
-      console.log(getRandomArrElement(colors))
-
-      Example Output: 
-      red
-    */
+    /**
+     * @param {array} [array] - array to get element from
+     * @returns {*}
+     *
+     * @example
+     * getRandomArrElement(['blue', 'red', 'orange', 'green'])) => red
+     */
   },
 };

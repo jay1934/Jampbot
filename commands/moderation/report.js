@@ -82,7 +82,7 @@ module.exports = {
                   `Please use this channel to discuss with ${message.author.username} about their report.`
                 )
                 .addField('Report Overview', quickReportMessage);
-              const jamp = getGuild('Team Jamp', message);
+              const jamp = getGuild('Team Jamp', message.client);
               await jamp.channels
                 .create(`${val}`, {
                   type: 'text',
@@ -108,7 +108,7 @@ module.exports = {
                   channel.setTopic(message.author.username`'s Report`);
                   channel.send(newTicket);
                 });
-              const newChannel = getChannel(val, message);
+              const newChannel = getChannel(val, message.client);
               const ticketContinuation = new Discord.MessageEmbed()
                 .setTitle('New Report')
                 .setColor('RED')
@@ -176,7 +176,7 @@ module.exports = {
                       )
                       .setFooter('We really appreciate your help <3');
                     message.channel.send(yesEmbed);
-                    getChannel('reports', message).send(report);
+                    getChannel('reports', message.client).send(report);
                   } else {
                     report.setTitle(
                       `New Report Sent by ${message.author.username}:`
@@ -190,7 +190,7 @@ module.exports = {
                       )
                       .setFooter('We really appreciate your help <3');
                     message.channel.send(yesEmbed);
-                    getChannel('reports', message)
+                    getChannel('reports', message.client)
                       .send(report)
                       .then((msg) => msg.pin);
                   }

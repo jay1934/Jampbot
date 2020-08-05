@@ -14,7 +14,7 @@ module.exports = async (message) => {
       const creator = message.content.match(/ by (.+?)(?=\s<a?:)+/);
       if (/<@!?(\d+)>/.test(creator[1])) {
         const noPingExec = creator[1].match(/<@!?(\d+)>/);
-        creator[1] = getUser(noPingExec[1], message).username;
+        creator[1] = getUser(noPingExec[1], message.client).username;
       }
       const pointsEarned = message.content.match(
         /((?:[0-6]\d|[0-9])(?:\.\d)?) points?/
@@ -29,7 +29,7 @@ module.exports = async (message) => {
         getChannel(config.channelID.modlog, message.client).send(
           `🔴 **${exec} **${getEmoji(
             emote[1],
-            message
+            message.client
           )} submitted a clear for **${level[1]}** by **${
             creator[1]
           }** and has earned **${pointsEarned[0]}** 🔴`
@@ -38,7 +38,7 @@ module.exports = async (message) => {
         console.log(
           `🔴 **${exec} **${getEmoji(
             emote[1],
-            message
+            message.client
           )} submitted a clear for **${level[1]}** by **${
             creator[1]
           }** and has earned **${pointsEarned[0]}** 🔴`

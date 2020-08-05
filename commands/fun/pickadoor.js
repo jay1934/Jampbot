@@ -16,12 +16,15 @@ module.exports = {
       return message.channel.send(
         `To many doors; you're going to lag out the game ${getEmoji(
           'What',
-          message
+          message.client
         )}`
       );
     if (args[0] > parseInt(doors))
       return message.channel.send(
-        `There are only ${doors} doors${getEmoji('WeirdChamp', message)}`
+        `There are only ${doors} doors ${getEmoji(
+          'WeirdChamp',
+          message.client
+        )}`
       );
     var result = getRandomInt(1, parseInt(doors));
     console.log(result);

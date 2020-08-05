@@ -26,7 +26,9 @@ module.exports = {
       .setColor('GREEN')
       .setDescription(Note)
       .setFooter('React to mark as resolved');
-    const msg = await getChannel(config.channelID.notes, message).send(embed);
+    const msg = await getChannel(config.channelID.notes, message.client).send(
+      embed
+    );
     await msg.react(good);
     await msg.pin();
     message.channel.send('Note added.');
