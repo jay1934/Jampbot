@@ -7,7 +7,7 @@ module.exports = {
   blacklist: true,
   description: 'Shows guildXPleaderboard.',
   async execute(message, args) {
-    const rawLeaderboard = await Levels.fetchLeaderboard(message.guild.id, 10); // We grab top 10 users with most xp in the current server.
+    const rawLeaderboard = await Levels.fetchLeaderboard(message.guild.id, 5);
     const leaderboard = Levels.computeLeaderboard(
       message.client,
       rawLeaderboard
