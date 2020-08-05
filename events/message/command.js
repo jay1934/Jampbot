@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const Levels = require('discord-xp');
 const { hasRole } = require('../../utils/functions');
 
 module.exports = async (message) => {
@@ -74,6 +75,14 @@ module.exports = async (message) => {
   if (command.cooldown) {
     if (!cooldowns.has(command.name)) {
       cooldowns.set(command.name, new Discord.Collection());
+    }
+
+    if (command.setLevel) {
+      const user = await Levels.fetch(message.author.id, message.guild.id);
+      if (!user || user.level < command.setLevel)
+        return message.channel.send(
+          `You need to be at least **level ${command.setLevel}** to use that command <:SadPog:710543485849174067>`
+        );
     }
 
     // gets current date so it can reference how long ago the cooldown was started
