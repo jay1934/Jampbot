@@ -3,15 +3,16 @@ const { getRandomInt, hasRole } = require('../../utils/functions');
 
 const newTimeCounter = new Set();
 module.exports = async (message) => {
+  // do not give exp if:
   if (
-    message.author.bot || // bots
-    message.channel.parentID === '701852801646723302' || // jampbot
+    message.author.bot || // bots can't gain exp
+    message.channel.parentID === '701852801646723302' || // if channel category is jampbot (bot-spam, level-submission, and level-updates)
     /699612856018272289|699230720392167482|701597700621074513/.test(
       message.channel.id
-    ) || // quaglad-spam, jampbot-dev and mod-stuff
-    message.content.startsWith('!') || // commands
-    message.content.replace(/<a?:\w+:\d+>/, ' ').length < 10 || // really short messages
-    newTimeCounter.has(message.author.id) // max once per minute
+    ) || // if channel is quaglad-spam, jampbot-dev and mod-stuff
+    message.content.startsWith('!') || // if message is command commands
+    message.content.replace(/<a?:\w+:\d+>/, ' ').length < 10 || // if message is under 10 characters
+    newTimeCounter.has(message.author.id) // if user already gained exp that minute
   )
     return;
 

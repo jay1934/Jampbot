@@ -180,7 +180,10 @@ module.exports = {
         max: 1,
         time: ms(time),
       })
-      .then((collected) => collected.first() && collected.first().content);
+      .then(
+        (collected) =>
+          collected.first() && collected.first().content.toLowerCase()
+      );
 
     /**
      * @param {object} [channel] - channel to get message from

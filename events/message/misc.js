@@ -46,7 +46,7 @@ module.exports = (message) => {
     // eslint-disable-next-line no-redeclare
     newTimeCounter.add('cooldown');
     message.channel.send(
-      `Are you bored? Try using \`\`!rps\`\` or \`\`quag\`\` in <#${config.channelID.spam}> <:BuzzyGoodMan:727242865322754139>`
+      `Are you bored? Try using \`\`!rps\`\` or \`\`!quag\`\` in <#${config.channelID.spam}> <:BuzzyGoodMan:727242865322754139>`
     );
     setTimeout(function () {
       newTimeCounter.delete('cooldown');

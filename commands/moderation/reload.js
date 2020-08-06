@@ -1,3 +1,6 @@
+const fs = require('fs');
+const { compareDependencies } = require('mathjs');
+
 module.exports = {
   name: 'reload',
   aliases: ['r'],
@@ -19,9 +22,17 @@ module.exports = {
       return message.channel.send(
         `❌ There is no command with the name or alias \`\`${commandName}\`\`.\nCorrect usage: \`\`!reload <command name or alias>\`\``
       );
-    delete require.cache[require.resolve(`./${command.name}.js`)];
+    var folder = fs.readdirSync('./commands').find((i) => {
+      try {
+        require(`../${i}/${command.name}`);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+    delete require.cache[require.resolve(`../${folder}/${command.name}.js`)];
     try {
-      const newCommand = require(`./${command.name}.js`);
+      const newCommand = require(`../${folder}/${command.name}.js`);
       message.client.commands.set(newCommand.name, newCommand);
     } catch (error) {
       console.log(error);

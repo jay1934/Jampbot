@@ -3,6 +3,7 @@ const ms = require('ms');
 const Levels = require('discord-xp');
 const { progressbar } = require('discord.js-utility');
 const Canvacord = require('canvacord');
+const fetch = require('node-fetch');
 const config = require('../../config.json');
 const {
   getChannel,
@@ -21,7 +22,7 @@ module.exports = {
   ownerOnly: true,
   helpIgnore: true,
   async execute(message, args) {
-    const target = message.mentions.users.first() || message.author;
+    /* const target = message.mentions.users.first() || message.author;
     console.log('cp1');
     const user = await Levels.fetch(target.id, message.guild.id);
 
@@ -51,6 +52,6 @@ module.exports = {
     console.log('cp4');
     const attachment = new Discord.MessageAttachment(image, 'rank.png');
     console.log('cp5');
-    message.channel.send(attachment);
+    message.channel.send(attachment); */
   },
 };

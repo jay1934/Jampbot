@@ -100,7 +100,6 @@ module.exports = {
       'The way you treasure your loved ones is incredible',
       "You're really something special",
       "You're a gift to those around you",
-      "You don't deserve it",
     ];
     const user =
       message.mentions.users.first() || getUser(args[0], message.client);

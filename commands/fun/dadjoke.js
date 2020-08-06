@@ -6,8 +6,6 @@ module.exports = {
   description: 'Sends a random dad joke (be prepared)',
   async execute(message, args) {
     const giveMeAJoke = require('give-me-a-joke');
-    giveMeAJoke.getRandomDadJoke(function (joke) {
-      message.channel.send(joke);
-    });
+    giveMeAJoke.getRandomDadJoke((joke) => message.channel.send(joke));
   },
 };

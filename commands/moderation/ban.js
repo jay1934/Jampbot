@@ -10,21 +10,19 @@ module.exports = {
   usage: "!ban @user <days worth of user's messages to delete (0-7)> [reason]",
   description: 'Bans a user',
   async execute(message, args) {
+    const user =
+      message.mentions.users.first() ||
+      message.guild.members.cache.get(args[0]);
+    if (message.mentions.users.size < 1)
+      return message.channel.send(
+        `❌ You must mention someone to ban them.\nCorrect usage: \`\`${this.usage}\`\`\``
+      );
     const day = args[1];
     if (day < 0 || day > 7)
       return message.channel.send(
         `Specify how many day's worth of user's messages to delete.\nCorrect usage: \`\`${this.usage}\`\`\``
       );
     const reason = args.slice(2).join(' ') || 'No Reason Supplied';
-    const user =
-      message.mentions.users.first() ||
-      message.guild.members.cache.get(args[0]);
-    if (message.mentions.users.size < 1)
-      return message.channel
-        .send(
-          `❌ You must mention someone to ban them.\nCorrect usage: \`\`${this.usage}\`\`\``
-        )
-        .catch(console.error);
     if (message.mentions.users.first().id === message.author.id)
       return message.channel.send(
         '❌ Self-harm is bad smh <:WeirdChamp:699435969824161823>'

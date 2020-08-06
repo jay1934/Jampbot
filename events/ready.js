@@ -4,9 +4,8 @@ const { getChannel, toFirstUpperCase } = require('../utils/functions');
 
 module.exports = async (client) => {
   const commandFolders = fs.readdirSync('./commands');
-  for (const folder of commandFolders) {
+  for (const folder of commandFolders)
     var commandFiles = fs.readdirSync(`./commands/${folder}`);
-  }
   getChannel('tyv', client).send('Online');
   console.log(
     commandFiles
