@@ -9,7 +9,7 @@ module.exports = {
   async execute(message, args) {
     const user = message.mentions.users.first();
     if (!user) return message.channel.send("You didn't mention a user!");
-    const xp = parseFloat(args[1]);
+    const xp = parseInt(args[1]);
     if (!xp)
       return message.channel.send(
         "You didn't specify an amount of EXP to subtract!"

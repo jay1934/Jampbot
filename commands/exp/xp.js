@@ -22,7 +22,7 @@ module.exports = {
       rawLeaderboard
     );
 
-    const bar = progressbar(user.xp, Levels.xpFor(user.level + 1), 15, [
+    const bar = progressbar(user.xp, Levels.xpFor(user.level + 1), 12, [
       '<:green:740590536343158844>',
       '<:red:740591576505385050>',
     ]);
