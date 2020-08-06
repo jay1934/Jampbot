@@ -12,6 +12,8 @@
 
 - Blacklists for **users _and_ channels** allowing complete control over bot accessability
 
+- An **EXP and leveling system**
+
 - Much much more!
 
 ---
@@ -21,6 +23,8 @@
 ## Commands:
 
 - **Moderation commands** such as `[temp/un]mute, kick, ban, warn, purge, and lockdown`
+
+- **EXP commands** such as `exp, leaderboard, and levels`
 
 - **Fun commands** such as `8ball, rps (rock, paper, scissors), trivia, and dadjoke`
 
