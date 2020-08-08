@@ -17,7 +17,6 @@ module.exports = async (message) => {
     return;
 
   newTimeCounter.add(message.author.id);
-
   var randomAmountOfXp = hasRole(message.member, 'True Homie')
     ? getRandomInt(1, 30) * 2
     : getRandomInt(1, 30); // Min 1, Max 30
@@ -33,6 +32,7 @@ module.exports = async (message) => {
       `Congratulations <@${message.author.id}>! You have leveled up to **level ${user.level}** <:JuzHype:717925533265952832>`
     );
   }
+
   setTimeout(() => {
     newTimeCounter.delete(message.author.id);
   }, 60000);

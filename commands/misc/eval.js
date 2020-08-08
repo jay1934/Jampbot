@@ -19,7 +19,7 @@ module.exports = {
 
       message.channel.send(clean(evaled), { code: 'xl' });
     } catch (err) {
-      message.channel.send('Something went wrong :/');
+      message.channel.send(`Err: ${err}`);
       console.log(err);
     }
   },

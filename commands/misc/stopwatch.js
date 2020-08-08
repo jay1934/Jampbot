@@ -1,5 +1,5 @@
 const time = require('../../models/reports');
-const { makeID } = require('../../utils/functions');
+const { makeID, getDifferenceInDHMS } = require('../../utils/functions');
 
 module.exports = {
   name: 'stopwatch',
@@ -8,25 +8,6 @@ module.exports = {
   usage: '!stopwatch [key] [stop]',
   description: 'Starts a stopwatch',
   async execute(message, args) {
-    function getDifferenceInDays(date1, date2) {
-      const diffInMs = Math.abs(date2 - date1);
-      return Math.round(diffInMs / (1000 * 60 * 60 * 24));
-    }
-
-    function getDifferenceInHours(date1, date2) {
-      const diffInMs = Math.abs(date2 - date1);
-      return Math.round(diffInMs / (1000 * 60 * 60));
-    }
-
-    function getDifferenceInMinutes(date1, date2) {
-      const diffInMs = Math.abs(date2 - date1);
-      return Math.round(diffInMs / (1000 * 60));
-    }
-
-    function getDifferenceInSeconds(date1, date2) {
-      const diffInMs = Math.abs(date2 - date1);
-      return Math.round(diffInMs / 1000);
-    }
     if (!args[0]) {
       const key = makeID(3);
       const current = Date();
@@ -49,32 +30,28 @@ module.exports = {
             "I can't find anything with that key! If you haven't created a stopwatch, use ``!sw``. Otherwise, double-check the key you're using."
           );
         message.channel.send(
-          `This stopwatch has been counting for ${
-            getDifferenceInDays(data.Date, newDate) === 0
-              ? ''
-              : `${getDifferenceInDays(data.Date, newDate)} days, `
-          }${
-            getDifferenceInHours(data.Date, newDate) === 0 &&
-            getDifferenceInDays(data.Date, newDate) === 0
-              ? ''
-              : `${getDifferenceInHours(data.Date, newDate)} hours, `
-          }${
-            getDifferenceInMinutes(data.Date, newDate) === 0 &&
-            getDifferenceInHours(data.Date, newDate) === 0 &&
-            getDifferenceInDays(data.Date, newDate) === 0
-              ? ''
-              : `${getDifferenceInMinutes(data.Date, newDate)} minutes${
-                  getDifferenceInHours(data.Date, newDate) === 0 &&
-                  getDifferenceInDays(data.Date, newDate) === 0
-                    ? ' and '
-                    : ', and '
-                }`
-          }${getDifferenceInSeconds(data.Date, newDate)} seconds.`
+          `This stopwatch has been counting for ${getDifferenceInDHMS(
+            data.Date,
+            newDate,
+            'day'
+          )} days, ${getDifferenceInDHMS(
+            data.Date,
+            newDate,
+            'hour'
+          )} hours, ${getDifferenceInDHMS(
+            data.Date,
+            newDate,
+            'minute'
+          )} minutes, and ${getDifferenceInDHMS(
+            data.Date,
+            newDate,
+            'second'
+          )} seconds.`
         );
       });
     } else {
       const newDate = new Date();
-      time.findOneAndDelete(
+      time.findOne(
         { Key: args[0], UserID: message.author.id },
         async (err, data) => {
           if (err) console.log(err);
@@ -83,29 +60,22 @@ module.exports = {
               "I can't find anything with that key! If you haven't created a stopwatch, use ``!sw``. Otherwise, double-check the key you're using, ad make sure **you're the author of that stopwatch**."
             );
           message.channel.send(
-            `This stopwatch was counting for ${
-              getDifferenceInDays(data.Date, newDate) === 0
-                ? ''
-                : `${getDifferenceInDays(data.Date, newDate)} days, `
-            }${
-              getDifferenceInHours(data.Date, newDate) === 0 &&
-              getDifferenceInDays(data.Date, newDate) === 0
-                ? ''
-                : `${getDifferenceInHours(data.Date, newDate)} hours, `
-            }${
-              getDifferenceInMinutes(data.Date, newDate) === 0 &&
-              getDifferenceInHours(data.Date, newDate) === 0 &&
-              getDifferenceInDays(data.Date, newDate) === 0
-                ? ''
-                : `${getDifferenceInMinutes(data.Date, newDate)} minutes${
-                    getDifferenceInHours(data.Date, newDate) === 0 &&
-                    getDifferenceInDays(data.Date, newDate) === 0
-                      ? ' and '
-                      : ', and '
-                  }`
-            }${getDifferenceInSeconds(
+            `This stopwatch was counting for ${getDifferenceInDHMS(
               data.Date,
-              newDate
+              newDate,
+              'day'
+            )} days, ${getDifferenceInDHMS(
+              data.Date,
+              newDate,
+              'hour'
+            )} hours, ${getDifferenceInDHMS(
+              data.Date,
+              newDate,
+              'minute'
+            )} minutes, and ${getDifferenceInDHMS(
+              data.Date,
+              newDate,
+              'second'
             )} seconds, and is now removed.`
           );
         }

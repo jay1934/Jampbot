@@ -9,7 +9,7 @@ const {
 
 module.exports = {
   name: 'madlib',
-  cooldown: 3600,
+  cooldown: '1h',
   setLevel: 10,
   aliases: ['ml'],
   category: 'fun',

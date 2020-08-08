@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const Levels = require('discord-xp');
+const ms = require('ms');
 const { hasRole } = require('../../utils/functions');
 
 module.exports = async (message) => {
@@ -71,7 +72,7 @@ module.exports = async (message) => {
 
     const timestamps = cooldowns.get(command.name);
 
-    const cooldownAmount = (command.cooldown || 3) * 1000;
+    const cooldownAmount = ms(command.cooldown) || 3000;
 
     if (timestamps.has(message.author.id)) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
