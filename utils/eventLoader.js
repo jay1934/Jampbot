@@ -1,3 +1,5 @@
+const { schedule } = require('./functions');
+
 const reqEvent = (event) => require(`../events/${event}`);
 module.exports = (client) => {
   client.on('ready', () => reqEvent('ready')(client));
@@ -9,4 +11,5 @@ module.exports = (client) => {
   client.on('guildMemberAdd', reqEvent('welcome'));
   client.on('guildMemberRemove', reqEvent('goodbye'));
   client.on('messageReactionAdd', reqEvent('reaction'));
+  schedule('24:00', () => reqEvent('deprecate')(client));
 };

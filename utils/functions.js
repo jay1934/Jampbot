@@ -2,7 +2,12 @@
 const ms = require('ms');
 
 module.exports = {
-  // make pseudorandom string using letters and numbers of specified length
+  /**
+   * @description make pseudorandom string using letters and numbers of specified length
+   * @param {number} [length] - length of string to generate
+   * @returns {string} id string
+   * @example (8) => Id72Ai7a
+   */
   makeID(length) {
     var result = '';
     var characters =
@@ -12,140 +17,120 @@ module.exports = {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-
-    /**
-     * @param {string} [length] - length of substring
-     * @returns {string}
-     *
-     * @example
-     * makeID(5) => DWw24
-     */
   },
 
-  // convert first letter of specified string to uppercase (if lowercase)
+  /**
+   * @description convert first letter of specified string to uppercase (if lowercase)
+   * @param {string} [string] - string to edit
+   * @returns {string} edited string
+   * @example hello world => Hello world
+   */
   toFirstUpperCase(string) {
     return string.substring(0, 1).toUpperCase() + string.substring(1);
-
-    /**
-     * @param {string} [string] - string to edit
-     * @returns {string}
-     *
-     * @example
-     * toFirstUpperCase('hello world') => Hello world
-     */
   },
 
-  // check if specified user (object) has specified role (access via role name or ID)
-  hasRole(user, roleNameOrID) {
+  /**
+   * @description check if specified user (object) has specified role (access via role name or ID)
+   * @param {object} [user] - user to check
+   * @param {string} [role] - name or id of role to check
+   * @returns {boolean} returns true if user has role, false otherwise
+   * @example (message.member, 'PogJamper') => true
+   */
+  hasRole(user, role) {
     return (
-      user.roles.cache.some((role) => role.name === roleNameOrID) ||
-      user.roles.cache.has(roleNameOrID)
+      user.roles.cache.some((role) => role.name === role) ||
+      user.roles.cache.has(role)
     );
-
-    /**
-     * @param {object} [user] - user to check
-     * @param {string} [roleNameOrID] - either the name or ID of the role
-     * @returns {boolean}
-     *
-     * @example
-     * hasRole(message.member, 'Member') => false
-     */
   },
 
-  // get role (object) via role name or ID
-  getRole(roleNameOrID, client) {
+  /**
+   * @description get role (object) via role name or ID
+   * @param {string} [role] - name or id of role to get
+   * @param {object} [client] - Discord client
+   * @returns {object} role object
+   * @example ('Member', message.client).name => Member
+   */
+  getRole(role, client) {
     return (
       client.guilds.cache
         .get(client.guild.id || '642447344050372608')
-        .roles.cache.find((role) => role.name === roleNameOrID) ||
+        .roles.cache.find((r) => r.name === role) ||
       client.guilds.cache
         .get(client.guild.id || '642447344050372608')
-        .roles.cache.get(roleNameOrID)
+        .roles.cache.get(role)
     );
-
-    /**
-     * @param {string} [rolNameOrID] - either the name or ID of the role
-     * @param {object} [client] - discord.js client
-     * @returns {object}
-     *
-     * @example
-     * getRole('Member', message.client).name => Member
-     */
   },
 
-  // get user (object) via user name or ID
-  getUser(userNameOrID, client) {
+  /**
+   * @description get user (object) via user name or ID
+   * @param {string} [user] - name or id of user to get
+   * @param {object} [client] - Discord client
+   * @returns {object} user object
+   * @example ('Lioness100', message.client).discriminator => 4566
+   */
+  getUser(user, client) {
     return (
-      client.users.cache.find((user) => user.username === userNameOrID) ||
-      client.users.cache.get(userNameOrID)
+      client.users.cache.find((u) => u.username === user) ||
+      client.users.cache.get(user)
     );
-
-    /**
-     * @param {string} [userNameOrID] - either name or ID of user
-     * @param {object} [client] - discord.js client
-     * @returns {object}
-     *
-     * @example
-     * getUser('Lioness100', message.client).id => 381490382183333899
-     */
   },
 
-  // get channel (object) via channel name or ID
-  getChannel(channelNameOrID, client) {
+  /**
+   * @description get channel (object) via channel name or ID
+   * @param {string} [channel] - name or id of channel to get
+   * @param {object} [client] - Discord Client
+   * @returns {object} channel object
+   * @example ('off-topic', message.client).deleted => false
+   */
+  getChannel(channel, client) {
     return (
-      client.channels.cache.find(
-        (channel) => channel.name === channelNameOrID
-      ) || client.channels.cache.get(channelNameOrID)
+      client.channels.cache.find((c) => c.name === channel) ||
+      client.channels.cache.get(channel)
     );
-
-    /**
-     * @param {string} [channelNameOrID] - either name or ID of channel
-     * @param {object} [client] - discord.js client
-     * @returns {object}
-     *
-     * @example
-     * getChannel('699222200787402762', message.client).name => off-topic
-     */
   },
 
-  // get emoji (object) via channel name or ID
-  getEmoji(emojiNameOrID, client) {
+  /**
+   * @description get emoji (object) via channel name or ID
+   * @param {string} [emoji] - name or id of emoji to get
+   * @param {object} [client] - Discord client
+   * @returns {object} emoji object (will be parsed if sent in message)
+   * @example ('x', message.client) => ❌
+   */
+  getEmoji(emoji, client) {
     try {
       return (
-        client.emojis.cache.find((emoji) => emoji.name === emojiNameOrID) ||
-        client.emojis.cache.get(emojiNameOrID)
+        client.emojis.cache.find((e) => e.name === emoji) ||
+        client.emojis.cache.get(emoji)
       );
     } catch (err) {
       console.log('There may be more than one emojis by that name', err);
     }
-
-    /**
-     * @param {string} [emojiNameOrID] - either name or ID of emoji
-     * @param {object} [client] - discord.js client
-     * @returns {object}
-     *
-     * @example
-     * getEmoji('x', message) => ❌
-     */
   },
 
-  // get guild (object) via channel name or ID
-  getGuild(guildNameOrID, client) {
+  /**
+   * @description get guild (object) via channel name or ID
+   * @param {string} [guild] - name or id of guild to get
+   * @param {object} [client] - Discord client
+   * @returns {object} guild object
+   * @example ('Team Jamp', message.client).name => Team Jamp
+   */
+  getGuild(guild, client) {
     return (
-      client.guilds.cache.find((guild) => guild.name === guildNameOrID) ||
-      client.guilds.cache.get(guildNameOrID)
+      client.guilds.cache.find((g) => g.name === guild) ||
+      client.guilds.cache.get(guild)
     );
-
-    /**
-     * @param {string} [guildNameOrID] - either name or ID of guild
-     * @param {object} [client] - discord.js client
-     * @returns {object}
-     *
-     * @example
-     * getGuild('Team Jamp', message).name => Team Jamp
-     */
   },
 
+  /**
+   * @description collect reactions from a message
+   * @param {object} [message] - message to react to
+   * @param {object} [author] - user to accept reactions from
+   * @param {string} [time] - time given to react
+   * @param {string[]} [validReactions] - array of reactions to accept
+   * @returns {string} name of first emoji reacted (lower case)
+   * @example await message.channel.send('hello').then(async msg => {
+   *       const emoji = await getReactions(msg, message.author, '30s', ["✅", "❌"]);
+   */
   async getReactions(message, author, time, validReactions) {
     // eslint-disable-next-line no-await-in-loop
     for (const reaction of validReactions) await message.react(reaction);
@@ -153,66 +138,46 @@ module.exports = {
       validReactions.includes(reaction.emoji.name) && user.id === author.id;
     return message
       .awaitReactions(filter, { max: 1, time: ms(time) })
-      .then((collected) => collected.first() && collected.first().emoji.name)
+      .then((collected) => collected.first().emoji.name)
       .catch((err) => {
         message.channel.send(
           `You didn't answer in ${ms(ms(time), { long: true })}!`
         );
         console.log(err);
       });
-
-    /**
-     * @param {object} [message] - message to react on
-     * @param {object} [author] - user to accept reactions from (usually message.author)
-     * @param {string} [time] - time given to react
-     * @param {string[]} [validReactions] - emojis to accept
-     * @returns {object}
-     *
-     * @example
-     * await message.channel.send('hello').then(async msg => {
-     *       const emoji = await getReactions(msg, message.author, 30s, ["✅", "❌"]);
-     */
   },
 
+  /**
+   * @description collect next message sent in channel
+   * @param {object} [channel] - channel to collect messages from
+   * @param {object} [author] - user to accept messages from
+   * @param {string} [time] - time given to send a message
+   * @returns {string} - message content (lower case)
+   * @example await message.channel.send('hello').then(async () => {
+   *       const results = await promptMessage(message, message.author, 30s);
+   */
   async getNextMessage(channel, author, time) {
     return channel
       .awaitMessages((m) => m.author.id === author.id, {
         max: 1,
         time: ms(time),
       })
-      .then(
-        (collected) =>
-          collected.first() && collected.first().content.toLowerCase()
-      );
-
-    /**
-     * @param {object} [channel] - channel to get message from
-     * @param {object} [author] - user to accept message from
-     * @param {string} [time] - time given to send a message
-     * @returns {object}
-     *
-     * @example
-     * await message.channel.send('hello').then(async () => {
-     *       const results = await promptMessage(message, message.author, 30s);
-     */
+      .then((collected) => collected.first().content.toLowerCase());
   },
 
-  // move array element from one index to another
+  /**
+   * @description move array element from one index to another
+   * @param {array} [array] - array to edit
+   * @param {number} [fromIndex] - original index of element
+   * @param {number} [toIndex] - new index for element
+   * @returns {array} edited array
+   * @example (['first', 'second', 'third'], 1, 2) => ['first', 'third', 'second']
+   */
   arrMove(array, fromIndex, toIndex) {
     var element = array[fromIndex];
     array.splice(fromIndex, 1);
     array.splice(toIndex, 0, element);
     return array;
-
-    /**
-     * @param {array} [array] - array to use
-     * @param {number} [fromIndex] - original index of element
-     * @param {number} [toIndex] - new index of element
-     * @returns {array}
-     *
-     * @example
-     * arrMove(['first', 'second', 'third'], 1, 2) => ['first', 'third', 'second']
-     */
   },
 
   // get random integer in specified min-max range (optionally using an exclusive max value)
@@ -229,6 +194,59 @@ module.exports = {
      * @example
      * console.log(getRandomInt(15, 20)) => 17
      */
+  },
+
+  getDifferenceInDHMS(date1, date2, DHMS) {
+    if (!DHMS)
+      throw new TypeError(
+        'You did not specify DHMS (day, hour, minute, or second).'
+      );
+
+    if (DHMS === 'day') {
+      const diffInMs = Math.abs(date2 - date1);
+      return diffInMs / (1000 * 60 * 60 * 24);
+    }
+    if (DHMS === 'hour') {
+      const diffInMs = Math.abs(date2 - date1);
+      return diffInMs / (1000 * 60 * 60);
+    }
+    if (DHMS === 'minute') {
+      const diffInMs = Math.abs(date2 - date1);
+      return diffInMs / (1000 * 60);
+    }
+    if (DHMS === 'second') {
+      const diffInMs = Math.abs(date2 - date1);
+      return diffInMs / 1000;
+    }
+    throw new TypeError(
+      'You did not specify DHMS (day, hour, minute, or second).'
+    );
+  },
+
+  schedule(time, triggerThis) {
+    // get hour and minute from hour:minute param received, ex.: '16:00'
+    const hour = Number(time.split(':')[0]);
+    const minute = Number(time.split(':')[1]);
+
+    // create a Date object at the desired timepoint
+    const startTime = new Date();
+    startTime.setHours(hour, minute);
+    const now = new Date();
+
+    // increase timepoint by 24 hours if in the past
+    if (startTime.getTime() < now.getTime()) {
+      startTime.setHours(startTime.getHours() + 24);
+    }
+
+    // get the interval in ms from now to the timepoint when to trigger the alarm
+    const firstTriggerAfterMs = startTime.getTime() - now.getTime();
+
+    // trigger the function triggerThis() at the timepoint
+    // create setInterval when the timepoint is reached to trigger it every day at this timepoint
+    setTimeout(function () {
+      triggerThis();
+      setInterval(triggerThis, 24 * 60 * 60 * 1000);
+    }, firstTriggerAfterMs);
   },
 
   // get random element from specified array
