@@ -6,20 +6,21 @@ const { getRole, hasRole, getChannel } = require('../../utils/functions');
 module.exports = {
   name: 'mute',
   guildOnly: true,
-  rolePermission: 'Jampolice',
+  modOnly: true,
+  rolePermission: '684872981066940437',
   aliases: ['unmute', 'tempmute'],
   category: 'moderation',
   usage:
     '![un]mute @user [reason]\n!tempmute @user <duration(10s, 12h, etc)> [reason]',
   description: 'Mutes a user',
-  async execute(message, args) {
+  async execute(message, args, log) {
     const usage = '\nCorrect usage: ``!mute @user [reason]``';
     const unusage = '\nCorrect usage: ``!unmute @user [reason]``';
     const tempusage =
       '\nCorrect usage: ``!tempmute @user duration[s/m/h] [reason]';
     const user = message.mentions.users.first();
-    const mainRole = getRole('Member', message.client);
-    const muteRole = getRole('Muted', message.client);
+    const mainRole = getRole('Member', message.guild);
+    const muteRole = getRole('Muted', message.guild);
     if (message.content.includes('!mute')) {
       const reason = args.slice(1).join(' ') || 'No Reason Supplied';
       if (!muteRole)
@@ -75,9 +76,7 @@ module.exports = {
       message.channel.send({
         embed: muteConfirmationEmbed,
       });
-      getChannel(config.channelID.modlog, message.client).send({
-        embed: muteConfirmationEmbed,
-      });
+      if (log) log.send(muteConfirmationEmbed);
 
       const muteDM = new Discord.MessageEmbed()
         .setColor('RED ')
@@ -130,7 +129,7 @@ module.exports = {
       message.guild.member(user).roles.remove(muteRole);
       message.guild.member(user).roles.add(mainRole);
 
-      if (config.channelID.modlog.length !== 0) {
+      if (log) {
         const unmuteConfirmationEmbed = new Discord.MessageEmbed()
           .setColor('RED')
           .setDescription(`✅ **${user.tag}** has been successfully unmuted!`)
@@ -143,24 +142,22 @@ module.exports = {
         message.channel.send({
           embed: unmuteConfirmationEmbed,
         });
-        getChannel(config.channelID.modlog, message.client).send({
-          embed: unmuteConfirmationEmbed,
-        });
+        log.send(unmuteConfirmationEmbed);
+
+        const unmuteDM = new Discord.MessageEmbed()
+          .setColor('RED')
+          .setDescription(
+            `You have been unmuted from Team Jamp. Please discontinue the behavior that led to your mute :confused:`
+          )
+          .addField(
+            'Original Moderator:',
+            `${message.author.username}#${message.author.discriminator}`
+          )
+
+          .addField('Original Reason', reason);
+
+        user.send({ embed: unmuteDM });
       }
-
-      const unmuteDM = new Discord.MessageEmbed()
-        .setColor('RED')
-        .setDescription(
-          `You have been unmuted from Team Jamp. Please discontinue the behavior that led to your mute :confused:`
-        )
-        .addField(
-          'Original Moderator:',
-          `${message.author.username}#${message.author.discriminator}`
-        )
-
-        .addField('Original Reason', reason);
-
-      user.send({ embed: unmuteDM });
     } else if (message.content.includes('!tempmute')) {
       const time = args[1];
       const reason = args.slice(2).join(' ') || 'No Reason Supplied';
@@ -206,7 +203,7 @@ module.exports = {
       message.guild.member(user).roles.remove(mainRole);
       message.guild.member(user).roles.add(muteRole);
 
-      if (config.channelID.modlog.length !== 0) {
+      if (log) {
         const muteConfirmationEmbed = new Discord.MessageEmbed()
           .setColor('RED')
           .setThumbnail(config.thumbnails.sad)
@@ -228,9 +225,7 @@ module.exports = {
         message.channel.send({
           embed: muteConfirmationEmbed,
         });
-        getChannel(config.channelID.modlog, message.client).send({
-          embed: muteConfirmationEmbed,
-        });
+        log.send(muteConfirmationEmbed);
       }
 
       const muteDM = new Discord.MessageEmbed()
@@ -281,9 +276,7 @@ module.exports = {
         message.guild.member(user).roles.remove(muteRole);
 
         user.send({ embed: unmuteDM });
-        getChannel(config.channelID.modlog, message.client).send({
-          embed: unmuteConfirmationEmbed,
-        });
+        log.send(unmuteConfirmationEmbed);
       }, ms(time));
     } else {
       message.channel.send('There was a problem. Please try again later.');

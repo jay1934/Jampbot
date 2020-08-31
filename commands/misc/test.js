@@ -1,9 +1,15 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-continue */
 const Discord = require('discord.js');
-const ms = require('ms');
 const Levels = require('discord-xp');
 const { progressbar } = require('discord.js-utility');
 const Canvacord = require('canvacord');
 const fetch = require('node-fetch');
+var Game = require('hangman-game-engine');
+var request = require('request');
+const guilds = require('../../models/guilds');
 const config = require('../../config.json');
 const {
   getChannel,
@@ -13,7 +19,9 @@ const {
   getReactions,
   getNextMessage,
   makeID,
+  toFirstUpperCase,
 } = require('../../utils/functions');
+var { hm } = require('../../data/inProgress.json');
 
 const canva = new Canvacord();
 
@@ -21,37 +29,12 @@ module.exports = {
   name: 'test',
   ownerOnly: true,
   helpIgnore: true,
-  async execute(message, args) {
-    /* const target = message.mentions.users.first() || message.author;
-    console.log('cp1');
-    const user = await Levels.fetch(target.id, message.guild.id);
-
-    const rawLeaderboard = await Levels.fetchLeaderboard(
-      message.guild.id,
-      1000
-    ); // We grab top 10 users with most xp in the current server.
-    const leaderboard = Levels.computeLeaderboard(
-      message.client,
-      rawLeaderboard
+  async execute(message, args, log) {
+    const [first] = await fetch('https://dog.ceo/api/breeds/image/random').then(
+      (response) => {
+        Object.keys(JSON.parse(response.json()));
+      }
     );
-    console.log('cp2');
-    const image = await canva.rank({
-      username: target.username,
-      discrim: target.discriminator,
-      level: user.level,
-      rank: leaderboard
-        .filter((u) => u.userID === target.id)
-        .map((u) => u.position),
-      neededXP: Levels.xpFor(user.level + 1),
-      currentXP: user.xp,
-      avatarURL: target.displayAvatarURL({ format: 'png' }),
-      color: 'white',
-      background:
-        'https://thumbs.gfycat.com/AnimatedDeficientAlleycat-size_restricted.gif',
-    });
-    console.log('cp4');
-    const attachment = new Discord.MessageAttachment(image, 'rank.png');
-    console.log('cp5');
-    message.channel.send(attachment); */
+    message.channel.send(first);
   },
 };

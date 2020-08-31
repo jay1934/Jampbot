@@ -10,6 +10,7 @@ module.exports = {
   name: 'commands',
   helpIgnore: true,
   async execute(message, args) {
+    const guilds = require('../../models/guilds');
     const { commands } = message.client;
 
     /* command object example:
@@ -38,8 +39,12 @@ module.exports = {
             command.category === category &&
             !command.disabled &&
             !command.helpIgnore &&
+            !command.exclusive &&
             command.usage &&
-            command.description
+            command.description &&
+            guilds.findOne({ GuildID: message.guild.id }, (err, res) => {
+              return !res.Disabled.includes(command.name);
+            })
         )
         .map(
           (command) =>

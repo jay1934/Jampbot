@@ -4,6 +4,7 @@ const {
   getReactions,
   getNextMessage,
 } = require('../../utils/functions');
+var { rps } = require('../../data/inProgress.json');
 
 module.exports = {
   name: 'rps',
@@ -13,6 +14,11 @@ module.exports = {
   description:
     'Starts a rock-paper-scissor game with Jampbot++ (or someone else)',
   async execute(message, args) {
+    if (rps)
+      return message.channel.send(
+        'A game of rps is already in progress! Please wait until it finishes.'
+      );
+    rps = true;
     const player2 =
       message.mentions.users.first() ||
       message.guild.members.cache.get(args[0]);
@@ -344,5 +350,6 @@ module.exports = {
           );
         });
     }
+    rps = false;
   },
 };

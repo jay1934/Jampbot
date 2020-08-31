@@ -3,7 +3,7 @@ const { getUser } = require('../../utils/functions');
 
 module.exports = {
   name: 'closeticket',
-  rolePermission: 'Jampolice',
+  modOnly: true,
   guildOnly: true,
   helpIgnore: true,
   async execute(message, args) {

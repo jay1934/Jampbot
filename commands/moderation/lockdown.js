@@ -6,15 +6,15 @@ const { getRole, getChannel } = require('../../utils/functions');
 module.exports = {
   name: 'lockdown',
   aliases: ['unlock', 'templd'],
-  rolePermission: 'Jampolice',
+  modOnly: true,
   category: 'moderation',
   usage:
     '!lockdown [reason]\n!unlock [reason]\n!templd <duration(10s, 12h, etc)> [reason]',
   description: 'Restricts message-sending permissions in channel',
-  async execute(message, args) {
+  async execute(message, args, log) {
     const { channel } = message;
     const reason = args.slice(0).join(' ') || 'No Reason Specified';
-    const Member = getRole('Member', message.client);
+    const Member = getRole('Member', message.guild);
 
     if (message.content.includes('!unlock')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
@@ -31,9 +31,7 @@ module.exports = {
       message.channel.send({
         embed: deLDembed,
       });
-      getChannel(config.channelID.modlog, message.client).send({
-        embed: deLDembed,
-      });
+      if (log) log.send(deLDembed);
     } else if (message.content.includes('!lockdown')) {
       channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
       const LDembed = new Discord.MessageEmbed()
@@ -49,9 +47,7 @@ module.exports = {
       message.channel.send({
         embed: LDembed,
       });
-      getChannel(config.channelID.modlog, message.client).send({
-        embed: LDembed,
-      });
+      if (log) log.send(LDembed);
     } else if (message.content.includes('!templd')) {
       const usage = '\nCorrect usage: ``!templd duration[s/m/h] [reason]``';
       const reason = args.slice(1).join(' ') || 'No Reason Supplied';
@@ -77,9 +73,7 @@ module.exports = {
       message.channel.send({
         embed: tempLDembed,
       });
-      getChannel(config.channelID.modlog, message.client).send({
-        embed: tempLDembed,
-      });
+      if (log) log.send(tempLDembed);
       setTimeout(function () {
         channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
         const deLDembed = new Discord.MessageEmbed()
@@ -93,12 +87,8 @@ module.exports = {
           )
 
           .addField('Original Reason', reason);
-        message.channel.send({
-          embed: deLDembed,
-        });
-        getChannel(config.channelID.modlog, message.client).send({
-          embed: deLDembed,
-        });
+        message.channel.send(deLDembed);
+        if (log) log.send(deLDembed);
       }, ms(time));
     } else {
       message.channel.send('❌ Something went wrong. Please try again later.');

@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
 const { progressbar } = require('discord.js-utility');
+var { ml } = require('../../data/inProgress.json');
 const {
   getNextMessage,
   getRandomInt,
@@ -17,6 +18,11 @@ module.exports = {
   blacklist: true,
   description: 'Fill out a madlib on Discord!',
   async execute(message, args) {
+    if (ml)
+      return message.channel.send(
+        'A game of Madlibs is already in progress! Please wait until it finishes.'
+      );
+    ml = true;
     const options = [
       {
         title: 'Albert Einstein',
@@ -107,7 +113,6 @@ module.exports = {
         ],
       },
     ];
-    console.log('hello');
     var filled = [],
       canceled,
       secondPlus,
@@ -117,14 +122,18 @@ module.exports = {
     console.log(options[lib]);
     async function newWord() {
       const msg = await message.channel.send(
-        `**Please reply with a(n) ${
-          options[lib].blanks[i]
-        }**\nYou have 2 minutes. *Do not use \`cancel\` as a madlib word, it will cancel the game.*\n\n${progressbar(
-          filled.length,
-          options[lib].blanks.length,
-          12,
-          ['<:green:740590536343158844>', '<:red:740591576505385050>']
-        )} done`
+        new MessageEmbed()
+          .setTitle(`Please reply with a(n) \`\`${options[lib].blanks[i]}\`\``)
+          .setAuthor('You have 2 minutes.')
+          .setFooter(
+            "Do not use 'cancel' as a madlib word; it will cancel the game."
+          )
+          .setDescription(
+            `${progressbar(filled.length, options[lib].blanks.length, 12, [
+              '<:green:740590536343158844>',
+              '<:red:740591576505385050>',
+            ])} done`
+          )
       );
       await message.channel
         .awaitMessages((m) => m.author.id === message.author.id, {
@@ -151,5 +160,6 @@ module.exports = {
       options[lib].story = options[lib].story.replace(`[${i}]`, filled[i]);
     }
     message.channel.send(`**${options[lib].title}**\n\n${options[lib].story}`);
+    ml = false;
   },
 };

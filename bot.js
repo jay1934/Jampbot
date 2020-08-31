@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
-
 const fs = require('fs');
 require('dotenv').config();
-const levels = require('./models/levels');
 
 const client = new Discord.Client({
   partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
@@ -26,5 +24,4 @@ for (const folder of commandFolders) {
     client.commands.set(command.name, command);
   }
 }
-
 client.login(process.env.TOKEN);

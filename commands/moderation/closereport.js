@@ -4,7 +4,7 @@ const { getUser } = require('../../utils/functions.js');
 
 module.exports = {
   name: 'closereport',
-  rolePermission: 'Jampolice',
+  modOnly: true,
   helpIgnore: true,
   guildOnly: true,
   blacklist: true,

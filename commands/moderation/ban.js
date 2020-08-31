@@ -1,26 +1,30 @@
 const Discord = require('discord.js');
 const config = require('../../config.json');
-const { getChannel } = require('../../utils/functions');
+const { getChannel, getGuild } = require('../../utils/functions');
 
 module.exports = {
   name: 'ban',
-  rolePermission: 'Jampolice',
+  modOnly: true,
   guildOnly: true,
   category: 'moderation',
-  usage: "!ban @user <days worth of user's messages to delete (0-7)> [reason]",
+  usage: '!ban @user',
   description: 'Bans a user',
-  async execute(message, args) {
+  async execute(message, args, log) {
+    function error(msg, ms) {
+      message.delete();
+      message.channel.send(msg).then((err) =>
+        setTimeout(() => {
+          err.delete();
+        }, ms)
+      );
+    }
     const user =
       message.mentions.users.first() ||
       message.guild.members.cache.get(args[0]);
     if (message.mentions.users.size < 1)
-      return message.channel.send(
-        `❌ You must mention someone to ban them.\nCorrect usage: \`\`${this.usage}\`\`\``
-      );
-    const day = args[1];
-    if (day < 0 || day > 7)
-      return message.channel.send(
-        `Specify how many day's worth of user's messages to delete.\nCorrect usage: \`\`${this.usage}\`\`\``
+      return error(
+        `❌ You must mention someone to ban them.\nCorrect usage: \`\`${this.usage}\`\``,
+        5000
       );
     const reason = args.slice(2).join(' ') || 'No Reason Supplied';
     if (message.mentions.users.first().id === message.author.id)
@@ -33,10 +37,6 @@ module.exports = {
       );
     if (message.mentions.users.first().id === config.ownerid)
       return message.channel.send("You can't ban my Developer :wink:");
-    if (!day || day > 7)
-      return message.channel.send(
-        `You didn't enter the number of days worth of messages to delete.\nCorrect usage: \`\`${this.usage}\`\`\``
-      );
     const banDM = new Discord.MessageEmbed()
       .setColor('RED')
       .setThumbnail(config.thumbnails.sad)
@@ -45,7 +45,7 @@ module.exports = {
       .setFooter(
         'If you would like to appeal your ban or have any questions, contact @Lioness100#4566'
       )
-      .then(() => message.guild.member(user).ban({ days: day, reason }))
+      .then(() => message.guild.member(user).ban({ days: 1, reason }))
       .catch((err) => {
         message.channel.send('❌ Something went wrong');
         console.log(err);
@@ -68,11 +68,7 @@ module.exports = {
         `${message.author.username}#${message.author.discriminator}`
       )
       .addField('Reason', reason);
-    message.channel.send({
-      embed: banConfirmationEmbed,
-    });
-    getChannel(config.channelID.modlog, message.client).send({
-      embed: banConfirmationEmbed,
-    });
+    message.channel.send(banConfirmationEmbed);
+    if (log) log.send(banConfirmationEmbed);
   },
 };

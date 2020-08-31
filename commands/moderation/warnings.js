@@ -4,7 +4,7 @@ const config = require('../../config.json');
 
 module.exports = {
   name: 'warnings',
-  rolePermission: 'Jampolice',
+  modOnly: true,
   category: 'moderation',
   usage: '!warnings @user',
   description: "Displays user's warning's in Team Jamp",

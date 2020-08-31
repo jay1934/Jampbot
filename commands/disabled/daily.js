@@ -6,8 +6,8 @@ module.exports = {
   name: 'daily',
   setLevel: 5,
   category: 'EXP',
-  disabled: true,
   usage: '!daily',
+  disabled: true,
   description: 'Collect a daily amount of EXP',
   async execute(message, args) {
     var user = Levels.fetch(message.author.id, message.guild.id);

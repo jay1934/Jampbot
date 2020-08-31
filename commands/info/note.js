@@ -5,8 +5,9 @@ const { getChannel } = require('../../utils/functions');
 module.exports = {
   name: 'note',
   guildOnly: true,
+  exclusive: true,
   helpIgnore: true,
-  rolePermission: 'Jamp Judge',
+  rolePermission: '704378683988639834',
   async execute(message, args) {
     const good = '👍';
     const Note = args.slice(0).join(' ');

@@ -38,18 +38,23 @@ module.exports = (message) => {
     return message.channel.send(
       'NONONO the poor table\n\n┬─┬ ノ( ゜-゜ノ)\n\nThere you go 🙂'
     );
-  // if message includes some form of 'im' bored, send a remind that *you can use !rps to play rock paper scissors* ;)
-  const found = message.content
-    .toLowerCase()
-    .match(/i.{0,10}b+\s*o+\s*r+\s*e+\s*d/);
-  if (found && !newTimeCounter.has('cooldown')) {
-    // eslint-disable-next-line no-redeclare
-    newTimeCounter.add('cooldown');
-    message.channel.send(
-      `Are you bored? Try using \`\`!rps\`\` or \`\`!quag\`\` in <#${config.channelID.spam}> <:BuzzyGoodMan:727242865322754139>`
-    );
-    setTimeout(function () {
-      newTimeCounter.delete('cooldown');
-    }, 1800000);
+  if (
+    message.channel.type !== 'dm' &&
+    message.guild.id === '699220238801174558'
+  ) {
+    // if message includes some form of 'im' bored, send a remind that *you can use !rps to play rock paper scissors* ;)
+    const found = message.content
+      .toLowerCase()
+      .match(/i.{0,10}b+\s*o+\s*r+\s*e+\s*d/);
+    if (found && !newTimeCounter.has('cooldown')) {
+      // eslint-disable-next-line no-redeclare
+      newTimeCounter.add('cooldown');
+      message.channel.send(
+        `Are you bored? Try using \`\`!rps\`\` or \`\`!quag\`\` in <#${config.channelID.spam}> <:BuzzyGoodMan:727242865322754139>`
+      );
+      setTimeout(() => {
+        newTimeCounter.delete('cooldown');
+      }, 1800000);
+    }
   }
 };

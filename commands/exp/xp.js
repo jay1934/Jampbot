@@ -9,7 +9,10 @@ module.exports = {
   blacklist: true,
   description: 'Displays your XP rank or the XP rank of another user.',
   async execute(message, args) {
-    const target = message.mentions.users.first() || message.author;
+    const target =
+      message.mentions.users.first() ||
+      message.client.users.cache.get(args[0]) ||
+      message.author;
 
     const user = await Levels.fetch(target.id, message.guild.id);
 
@@ -22,15 +25,16 @@ module.exports = {
       rawLeaderboard
     );
 
+    if (!user)
+      return message.channel.send(
+        `**${target.username}** hasn't earned any xp so far <:SadPog:710543485849174067>`
+      );
+
     const bar = progressbar(user.xp, Levels.xpFor(user.level + 1), 12, [
       '<:green:740590536343158844>',
       '<:red:740591576505385050>',
     ]);
 
-    if (!user)
-      return message.channel.send(
-        `**${target.username}** hasn't earned any xp so far <:SadPog:710543485849174067>`
-      );
     if (target.id !== message.author.id)
       message.channel.send(
         `**${target.username}** is currently **Level ${
@@ -39,7 +43,7 @@ module.exports = {
           .filter((u) => u.userID === target.id)
           .map(
             (u) => u.position
-          )}** on the leaderboar <:PikaPls:718985469337010206>`
+          )}** on the leaderboard <:PikaPls:718985469337010206>`
       );
     else
       message.channel.send(
@@ -53,7 +57,7 @@ module.exports = {
           user.xp
         } XP** points and need **${
           Levels.xpFor(user.level + 1) - user.xp
-        }** more to level up!\n\n**Progress Bar (To Next Level):**\n${bar}`
+        }** more to level up!\n\n**Progres Bar (To Next Level):**\n${bar}`
       );
   },
 };

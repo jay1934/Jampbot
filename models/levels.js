@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { boolean } = require('mathjs');
 
 const LevelSchema = new mongoose.Schema({
   userID: { type: String },
@@ -8,9 +9,23 @@ const LevelSchema = new mongoose.Schema({
   lastUpdated: { type: Date, default: new Date() },
   lastDaily: { type: Date },
   streak: { type: Number, default: 0 },
-  achievements: {
-    submittedClear: { type: Boolean, default: false },
-    PogJamper: { type: Boolean, default: false },
+  rep: { type: Number, default: 0 },
+  lastAward: Date,
+  boosted: {
+    multi: { type: Number, default: 2 },
+    bool: { type: Boolean, default: false },
+  },
+  pog: {
+    multi: { type: Number, default: 1.5 },
+    bool: { type: Boolean, default: false },
+  },
+  jamper: {
+    multi: { type: Number, default: 1.2 },
+    bool: { type: Boolean, default: false },
+  },
+  early: {
+    multi: { type: Number, default: 1.5 },
+    bool: { type: Boolean, default: false },
   },
 });
 

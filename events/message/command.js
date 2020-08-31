@@ -2,8 +2,12 @@ const Discord = require('discord.js');
 const Levels = require('discord-xp');
 const ms = require('ms');
 const { hasRole } = require('../../utils/functions');
+const guilds = require('../../models/guilds');
 
 module.exports = async (message) => {
+  if (message.guild)
+    var guild = await guilds.findOne({ GuildID: message.guild.id });
+
   const cooldowns = new Discord.Collection();
 
   const config = require('../../config.json');
@@ -30,20 +34,28 @@ module.exports = async (message) => {
     message.client.commands.find(
       (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
     );
+  if (guild) {
+    if (
+      !command ||
+      guild.Disabled.includes(command.name) ||
+      (command.exclusive && message.guild.id !== '699220238801174558')
+    )
+      return;
+  }
 
-  if (!command) return;
+  if (command.category === 'EXP' && (!guild || !guild.EXP)) return;
+  if (command.category === 'moderation' && (!guild || !guild.EXP)) return;
 
   if (command.blacklist && blockedChannels.includes(message.channel.id)) return;
 
   if (
-    (command.noPing && message.content.includes('@everyone')) ||
-    message.content.includes(config.jamp)
-  )
-    return message.channel.send('<:polite:699433623962648576>');
-
-  if (
     command.rolePermission &&
-    !hasRole(message.member, command.rolePermission)
+    !hasRole(message.member, command.rolePermission) &&
+    message.guild.roles.cache.some(
+      (role) =>
+        role.name === command.rolePermission ||
+        role.id === command.rolePermission
+    )
   )
     return message.channel.send('❌ Insufficient permissions');
 
@@ -52,6 +64,13 @@ module.exports = async (message) => {
 
   if (command.guildOnly && message.channel.type !== 'text')
     return message.reply("❌ I can't execute that command inside DMs!");
+
+  if (
+    command.modOnly &&
+    !message.member.hasPermission('MANAGE_GUILD') &&
+    !command.rolePermission
+  )
+    return message.channel.send('❌ Insufficient permissions');
 
   if (command.disabled) return;
 
@@ -91,7 +110,13 @@ module.exports = async (message) => {
   }
 
   try {
-    command.execute(message, args);
+    if (guild)
+      command.execute(
+        message,
+        args,
+        message.client.channels.cache.get(guild.Log)
+      );
+    else command.execute(message, args);
   } catch (error) {
     console.error(error);
     message.channel.send(

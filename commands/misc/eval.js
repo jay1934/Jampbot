@@ -1,4 +1,11 @@
 /* eslint-disable no-eval */
+const Discord = require('discord.js');
+const fetch = require('node-fetch');
+const request = require('request');
+const f = require('../../utils/functions');
+const levels = require('../../models/levels');
+const guilds = require('../../models/guilds');
+
 module.exports = {
   name: 'eval',
   ownerOnly: true,

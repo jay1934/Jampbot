@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 
 module.exports = {
   name: 'purge',
-  rolePermission: 'Jampolice',
+  modOnly: true,
   guildOnly: true,
   category: 'moderation',
   usage: '!purge <number>',
@@ -12,7 +12,7 @@ module.exports = {
 
     if (!deleteCount || deleteCount < 2 || deleteCount > 100)
       return message.channel.send(
-        `❌ Please provide a number between 2 and 100 for the number of messages to delete.\nCorrect usage: \`\`${this.usage}\`\`\``
+        `❌ Please provide a number between 2 and 100 for the number of messages to delete.\nCorrect usage: \`\`${this.usage}\`\``
       );
 
     const fetched = await message.channel.messages.fetch({

@@ -11,7 +11,7 @@ module.exports = {
   guildOnly: true,
   ownerOnly: true,
   helpIgnore: true,
-  async execute(message, args) {
+  async execute(message, args, log) {
     var indefinite;
     const time = args[0];
     if (!time) {
@@ -91,9 +91,7 @@ module.exports = {
       resultsEmbed.setTimestamp();
       msg.unpin();
       message.channel.send({ embed: resultsEmbed });
-      getChannel(config.channelID.modlog, message.client).send({
-        embed: resultsEmbed,
-      });
+      if (log) log.send(resultsEmbed);
 
       // create new embed with old title & description, new field
       const newEmbed = new Discord.MessageEmbed({

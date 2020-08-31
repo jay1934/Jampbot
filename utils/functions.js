@@ -50,14 +50,10 @@ module.exports = {
    * @returns {object} role object
    * @example ('Member', message.client).name => Member
    */
-  getRole(role, client) {
+  getRole(role, guild) {
     return (
-      client.guilds.cache
-        .get(client.guild.id || '642447344050372608')
-        .roles.cache.find((r) => r.name === role) ||
-      client.guilds.cache
-        .get(client.guild.id || '642447344050372608')
-        .roles.cache.get(role)
+      guild.roles.cache.find((r) => r.name === role) ||
+      guild.roles.cache.get(role)
     );
   },
 
@@ -83,10 +79,11 @@ module.exports = {
    * @example ('off-topic', message.client).deleted => false
    */
   getChannel(channel, client) {
-    return (
+    const ch =
       client.channels.cache.find((c) => c.name === channel) ||
-      client.channels.cache.get(channel)
-    );
+      client.channels.cache.get(channel);
+    if (!ch) return false;
+    return ch;
   },
 
   /**
@@ -137,7 +134,7 @@ module.exports = {
     const filter = (reaction, user) =>
       validReactions.includes(reaction.emoji.name) && user.id === author.id;
     return message
-      .awaitReactions(filter, { max: 1, time: ms(time) })
+      .awaitReactions(filter, { max: 1 })
       .then((collected) => collected.first().emoji.name)
       .catch((err) => {
         message.channel.send(
@@ -152,17 +149,25 @@ module.exports = {
    * @param {object} [channel] - channel to collect messages from
    * @param {object} [author] - user to accept messages from
    * @param {string} [time] - time given to send a message
+   * @param {boolean} [full] - whether to return full object, or just content
    * @returns {string} - message content (lower case)
    * @example await message.channel.send('hello').then(async () => {
-   *       const results = await promptMessage(message, message.author, 30s);
+   *       const results = await getNexttMessage(message.channel, message.author, 30s);
    */
-  async getNextMessage(channel, author, time) {
-    return channel
-      .awaitMessages((m) => m.author.id === author.id, {
-        max: 1,
-        time: ms(time),
-      })
-      .then((collected) => collected.first().content.toLowerCase());
+  async getNextMessage(channel, author, time, full) {
+    return full
+      ? channel
+          .awaitMessages((m) => m.author.id === author.id, {
+            max: 1,
+            time: ms(time),
+          })
+          .then((collected) => collected.first())
+      : channel
+          .awaitMessages((m) => m.author.id === author.id, {
+            max: 1,
+            time: ms(time),
+          })
+          .then((collected) => collected.first().content.toLowerCase());
   },
 
   /**
@@ -197,11 +202,6 @@ module.exports = {
   },
 
   getDifferenceInDHMS(date1, date2, DHMS) {
-    if (!DHMS)
-      throw new TypeError(
-        'You did not specify DHMS (day, hour, minute, or second).'
-      );
-
     if (DHMS === 'day') {
       const diffInMs = Math.abs(date2 - date1);
       return diffInMs / (1000 * 60 * 60 * 24);
@@ -219,7 +219,7 @@ module.exports = {
       return diffInMs / 1000;
     }
     throw new TypeError(
-      'You did not specify DHMS (day, hour, minute, or second).'
+      'You did not specify a valid DHMS (day, hour, minute, or second).'
     );
   },
 

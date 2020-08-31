@@ -10,6 +10,7 @@ const prefix = '!';
 module.exports = {
   name: 'faq',
   category: 'info',
+  exclusive: true,
   usage: '!faq <number or keyword>',
   description: 'Sends answers and examples for FAQs',
   execute(message, args) {

@@ -1,42 +1,85 @@
 const levels = require('../models/levels');
+const guilds = require('../models/guilds');
 const { getChannel, getUser, getGuild } = require('../utils/functions');
 
 module.exports = (client) => {
-  function addMonths(date, months) {
-    var d = date.getDate();
-    date.setMonth(date.getMonth() + +months);
-    if (date.getDate() != d) {
-      date.setDate(0);
-    }
-    return date;
-  }
-  console.log('schedule function workes');
-  const toBePurged = levels
-    .find({
+  console.log('schedule function works');
+  levels.find(
+    {
       lastUpdated: {
-        $lt: addMonths(new Date(), -3),
+        $lt: new Date().setMonth(new Date().getMonth() - 3),
       },
-    })
-    .then((res) => {
+    },
+    (err, res) => {
+      if (err) console.log(err);
       if (res) {
         res.forEach((res) => {
-          if (getGuild('Team Jamp', client).member(res.UserID))
-            getChannel('mod-stuff', client).send(
-              `**${getUser(res.UserID, client).username}#${
-                getUser(res.UserID, client).discriminator
-              }**'s EXP was just reset after 3 months of inactivity (they had ${
-                res.xp
-              } EXP)`
-            );
+          if (getGuild(res.guildID, client).member(res.userID))
+            guilds.findOne({ GuildID: res.guildID }, (err, data) => {
+              if (err) console.log(err);
+              if (!data || !data.Log) return;
+              client.channels.cache
+                .get(data.Log)
+                .send(
+                  `**${getUser(res.userID, client).username}#${
+                    getUser(res.userID, client).discriminator
+                  }**'s EXP was just reset after 3 months of inactivity (they had ${
+                    res.xp
+                  } EXP)`
+                );
+            });
         });
       }
-    });
+    }
+  );
 
-  levels
-    .deleteMany({
+  levels.deleteMany(
+    {
       lastUpdated: {
-        $lt: addMonths(new Date(), -3),
+        $lt: new Date().setMonth(new Date().getMonth() - 3),
       },
-    })
-    .then((err) => console.log(`There was an error purging user: ${err}`));
+    },
+    (err, res) => {
+      if (err) console.log(err);
+      if (res) console.log(res.n, res.ok);
+    }
+  );
+
+  levels.find(
+    {
+      lastUpdated: { $lt: new Date().setDate(new Date().getDate() - 7) },
+    },
+    (err, users) => {
+      if (err) console.log(err);
+      if (users) {
+        users.forEach((user) => {
+          if (
+            !getGuild(user.guildID, client).member(user.userID) ||
+            user.xp < 400 ||
+            new Date(user.lasUpdated) <
+              new Date().setDate(new Date().getDate() - 7)
+          )
+            return;
+          guilds.findOne({ GuildID: user.guildID }, (err, data) => {
+            if (err) console.log(err);
+            if (!data || !data.Log) return;
+            client.channels.cache
+              .get(data.Log)
+              .send(
+                `**${getUser(user.userID, client).username}#${
+                  getUser(user.userID, client).discriminator
+                }**'s EXP was lowered ${
+                  (300 / user.xp) * 100
+                }% (300 EXP points) after one week of inactivity`
+              );
+          });
+          console.log('Deprecate (Before): ', user.xp);
+          user.xp -= 300;
+          console.log('LastUpdated (from deprecate)', user.lastUpdated);
+          user.lastUpdated = new Date();
+          user.save();
+        });
+      }
+    }
+  );
 };

@@ -13,13 +13,13 @@ module.exports = {
       Description.substring(0, 1).toUpperCase() + Description.substring(1);
     if (!args[0]) {
       return message.channel.send(
-        `❌ Please Enter a time period followed by "s or m or h".\nCorrect usage: \`\`${this.usage}\`\`\``
+        `❌ Please Enter a time period followed by "s or m or h".\nCorrect usage: \`\`${this.usage}\`\``
       );
     }
 
     if (args[0] <= 0) {
       return message.channel.send(
-        `❌ Please Enter a time period followed by "s or m or h".\nCorrect usage: \`\`${this.usage}\`\`\``
+        `❌ Please Enter a time period followed by "s or m or h".\nCorrect usage: \`\`${this.usage}\`\``
       );
     }
     message.channel.send(
@@ -37,9 +37,9 @@ module.exports = {
       .addField('Duration', ms(ms(Timer), { long: true }))
       .addField('Description', Description);
 
-    setTimeout(function () {
+    setTimeout(() => {
       message.channel.send(`<@${message.author.id}>`);
-      message.channel.send({ embed });
+      message.channel.send(embed);
     }, ms(Timer));
   },
 };

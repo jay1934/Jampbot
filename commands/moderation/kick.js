@@ -1,21 +1,21 @@
 const Discord = require('discord.js');
 const config = require('../../config.json');
-const { getChannel } = require('../../utils/functions');
+const { getChannel, getGuild } = require('../../utils/functions');
 
 module.exports = {
   name: 'kick',
-  rolePermission: 'Jampolice',
+  modOnly: true,
   guildOnly: true,
   category: 'moderation',
   usage: '!kick @user [reason]',
   description: 'Kicks a user',
-  async execute(message, args) {
+  async execute(message, args, log) {
     const reason = args.slice(1).join(' ') || 'No Reason Supplied';
     const user = message.mentions.users.first();
     if (message.mentions.users.size < 1)
       return message.channel
         .send(
-          `❌ You must mention someone to kick them.\nCorrect usage: \`\`${this.usage}\`\`\``
+          `❌ You must mention someone to kick them.\nCorrect usage: \`\`${this.usage}\`\``
         )
         .catch(console.error);
     if (message.mentions.users.first().id === message.author.id)
@@ -80,9 +80,7 @@ module.exports = {
       message.channel.send({
         embed: kickConfirmationEmbed,
       });
-      getChannel(config.channelID.modlog, message.client).send({
-        embed: kickConfirmationEmbed,
-      });
+      if (log) log.send(kickConfirmationEmbed);
     }
   },
 };

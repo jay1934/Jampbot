@@ -3,7 +3,7 @@ const config = require('../../config.json');
 
 module.exports = {
   name: 'warn',
-  rolePermission: 'Jampolice',
+  modOnly: true,
   guildOnly: true,
   category: 'moderation',
   usage: '!warn @user <warn message>',

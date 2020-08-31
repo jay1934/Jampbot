@@ -9,7 +9,7 @@ module.exports = {
     const str = args.slice(0).join(' ');
     if (!str)
       return message.channel.send(
-        `❌ You did not give a string to convert.\nCorrect usage: \`\`${this.usage}\`\`\``
+        `❌ You did not give a string to convert.\nCorrect usage: \`\`${this.usage}\`\``
       );
 
     if (message.content.includes('encode')) {
