@@ -22,15 +22,17 @@
 
 ## Commands:
 
-- **Moderation commands** such as `[temp/un]mute, kick, ban, warn, purge, and lockdown`
+- **Moderation Commands** such as `[temp/un]mute, kick, ban, warn, purge, and lockdown`
 
-- **EXP commands** such as `exp, leaderboard, and levels`
+- **EXP Commands** such as `exp, leaderboard, and levels`
 
-- **Fun commands** such as `8ball, rps (rock, paper, scissors), trivia, and dadjoke`
+- **Fun Commands** such as `8ball, quag, f, and dadjoke`
 
-- **(Configurable) FAQ commands** such as `faq register, faq login, etc.`
+- **Interactive Game Commands** such as `hangman, connect-four, and rps`
 
-- **Misc commands** such as `timer, poll, and giveaway`
+- **(Configurable) FAQ Commands** such as `faq register, faq login, etc.`
+
+- **Misc Commands** such as `timer, poll, and giveaway`
 
 ---
 
@@ -38,15 +40,7 @@
 
 ## Planned Features:
 
-- [x] Create **note.js** for mods
-
-- [x] Create **report.js** (only works in DMs)
-
-- [x] Create **warn.js and warnings.js**
-
-- [ ] Continue questions in **trivia.js**
-
-- [x] Make **help.js**; send embeds in DM.
+- Redo `!ban` command
 
 ---
 
