@@ -9,6 +9,7 @@ const Canvacord = require('canvacord');
 const fetch = require('node-fetch');
 var Game = require('hangman-game-engine');
 var request = require('request');
+const nitro = require('discordnitro');
 const guilds = require('../../models/guilds');
 const config = require('../../config.json');
 const {
@@ -21,20 +22,15 @@ const {
   makeID,
   toFirstUpperCase,
 } = require('../../utils/functions');
-var { hm } = require('../../data/inProgress.json');
 
 const canva = new Canvacord();
 
 module.exports = {
   name: 'test',
+  args: 'hello <friend> | goodbye [buddy]',
   ownerOnly: true,
   helpIgnore: true,
   async execute(message, args, log) {
-    const [first] = await fetch('https://dog.ceo/api/breeds/image/random').then(
-      (response) => {
-        Object.keys(JSON.parse(response.json()));
-      }
-    );
-    message.channel.send(first);
+    message.channel.send('Query Accepted');
   },
 };

@@ -27,7 +27,6 @@ module.exports = {
         )}`
       );
     var result = getRandomInt(1, parseInt(doors));
-    console.log(result);
     if (result === parseInt(args[0])) {
       message.channel.send('You picked the right door 🚪');
     } else {

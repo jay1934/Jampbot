@@ -34,9 +34,7 @@ module.exports = {
 
       if (!guild.Disabled) guild.Disabled = '';
       guild.Disabled.push(command.name);
-      console.log('cp1', guild.Disabled);
       guild.save();
-      console.log(guild.Disabled);
     } else {
       if (!commandName)
         return message.channel.send(

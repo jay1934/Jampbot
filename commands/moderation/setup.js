@@ -8,7 +8,6 @@ module.exports = {
   ownerOnly: true,
   async execute(message, args) {
     var moderation, exp, log, welcome;
-    console.log('it is i the debugging checkpoint');
     message.channel
       .send(
         new MessageEmbed()

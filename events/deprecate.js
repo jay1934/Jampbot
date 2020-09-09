@@ -3,7 +3,6 @@ const guilds = require('../models/guilds');
 const { getChannel, getUser, getGuild } = require('../utils/functions');
 
 module.exports = (client) => {
-  console.log('schedule function works');
   levels.find(
     {
       lastUpdated: {
@@ -41,7 +40,6 @@ module.exports = (client) => {
     },
     (err, res) => {
       if (err) console.log(err);
-      if (res) console.log(res.n, res.ok);
     }
   );
 
@@ -68,9 +66,9 @@ module.exports = (client) => {
               .send(
                 `**${getUser(user.userID, client).username}#${
                   getUser(user.userID, client).discriminator
-                }**'s EXP was lowered ${
+                }**'s EXP was lowered ${Math.floor(
                   (300 / user.xp) * 100
-                }% (300 EXP points) after one week of inactivity`
+                )}% (300 EXP points) after one week of inactivity`
               );
           });
           console.log('Deprecate (Before): ', user.xp);

@@ -34,15 +34,6 @@ module.exports = async (message) => {
             creator[1]
           }** and has earned **${pointsEarned[0]}** 🔴`
         );
-      } else {
-        console.log(
-          `🔴 **${exec} **${getEmoji(
-            emote[1],
-            message.client
-          )} submitted a clear for **${level[1]}** by **${
-            creator[1]
-          }** and has earned **${pointsEarned[0]}** 🔴`
-        );
       }
     } catch (err) {
       console.log(err);

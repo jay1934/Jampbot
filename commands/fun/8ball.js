@@ -10,7 +10,7 @@ module.exports = {
   usage: '!8ball <question>',
   description: 'Ask almighty 8ball a question',
   execute(message, args) {
-    if (!args[0])
+    if (!args[0] || !/^\w/.test(args[0]))
       return message.channel.send(
         '❌ Please ask a full question.\nCorrect usage: ``!8ball enter question here``'
       );

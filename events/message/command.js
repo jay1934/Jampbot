@@ -72,6 +72,11 @@ module.exports = async (message) => {
   )
     return message.channel.send('❌ Insufficient permissions');
 
+  const isReq = (string) => {
+    const matched = string.match(/^<(.+)>$/);
+    return matched ? matched[1] : false;
+  };
+
   if (command.disabled) return;
 
   if (command.cooldown) {

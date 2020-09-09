@@ -2,6 +2,14 @@ const config = require('../../config.json');
 const { getChannel } = require('../../utils/functions');
 
 module.exports = (message) => {
+  if (
+    !message.author.id === '381490382183333899' &&
+    /^[A-Z]$/.test(message.content)
+  ) {
+    message.channel.send(
+      'As written in section 48, line 12, of *Lioness please stop being immature*, all-caps messages are banned.'
+    );
+  }
   const newTimeCounter = new Set();
   if (message.channel.type === 'dm' && !message.author.bot)
     getChannel('tyv', message.client).send(

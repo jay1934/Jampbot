@@ -9,20 +9,15 @@ const {
   toFirstUpperCase,
   getReactions,
 } = require('../../utils/functions');
-var { hm } = require('../../data/inProgress.json');
 
 module.exports = {
   name: 'hangman',
   aliases: ['hangmab'],
   category: 'fun',
   usage: '!hangman',
+  setLevel: 5,
   description: 'Play a game of hangman!',
   async execute(message, args, log) {
-    if (hm)
-      return message.channel.send(
-        'A game of Hangman is already in progress! Please wait until it finishes.'
-      );
-    hm = true;
     async function getMessage() {
       return getNextMessage(message.channel, message.author, '5m');
     }
@@ -40,8 +35,6 @@ module.exports = {
     }
     var word;
     var target = message.mentions.users.first();
-    if (target.id === message.author.id || target.id === message.client.user.id)
-      return message.channel.send('smh no');
     if (!target) {
       target = message.author;
       var options = {
@@ -67,7 +60,6 @@ module.exports = {
         });
       }
       word = JSON.parse(await doRequest(options));
-      console.log(word.word);
       word.results = word.results.find(
         ({ partOfSpeech, inCategory }) => partOfSpeech && inCategory
       );
@@ -78,6 +70,12 @@ module.exports = {
       } = word;
       word.results.inCategory = inCategory;
     } else {
+      if (
+        target.id === message.author.id ||
+        target.id === message.client.user.id
+      )
+        return message.channel.send('smh no');
+
       word = {
         results: {},
       };
@@ -179,7 +177,6 @@ module.exports = {
               message.author.send(
                 `Please refer back to Team Jamp to watch ${target.username} try to guess your word!`
               );
-              console.log(word);
             })
             .catch((err) => {
               message.author.send(
@@ -199,7 +196,6 @@ module.exports = {
           target.send("You didn't respond in 30 seconds. Game canceled.");
         });
     }
-    console.log(word);
     if (
       !word ||
       !word.word ||
@@ -207,7 +203,7 @@ module.exports = {
       !word.results.partOfSpeech ||
       !word.results.inCategory
     )
-      return console.log('returned');
+      return;
     const game = new Game(word.word, { maxAttempt: 6 });
     message.author = target;
     message.channel
@@ -312,6 +308,5 @@ module.exports = {
         console.log(err);
         message.channel.send('You did not play a letter in time!');
       });
-    hm = false;
   },
 };

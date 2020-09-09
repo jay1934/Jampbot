@@ -3,7 +3,6 @@
 /* eslint-disable no-await-in-loop */
 var Game = require('connect-four');
 const { getNextMessage } = require('../../utils/functions');
-var { cf } = require('../../data/inProgress.json');
 
 module.exports = {
   name: 'connect-four',
@@ -14,11 +13,6 @@ module.exports = {
   usage: '!connect-four @user',
   description: 'Play a game of connectfour with someone!',
   async execute(message, args, log) {
-    if (cf)
-      return message.channel.send(
-        'A game of connect-four is already in progress! Please wait until it finishes.'
-      );
-    cf = true;
     async function error(user) {
       return message.channel
         .send('That move is not valid! Please try again.')
@@ -70,9 +64,7 @@ module.exports = {
       )
       .then(async (msg) => {
         game.on('play', async (player, coords) => {
-          console.log(player, coords);
           board[coords.row][+coords.col] = player === id1 ? '🔵' : '🔴';
-          console.log(board);
           if (game.ended) {
             msg.delete();
             message.channel.send(
@@ -147,6 +139,5 @@ module.exports = {
           "You didn't answer within 5 minute. Game canceled."
         );
       });
-    cf = false;
   },
 };

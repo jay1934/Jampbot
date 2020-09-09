@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
 const Levels = require('discord-xp');
-const { hasRole } = require('../../utils/functions.js');
 
 module.exports = {
   name: 'userinfo',

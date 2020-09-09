@@ -4,7 +4,6 @@ const {
   getReactions,
   getNextMessage,
 } = require('../../utils/functions');
-var { rps } = require('../../data/inProgress.json');
 
 module.exports = {
   name: 'rps',
@@ -14,11 +13,6 @@ module.exports = {
   description:
     'Starts a rock-paper-scissor game with Jampbot++ (or someone else)',
   async execute(message, args) {
-    if (rps)
-      return message.channel.send(
-        'A game of rps is already in progress! Please wait until it finishes.'
-      );
-    rps = true;
     const player2 =
       message.mentions.users.first() ||
       message.guild.members.cache.get(args[0]);
@@ -29,7 +23,7 @@ module.exports = {
       );
     if (!player2) {
       const result = getRandomArrElement(replies);
-      console.log(result);
+
       const embed = new Discord.MessageEmbed()
         .setColor('RED')
         .setTitle('You have been challenged to a game of\nRock Paper Scissors')
@@ -49,7 +43,7 @@ module.exports = {
         })
         .then((collected) => {
           const answer = collected.first().content.toLowerCase();
-          console.log(answer);
+
           // only accept messages by the user who sent the command
           // accept only 1 message, and return the promise after 30000ms = 30s
           if (answer === 'stop') {
@@ -124,7 +118,6 @@ module.exports = {
           `**${message.author.username}** has challenged you to a game of **rock, paper, scissors**! Would you like to accept?`
         )
         .catch((err) => {
-          console.log('cp0', err);
           return message.channel.send(
             "It seems I can't DM this user <:hairBotS:733296095022546985>"
           );
@@ -149,7 +142,6 @@ module.exports = {
                 message.reply(
                   "it seems I can't DM you <:botS:719916354609872926>"
                 );
-                console.log('cp1', err);
                 player2.send(
                   `I couldn't DM ${message.author.username}; game canceled`
                 );
@@ -186,7 +178,6 @@ module.exports = {
                 );
               })
               .catch((err) => {
-                console.log('cp2', err);
                 message.author.send(
                   '❌ No answer after 30 seconds, game canceled.'
                 );
@@ -223,7 +214,6 @@ module.exports = {
                 player2.send(`You have played **${results.toLowerCase()}**.`);
               })
               .catch((err) => {
-                console.log('cp3', err);
                 player2.send('❌ No answer after 30 seconds, game canceled.');
                 message.channel.send(
                   `**${message.author.username}** gave no answer after 30 seconds, game canceled.`
@@ -340,7 +330,6 @@ module.exports = {
           } else console.log(emoji);
         })
         .catch((err) => {
-          console.log('cp4', err);
           player2.send('❌ No answer after 30 seconds, game canceled.');
           message.channel.send(
             `**${player2.username}** gave no answer after 30 seconds, game canceled.`
@@ -350,6 +339,5 @@ module.exports = {
           );
         });
     }
-    rps = false;
   },
 };

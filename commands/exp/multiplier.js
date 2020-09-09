@@ -1,6 +1,5 @@
 const { MessageEmbed } = require('discord.js');
 const Levels = require('discord-xp');
-const { hasRole } = require('../../utils/functions');
 
 module.exports = {
   name: 'multiplier',

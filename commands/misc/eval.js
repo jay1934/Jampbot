@@ -2,10 +2,13 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const request = require('request');
+const moment = require('moment');
 const f = require('../../utils/functions');
 const levels = require('../../models/levels');
 const guilds = require('../../models/guilds');
+const { getNextMessage } = require('../../utils/functions');
 
+getNextMessage();
 module.exports = {
   name: 'eval',
   ownerOnly: true,
@@ -24,7 +27,17 @@ module.exports = {
 
       if (typeof evaled !== 'string') evaled = require('util').inspect(evaled);
 
-      message.channel.send(clean(evaled), { code: 'xl' });
+      message.channel.send(
+        new Discord.MessageEmbed()
+          .setColor('GREEN')
+          .setAuthor("Lioness' Eval Results", message.author.displayAvatarURL())
+          .addField('Input:', `\`\`\`${args.join(' ')}\`\`\``)
+          .addField(
+            'Output:',
+            `\`\`\`${clean(evaled)}`,
+            `${{ code: 'xl' }}\`\`\``
+          )
+      );
     } catch (err) {
       message.channel.send(`Err: ${err}`);
       console.log(err);

@@ -22,7 +22,6 @@ module.exports = {
       return message.channel.send(
         'You have to mention a user to give reputation to'
       );
-    console.log(user);
     if (user === message.author)
       return message.channel.send("You can't give yourself reputation smh");
     const taker = await Levels.fetch(user.id, message.guild.id);

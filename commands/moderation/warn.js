@@ -9,7 +9,6 @@ module.exports = {
   usage: '!warn @user <warn message>',
   descriptions: 'Warns a user',
   async execute(message, args) {
-    console.log('yes');
     const warns = require('../../models/warns');
     const user = message.mentions.users.first();
     if (!user)

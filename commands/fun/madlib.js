@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
 const { progressbar } = require('discord.js-utility');
-var { ml } = require('../../data/inProgress.json');
 const {
   getNextMessage,
   getRandomInt,
@@ -18,11 +17,6 @@ module.exports = {
   blacklist: true,
   description: 'Fill out a madlib on Discord!',
   async execute(message, args) {
-    if (ml)
-      return message.channel.send(
-        'A game of Madlibs is already in progress! Please wait until it finishes.'
-      );
-    ml = true;
     const options = [
       {
         title: 'Albert Einstein',
@@ -119,7 +113,6 @@ module.exports = {
       i = 0,
       lib = getRandomInt(0, options.length - 1);
 
-    console.log(options[lib]);
     async function newWord() {
       const msg = await message.channel.send(
         new MessageEmbed()
@@ -160,6 +153,5 @@ module.exports = {
       options[lib].story = options[lib].story.replace(`[${i}]`, filled[i]);
     }
     message.channel.send(`**${options[lib].title}**\n\n${options[lib].story}`);
-    ml = false;
   },
 };
