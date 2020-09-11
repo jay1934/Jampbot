@@ -31,12 +31,8 @@ module.exports = {
         new Discord.MessageEmbed()
           .setColor('GREEN')
           .setAuthor("Lioness' Eval Results", message.author.displayAvatarURL())
-          .addField('Input:', `\`\`\`${args.join(' ')}\`\`\``)
-          .addField(
-            'Output:',
-            `\`\`\`${clean(evaled)}`,
-            `${{ code: 'xl' }}\`\`\``
-          )
+          .addField('Input:', `\`\`\`js\n${args.join(' ')}\n\`\`\``)
+          .addField('Output:', `\`\`\`js\n${clean(evaled)}\n\`\`\``)
       );
     } catch (err) {
       message.channel.send(`Err: ${err}`);
