@@ -1,5 +1,3 @@
-const math = require('mathjs');
-
 module.exports = {
   name: 'calculate',
   aliases: ['calc'],
@@ -12,13 +10,8 @@ module.exports = {
         `Please specify an expression to evaluate.\nCorrect usage: \`\`${this.usage}\`\``
       );
 
-    try {
-      const evaluated = math.evaluate(args.slice(0).join(' ')).toString();
-      return message.channel
-        .send(evaluated)
-        .catch(() => message.channel.send('Invalid expression.'));
-    } catch {
-      return message.channel.send('Invalid expression.');
-    }
+    message.channel
+      .send(require('mathjs').evaluate(args.slice(0).join(' ')).toString())
+      .catch(() => message.channel.send('Invalid expression.'));
   },
 };

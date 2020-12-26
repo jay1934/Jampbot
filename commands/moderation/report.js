@@ -1,16 +1,6 @@
 const Discord = require('discord.js');
-const mongoose = require('mongoose');
-const config = require('../../config.json');
 const reports = require('../../models/reports');
-const {
-  getRandomInt,
-  getRandomArrElement,
-  makeID,
-  getChannel,
-  getGuild,
-} = require('../../utils/functions');
 
-const val = `user-report-${getRandomInt(1000, 9999)}`;
 const reportEmbed = new Discord.MessageEmbed()
   .setTitle('New Report')
   .setColor('RED')
@@ -29,7 +19,7 @@ module.exports = {
   category: 'info',
   usage: '!report',
   description: 'Report something/someone',
-  async execute(message, args) {
+  async execute(message) {
     if (message.channel.type !== 'dm') {
       message.delete();
       message.channel
@@ -41,7 +31,7 @@ module.exports = {
         });
       return;
     }
-
+    const val = `user-report-${Math.inRange(1000, 9999)}`;
     let msg1 = await message.channel.send(ticketEmbed);
     msg1.react('📫').then(() => msg1.react('📧'));
 
@@ -82,7 +72,9 @@ module.exports = {
                   `Please use this channel to discuss with ${message.author.username} about their report.`
                 )
                 .addField('Report Overview', quickReportMessage);
-              const jamp = getGuild('Team Jamp', message.client);
+              const jamp = message.client.guilds.cache.get(
+                '699220238801174558'
+              );
               await jamp.channels
                 .create(`${val}`, {
                   type: 'text',
@@ -107,15 +99,16 @@ module.exports = {
                   channel.setParent('727561183921569832');
                   channel.setTopic(message.author.username`'s Report`);
                   channel.send(newTicket);
+
+                  const ticketContinuation = new Discord.MessageEmbed()
+                    .setTitle('New Report')
+                    .setColor('RED')
+                    .setDescription(
+                      `Thank you for advancing your report; a new channel has been made. Please visit it [here](http://discord.com/channels/699220238801174558/${channel.id}) to continue.`
+                    );
+
+                  msg1.edit(ticketContinuation);
                 });
-              const newChannel = getChannel(val, message.client);
-              const ticketContinuation = new Discord.MessageEmbed()
-                .setTitle('New Report')
-                .setColor('RED')
-                .setDescription(
-                  `Thank you for advancing your report; a new channel has been made. Please visit it [here](http://discord.com/channels/699220238801174558/${newChannel.id}) to continue.`
-                );
-              msg1.edit(ticketContinuation);
               const newReport = new reports({
                 CreatorID: message.author.id,
                 Report: quickReportMessage,
@@ -134,12 +127,19 @@ module.exports = {
               max: 1,
               time: 600000,
             })
-
             .then(async (collected) => {
               // only accept messages by the user who sent the command
               // accept only 1 message, and return the promise after 30000ms = 30s
               const reportMessage = collected.first();
-              const key = makeID(4);
+              var key = '';
+              var characters =
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+              var charactersLength = characters.length;
+              for (var i = 0; i < 4; i++) {
+                key += characters.charAt(
+                  Math.floor(Math.random() * charactersLength)
+                );
+              }
               const report = new Discord.MessageEmbed()
                 .setAuthor(`Message Key: ${key}`)
                 .setDescription(reportMessage);
@@ -176,7 +176,9 @@ module.exports = {
                       )
                       .setFooter('We really appreciate your help <3');
                     message.channel.send(yesEmbed);
-                    getChannel('reports', message.client).send(report);
+                    message.guild.channels.cache
+                      .find((channel) => channel.name === 'reports')
+                      .send(report);
                   } else {
                     report.setTitle(
                       `New Report Sent by ${message.author.username}:`
@@ -190,7 +192,8 @@ module.exports = {
                       )
                       .setFooter('We really appreciate your help <3');
                     message.channel.send(yesEmbed);
-                    getChannel('reports', message.client)
+                    message.guild.channels.cache
+                      .find((channel) => channel.name === 'reports')
                       .send(report)
                       .then((msg) => msg.pin);
                   }

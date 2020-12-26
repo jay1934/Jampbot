@@ -1,12 +1,11 @@
 const { MessageEmbed } = require('discord.js');
-const { getNextMessage, getReactions } = require('../../utils/functions');
 const guilds = require('../../models/guilds');
 
 module.exports = {
   name: 'setup',
   helpIgnore: true,
   ownerOnly: true,
-  async execute(message, args) {
+  async execute(message) {
     var moderation, exp, log, welcome;
     message.channel
       .send(
@@ -18,11 +17,13 @@ module.exports = {
           .setColor('GREEN')
       )
       .then(async (msg) => {
-        const emoji = await getReactions(msg, message.author, '30s', [
-          '✅',
-          '❌',
-        ]);
-        console.log(emoji);
+        const collected = await msg.awaitReactions(
+          (reaction, user) =>
+            ['✅', '❌'].includes(reaction.emoji.name) &&
+            user.id === message.author.id,
+          { time: '30s', long: true }
+        );
+        const emoji = collected.first().emoji.name;
         if (emoji === '✅') {
           message.channel
             .send(
@@ -31,10 +32,13 @@ module.exports = {
                 .setColor('GREEN')
             )
             .then(async (msg) => {
-              const emoji = await getReactions(msg, message.author, '30s', [
-                '✅',
-                '❌',
-              ]);
+              const collected = await msg.awaitReactions(
+                (reaction, user) =>
+                  ['✅', '❌'].includes(reaction.emoji.name) &&
+                  user.id === message.author.id,
+                { time: '30s', long: true }
+              );
+              const emoji = collected.first().emoji.name;
               if (emoji === '✅') moderation = true;
               else moderation = false;
               message.channel
@@ -44,10 +48,13 @@ module.exports = {
                     .setColor('GREEN')
                 )
                 .then(async (msg) => {
-                  const emoji = await getReactions(msg, message.author, '30s', [
-                    '✅',
-                    '❌',
-                  ]);
+                  const collected = await msg.awaitReactions(
+                    (reaction, user) =>
+                      ['✅', '❌'].includes(reaction.emoji.name) &&
+                      user.id === message.author.id,
+                    { time: '30s', long: true }
+                  );
+                  const emoji = collected.first().emoji.name;
                   if (emoji === '✅') exp = true;
                   else exp = false;
                   message.channel
@@ -60,11 +67,11 @@ module.exports = {
                         .setColor('GREEN')
                     )
                     .then(async () => {
-                      const results = await getNextMessage(
-                        message.channel,
-                        message.author,
-                        '30s'
+                      var results = await message.channel.awaitMessages(
+                        (msg) => msg.author.id === message.author.id,
+                        { time: '30000' }
                       );
+                      results = results.first().content;
                       if (results === 'no') log = null;
                       else if (results) {
                         const channel = message.guild.channels.cache.get(
@@ -86,11 +93,11 @@ module.exports = {
                             .setColor('GREEN')
                         )
                         .then(async () => {
-                          const results = await getNextMessage(
-                            message.channel,
-                            message.author,
-                            '30s'
+                          var results = await message.channel.awaitMessages(
+                            (msg) => msg.author.id === message.author.id,
+                            { time: '30000' }
                           );
+                          results = results.first().content;
                           if (results === 'no') welcome = null;
                           else if (results) {
                             const channel = message.guild.channels.cache.get(
@@ -115,7 +122,7 @@ module.exports = {
                           guilds.findOne(
                             { GuildID: message.guild.id },
                             (err, data) => {
-                              if (err) console.log(err);
+                              if (err) throw err;
                               if (!data) {
                                 const newGuild = new guilds({
                                   GuildID: message.guild.id,
@@ -134,40 +141,35 @@ module.exports = {
                             }
                           );
                         })
-                        .catch((err) => {
-                          console.log(err);
-                          return message.channel.send(
+                        .catch(() =>
+                          message.channel.send(
                             "You didn't answer within 30 seconds. Setup canceled."
-                          );
-                        });
+                          )
+                        );
                     })
-                    .catch((err) => {
-                      console.log(err);
-                      return message.channel.send(
+                    .catch(() =>
+                      message.channel.send(
                         "You didn't answer within 30 seconds. Setup canceled."
-                      );
-                    });
+                      )
+                    );
                 })
-                .catch((err) => {
-                  console.log(err);
-                  return message.channel.send(
+                .catch(() =>
+                  message.channel.send(
                     "You didn't answer within 30 seconds. Setup canceled."
-                  );
-                });
+                  )
+                );
             })
-            .catch((err) => {
-              console.log(err);
-              return message.channel.send(
+            .catch(() =>
+              message.channel.send(
                 "You didn't answer within 30 seconds. Setup canceled."
-              );
-            });
+              )
+            );
         } else return message.channel.send('Setup canceled');
       })
-      .catch((err) => {
-        console.log(err);
-        return message.channel.send(
+      .catch(() =>
+        message.channel.send(
           "You didn't answer within 30 seconds. Setup canceled."
-        );
-      });
+        )
+      );
   },
 };

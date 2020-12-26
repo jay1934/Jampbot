@@ -1,6 +1,4 @@
-const discord = require('discord.js');
-const config = require('../../config.json');
-const { getChannel } = require('../../utils/functions');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   name: 'note',
@@ -19,7 +17,7 @@ module.exports = {
       return message.channel.send(
         '❌ The embed character limit is ``2048`` characters. Please try again with a shorter message, or split your message into two different notes.'
       );
-    const embed = new discord.MessageEmbed()
+    const embed = new MessageEmbed()
       .setAuthor(`Noted by ${message.author.username}`)
       .setThumbnail(
         'https://cdn0.iconfinder.com/data/icons/online-education-butterscotch-vol-2/512/Student_Notes-512.png'
@@ -27,9 +25,9 @@ module.exports = {
       .setColor('GREEN')
       .setDescription(Note)
       .setFooter('React to mark as resolved');
-    const msg = await getChannel(config.channelID.notes, message.client).send(
-      embed
-    );
+    const msg = await message.guild.channels.cache
+      .get('731248690550800406')
+      .send(embed);
     await msg.react(good);
     await msg.pin();
     message.channel.send('Note added.');

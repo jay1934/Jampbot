@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const reports = require('../../models/reports.js');
-const { getUser } = require('../../utils/functions.js');
 
 module.exports = {
   name: 'closereport',
@@ -35,7 +34,7 @@ module.exports = {
       confirmation.addField('Closing Message', reason, true);
     }
     reports.findOne({ ReportID: args[0] }, async (err, data) => {
-      if (err) console.log(err);
+      if (err) throw err;
       if (!data)
         return message.channel.send(
           "There was an error. Double check you're using a valid report key"
@@ -46,7 +45,7 @@ module.exports = {
         Closed: true,
       });
       data.save();
-      getUser(data.CreatorID, message.client).send(closed);
+      message.client.users.cache.get(data.CreatorID).send(closed);
       message.channel.send(confirmation);
     });
   },

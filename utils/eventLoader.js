@@ -1,7 +1,5 @@
-const { schedule } = require('./functions');
-
 const reqEvent = (event) => require(`../events/${event}`);
-module.exports = (client) => {
+module.exports = async (client) => {
   client.on('ready', () => reqEvent('ready')(client));
   client.on('message', reqEvent('message/newChannel'));
   client.on('message', reqEvent('message/exp'));
@@ -12,5 +10,8 @@ module.exports = (client) => {
   client.on('guildMemberAdd', reqEvent('welcome'));
   client.on('guildMemberRemove', reqEvent('goodbye'));
   client.on('messageReactionAdd', reqEvent('reaction'));
-  schedule('12:00', () => reqEvent('deprecate')(client));
+  setTimeout(() => {
+    reqEvent('deprecate')(client);
+    setInterval(() => reqEvent('deprecate')(client), 86400000);
+  }, new Date().setHours(12, 0) - Date.now());
 };

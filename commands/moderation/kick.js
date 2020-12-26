@@ -1,6 +1,4 @@
 const Discord = require('discord.js');
-const config = require('../../config.json');
-const { getChannel, getGuild } = require('../../utils/functions');
 
 module.exports = {
   name: 'kick',
@@ -26,7 +24,7 @@ module.exports = {
       return message.channel.send(
         "❌ You can't kick me **I made you** <:mi_emote_o:717925349299585035>"
       );
-    if (message.mentions.users.first().id === config.ownerid)
+    if (message.mentions.users.first().id === message.client.owner.id)
       return message.channel.send("❌ You can't kick my Developer:wink:");
     const botRolePossition = message.guild.member(message.client.user).roles
       .highest.position;
@@ -45,10 +43,11 @@ module.exports = {
         `:redTick: I cannot kick that member. My role might not be high enough or it's an internal error.`
       );
     } else {
-      const member = message.mentions.members.first();
       const kickDM = new Discord.MessageEmbed()
         .setColor('RED')
-        .setThumbnail(config.thumbnails.sad)
+        .setThumbnail(
+          'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+        )
         .setTitle('You have been kicked from Team Jamp :confused:')
         .setDescription(
           "Please do not rejoin unless you have taken time to think about what you've done and how to improve"
@@ -70,7 +69,9 @@ module.exports = {
       }
       const kickConfirmationEmbed = new Discord.MessageEmbed()
         .setColor('RED')
-        .setThumbnail(config.thumbnails.sad)
+        .setThumbnail(
+          'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+        )
         .setDescription(`✅ **${user.tag}** has been successfully kicked!`)
         .addField(
           'Moderator:',

@@ -1,7 +1,6 @@
 // In development
 
 const { MessageEmbed } = require('discord.js');
-const { getRandomArrElement } = require('../../utils/functions');
 
 const questions = [
   {
@@ -81,8 +80,8 @@ module.exports = {
   guildOnly: true,
   blacklist: true,
   disabled: true,
-  async execute(message, args) {
-    const q = getRandomArrElement(questions);
+  async execute(message) {
+    const q = questions.sample();
     let i = 0;
     const Embed = new MessageEmbed()
       .setTitle(q.title)

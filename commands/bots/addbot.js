@@ -1,5 +1,4 @@
 const { MessageEmbed } = require('discord.js');
-const { getReactions } = require('../../utils/functions');
 const botter = require('../../models/botter');
 
 module.exports = {
@@ -9,7 +8,7 @@ module.exports = {
   usage: '!addbot <bot ID> <bot prefix> <bot description>',
   blacklist: true,
   description: 'Add your bot to the server',
-  async execute(message, args, log) {
+  async execute(message, args) {
     const id = args[0];
     if (!id)
       return message.channel.send(
@@ -40,7 +39,7 @@ module.exports = {
         if (message.guild.members.cache.get(user.id))
           return message.channel.send('That user is already in the guild!');
         botter.findOne({ BotID: user.id }, (err, res) => {
-          if (err) console.log(err);
+          if (err) throw err;
           if (!res) return;
           if (res.Blacklisted)
             return message.channel.send('Your bot was blacklisted.');
@@ -62,55 +61,65 @@ module.exports = {
         else confirmation.addField("Your Bot's Description", description);
 
         message.channel.send(confirmation).then(async (msg) => {
-          const emoji = await getReactions(msg, message.author, '1m', [
-            '✅',
-            '❌',
-          ]);
+          await msg.react('✅');
+          await msg.react('❌');
+          msg
+            .awaitReactions(
+              (reaction, user) =>
+                ['✅', '❌'].includes(reaction.emoji.name) &&
+                user.id === message.author.id,
+              { max: 1 }
+            )
+            .then(async (collected) => {
+              var emoji = collected.first().emoji.name;
 
-          if (emoji === '✅') {
-            const newBot = await new botter({
-              UserID: message.author.id,
-              BotID: user.id,
-              Prefix: prefix,
+              if (emoji === '✅') {
+                const newBot = await new botter({
+                  UserID: message.author.id,
+                  BotID: user.id,
+                  Prefix: prefix,
+                });
+                newBot.save();
+                message.channel.send(
+                  'Your bot has been sent to the review queue!'
+                );
+                message.client.channels.cache
+                  .get('746462163308118017')
+                  .send(
+                    new MessageEmbed()
+                      .setColor('GREEN')
+                      .setAuthor(user.tag, user.displayAvatarURL())
+                      .setTitle(`New Bot; Invited by ${message.author.tag}`)
+                      .setDescription(
+                        `${description}\n[Jump to message](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`
+                      )
+                      .addField('Bot ID', user.id)
+                      .addField('Bot Prefix', prefix)
+                      .addField(
+                        'Invite',
+                        `[Invite this bot here](https://discord.com/api/oauth2/authorize?client_id=${user.id}&permissions=70634560&scope=bot)`
+                      )
+                      .setFooter(
+                        message.author.tag,
+                        message.author.displayAvatarURL()
+                      )
+                  );
+                msg.delete();
+                message.client.channels.cache
+                  .get('745787042478292993')
+                  .send(
+                    `${message.author.tag}'s bot, ${user.tag}, was sent into the review queue!`
+                  );
+              } else {
+                msg.delete();
+                return message.channel.send('Bot request canceled.');
+              }
             });
-            newBot.save();
-            message.channel.send('Your bot has been sent to the review queue!');
-            message.client.channels.cache
-              .get('746462163308118017')
-              .send(
-                new MessageEmbed()
-                  .setColor('GREEN')
-                  .setAuthor(user.tag, user.displayAvatarURL())
-                  .setTitle(`New Bot; Invited by ${message.author.tag}`)
-                  .setDescription(
-                    `${description}\n[Jump to message](https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id})`
-                  )
-                  .addField('Bot ID', user.id)
-                  .addField('Bot Prefix', prefix)
-                  .addField(
-                    'Invite',
-                    `[Invite this bot here](https://discord.com/api/oauth2/authorize?client_id=${user.id}&permissions=70634560&scope=bot)`
-                  )
-                  .setFooter(
-                    message.author.tag,
-                    message.author.displayAvatarURL()
-                  )
-              );
-            msg.delete();
-            message.client.channels.cache
-              .get('745787042478292993')
-              .send(
-                `${message.author.tag}'s bot, ${user.tag}, was sent into the review queue!`
-              );
-          } else {
-            msg.delete();
-            return message.channel.send('Bot request canceled.');
-          }
         });
       })
       .catch((err) => {
         message.channel.send("That user doesn't exist!");
-        console.log(err);
+        throw err;
       });
   },
 };

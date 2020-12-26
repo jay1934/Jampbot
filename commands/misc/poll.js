@@ -1,11 +1,8 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const ms = require('ms');
-const config = require('../../config');
-const { getChannel, makeID } = require('../../utils/functions');
 
 const agree = '👍';
 const disagree = '👎';
-const id = makeID(3);
 module.exports = {
   name: 'poll',
   guildOnly: true,
@@ -32,8 +29,7 @@ module.exports = {
     if (!question.endsWith('?')) question += '?';
 
     message.delete();
-    const Embed = new Discord.MessageEmbed()
-      .setAuthor(id)
+    const Embed = new MessageEmbed()
       .setTitle(`New poll!`)
       .setThumbnail(
         'https://i.dlpng.com/static/png/4199263-free-poll-icon-229142-download-poll-icon-229142-polling-png-300_300_preview.webp'
@@ -65,7 +61,7 @@ module.exports = {
         { time: ms(time), long: true }
       );
 
-      const resultsEmbed = new Discord.MessageEmbed()
+      const resultsEmbed = new MessageEmbed()
         .setColor('GREEN')
         .setTitle('Poll Results')
         .setThumbnail(
@@ -90,11 +86,11 @@ module.exports = {
       }
       resultsEmbed.setTimestamp();
       msg.unpin();
-      message.channel.send({ embed: resultsEmbed });
+      message.channel.send(resultsEmbed);
       if (log) log.send(resultsEmbed);
 
       // create new embed with old title & description, new field
-      const newEmbed = new Discord.MessageEmbed({
+      const newEmbed = new MessageEmbed({
         title: 'Voting Closed',
         description: question,
         thumbnail: {
@@ -109,7 +105,7 @@ module.exports = {
             } ⋅ ${disagree}: ${reactions.get(disagree).count - 1}`,
           },
         ],
-        color: 'RED',
+        color: 15158332,
         footer: {
           text: `The poll lasted ${ms(ms(time), {
             long: true,

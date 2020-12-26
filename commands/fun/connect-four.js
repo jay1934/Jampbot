@@ -2,7 +2,6 @@
 /* eslint-disable no-constant-condition */
 /* eslint-disable no-await-in-loop */
 var Game = require('connect-four');
-const { getNextMessage } = require('../../utils/functions');
 
 module.exports = {
   name: 'connect-four',
@@ -12,28 +11,25 @@ module.exports = {
   blacklist: true,
   usage: '!connect-four @user',
   description: 'Play a game of connectfour with someone!',
-  async execute(message, args, log) {
+  async execute(message) {
     async function error(user) {
       return message.channel
         .send('That move is not valid! Please try again.')
         .then(async () => {
-          const results = await getNextMessage(
-            message.channel,
-            user,
-            '5m',
-            true
+          var results = await message.channel.awaitMessages(
+            (msg) => msg.author.id === user.id,
+            { time: '300000' }
           );
-          try {
-            results.delete();
-          } catch {
-            return false;
-          }
-          return +results.content;
+          return results.first().deleted ? false : +results.first().content;
         });
     }
 
     async function getMessage(user) {
-      return getNextMessage(message.channel, user, '5m');
+      const results = await message.channel.awaitMessages(
+        (msg) => msg.author.id === user.id,
+        { time: '300000' }
+      );
+      return results.first().content;
     }
     var player1 = message.author;
     var player2 = message.mentions.users.first();
@@ -58,7 +54,7 @@ module.exports = {
       ['⚫', '⚫', '⚫', '⚫', '⚫', '⚫', '⚫'],
       ['⚫', '⚫', '⚫', '⚫', '⚫', '⚫', '⚫'],
     ];
-    const msg = await message.channel
+    message.channel
       .send(
         `**${id2}**, it's your move! Please respond with a column (1-7). Respond \`cancel\` at any time.`
       )
@@ -89,12 +85,11 @@ module.exports = {
           );
           board.reverse();
           try {
-            var results = await getNextMessage(
-              msg.channel,
-              nextPlayer,
-              '5m',
-              true
+            var results = await msg.channel.awaitMessages(
+              (msg) => msg.author.id === nextPlayer.id,
+              { time: '300000' }
             );
+            results = results.first();
             while (true) {
               if (results.content === 'cancel')
                 return message.channel.send('Game canceled');
@@ -109,14 +104,17 @@ module.exports = {
               else break;
             }
             game.play(nextPlayerID, +results.content - 1);
-          } catch (e) {
-            console.log(e);
+          } catch {
             message.channel.send(
               "You didn't answer within 5 minute. Game canceled."
             );
           }
         });
-        var results = await getNextMessage(msg.channel, player2, '5m', true);
+        var results = await msg.channel.awaitMessages(
+          (msg) => msg.author.id === player2.id,
+          { time: '300000' }
+        );
+        results = results.first();
         while (true) {
           if (results.content === 'cancel')
             return message.channel.send('Game canceled');
@@ -133,11 +131,10 @@ module.exports = {
         }
         game.play(id2, +results.content - 1);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() =>
         message.channel.send(
           "You didn't answer within 5 minute. Game canceled."
-        );
-      });
+        )
+      );
   },
 };

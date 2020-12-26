@@ -1,6 +1,3 @@
-const Levels = require('discord-xp');
-const { getEmoji } = require('../../utils/functions');
-
 module.exports = {
   name: 'demote',
   ownerOnly: true,
@@ -13,14 +10,17 @@ module.exports = {
       return message.channel.send(
         "You didn't specify how many EXP levels to take away!"
       );
-    Levels.subtractLevel(user.id, message.guild.id, xp)
-      .then(() =>
+    'discord-xp'
+      .subtractLevel(user.id, message.guild.id, xp)
+      .then((bool) =>
         message.channel.send(
-          `**${xp} Levels** have been taken away from **${
-            user.username
-          }** ${getEmoji('SadPog', message.client)}`
+          `**${xp} Levels** have been taken away from **${user.username}** ${
+            bool ? 'and they leveled down' : ''
+          } ${message.guild.emojis.cache.find(
+            (emoji) => emoji.name === 'SadPog'
+          )}`
         )
       )
-      .catch((err) => console.log(err));
+      .catch(console.error);
   },
 };

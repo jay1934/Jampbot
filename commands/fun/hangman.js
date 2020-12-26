@@ -2,13 +2,7 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-await-in-loop */
 const Game = require('hangman-game-engine');
-const request = require('request');
 const { MessageEmbed } = require('discord.js');
-const {
-  getNextMessage,
-  toFirstUpperCase,
-  getReactions,
-} = require('../../utils/functions');
 
 module.exports = {
   name: 'hangman',
@@ -17,20 +11,23 @@ module.exports = {
   usage: '!hangman',
   setLevel: 5,
   description: 'Play a game of hangman!',
-  async execute(message, args, log) {
+  async execute(message) {
     async function getMessage() {
-      return getNextMessage(message.channel, message.author, '5m');
+      const result = message.channel.awaitMessages(
+        (msg) => msg.author.id === message.author.id,
+        { time: '300000' }
+      );
+      return result.first().content;
     }
     async function error() {
       return message.channel
         .send('You already played that letter! Please try again.')
         .then(async () => {
-          const results = await getNextMessage(
-            message.channel,
-            message.author,
-            '5m'
+          const result = message.channel.awaitMessages(
+            (msg) => msg.author.id === message.author,
+            { time: '300000' }
           );
-          return results;
+          return result.first().content;
         });
     }
     var word;
@@ -50,13 +47,9 @@ module.exports = {
       };
       function doRequest(url) {
         return new Promise(function (resolve, reject) {
-          request(url, function (error, res, body) {
-            if (!error && res.statusCode == 200) {
-              resolve(body);
-            } else {
-              reject(error);
-            }
-          });
+          require('request')(url, (error, res, body) =>
+            !error && res.statusCode == 200 ? resolve(body) : reject(error)
+          );
         });
       }
       word = JSON.parse(await doRequest(options));
@@ -88,108 +81,134 @@ module.exports = {
             )
             .setDescription('Do you accept?')
         )
-        .catch((err) => {
-          console.log(err);
-          message.channel.send("It seems that I can't DM this user");
-        })
+        .catch(() => message.channel.send("It seems that I can't DM this user"))
         .then(async (msg) => {
           message.channel.send(
             `A game request was sent to ${target.username}, please refer to your DMs for the next steps.`
           );
-          const emoji = await getReactions(msg, target, '30s', ['✅', '❌']);
-          if (emoji === '❌') {
-            target.send('You have succesfully declined');
-            message.author.send(
-              `Unfortunately, ${target.username} declined your offer`
-            );
-            return message.channel.send(
-              `${target.username} declined the offer`
-            );
-          }
-          target.send(
-            `You have succesfully accepted! Please refer back to Team Jamp, and wait while ${message.author.username} chooses your word.`
-          );
-          message.channel.send(`${target.username} accepted the offer!`);
-          await message.author
-            .send(
-              new MessageEmbed()
-                .setColor('GREEN')
-                .setTitle(
-                  `${target.username} accepted the offer! Please respond with your chosen word.`
-                )
-                .setDescription(
-                  `Please keep in mind that ${target.username} will only have **6** wrong guesses before game over. Don't make the word too easy, or too hard!`
-                )
-                .addField(
-                  'Requirements',
-                  'Your word must be under 20 characters and use only a-z letters (no spaces or hyphens) or the game will be immediately canceled.'
-                )
-                .setFooter('For the interest of time, you have 5 minutes.')
+          await msg.react('✅');
+          await msg.react('❌');
+          msg
+            .awaitReactions(
+              (reaction, user) =>
+                ['✅', '❌'].includes(reaction.emoji.name) &&
+                user.id === message.author.id,
+              { max: 1, time: 30000 }
             )
-            .catch(() =>
-              message.channel.send(
-                `It seems I cant send a DM to ${message.author.user}. Game canceled.`
-              )
-            )
-            .then(async (msg) => {
-              var results = await getNextMessage(
-                msg.channel,
-                message.author,
-                '5m'
-              );
-              if (results.length > 20 || !/[a-z]/i.test(results)) {
+            .then(async (collected) => {
+              var emoji = collected.first().emoji.name;
+              if (emoji === '❌') {
+                target.send('You have succesfully declined');
                 message.author.send(
-                  'Your word does not follow the requirements. Game canceled.'
+                  `Unfortunately, ${target.username} declined your offer`
                 );
                 return message.channel.send(
-                  `${message.author.username}'s word did not follow the requirements, the game has been canceled.`
+                  `${target.username} declined the offer`
                 );
               }
-              word.word = results.toLowerCase();
-              message.author.send(
-                new MessageEmbed()
-                  .setColor('GREEN')
-                  .setTitle(
-                    'What part of speech is this word? For example, adjective, noun, etc.'
+              target.send(
+                `You have succesfully accepted! Please refer back to Team Jamp, and wait while ${message.author.username} chooses your word.`
+              );
+              message.channel.send(`${target.username} accepted the offer!`);
+              message.author
+                .send(
+                  new MessageEmbed()
+                    .setColor('GREEN')
+                    .setTitle(
+                      `${target.username} accepted the offer! Please respond with your chosen word.`
+                    )
+                    .setDescription(
+                      `Please keep in mind that ${target.username} will only have **6** wrong guesses before game over. Don't make the word too easy, or too hard!`
+                    )
+                    .addField(
+                      'Requirements',
+                      'Your word must be under 20 characters and use only a-z letters (no spaces or hyphens) or the game will be immediately canceled.'
+                    )
+                    .setFooter('For the interest of time, you have 5 minutes.')
+                )
+                .catch(() =>
+                  message.channel.send(
+                    `It seems I cant send a DM to ${message.author.user}. Game canceled.`
                   )
-                  .setFooter('For the interest of time, you have one minute.')
-              );
-              results = await getNextMessage(msg.channel, message.author, '1m');
-              word.results.partOfSpeech = results;
-              message.author.send(
-                new MessageEmbed()
-                  .setColor('GREEN')
-                  .setTitle(
-                    'What category does your word fit in to? For example, algebra fits in to math'
-                  )
-                  .setFooter('For the interest of time, you have one minute.')
-              );
-              results = await getNextMessage(msg.channel, message.author, '1m');
-              word.results.inCategory = results;
-              message.author.send(
-                new MessageEmbed()
-                  .setColor('GREEN')
-                  .setTitle('Please provide a short definition of your word.')
-                  .setFooter('For the interest of time, you have three minutes')
-              );
-              results = await getNextMessage(msg.channel, message.author, '3m');
-              word.results.definition = results;
-              message.author.send(
-                `Please refer back to Team Jamp to watch ${target.username} try to guess your word!`
-              );
-            })
-            .catch((err) => {
-              message.author.send(
-                "You didn't respond in the alloted time! Game canceled."
-              );
-              message.channel.send(
-                `${message.author.username} didn't pick a word in the alloted time. Game canceled.`
-              );
-              console.log(err);
+                )
+                .then(async (msg) => {
+                  var results = message.channel.awaitMessages(
+                    (msg) => msg.author.id === message.author.id,
+                    { time: '300000' }
+                  );
+                  results = results.first().content;
+                  if (results.length > 20 || !/[a-z]/i.test(results)) {
+                    message.author.send(
+                      'Your word does not follow the requirements. Game canceled.'
+                    );
+                    return message.channel.send(
+                      `${message.author.username}'s word did not follow the requirements, the game has been canceled.`
+                    );
+                  }
+                  word.word = results.toLowerCase();
+                  message.author.send(
+                    new MessageEmbed()
+                      .setColor('GREEN')
+                      .setTitle(
+                        'What part of speech is this word? For example, adjective, noun, etc.'
+                      )
+                      .setFooter(
+                        'For the interest of time, you have one minute.'
+                      )
+                  );
+                  results = await msg.channel.awaitMessages(
+                    (msg) => msg.author.id === message.author.id,
+                    { time: '60000' }
+                  );
+                  results = results.first().content;
+                  word.results.partOfSpeech = results;
+                  message.author.send(
+                    new MessageEmbed()
+                      .setColor('GREEN')
+                      .setTitle(
+                        'What category does your word fit in to? For example, algebra fits in to math'
+                      )
+                      .setFooter(
+                        'For the interest of time, you have one minute.'
+                      )
+                  );
+                  results = await msg.channel.awaitMessages(
+                    (msg) => msg.author.id === message.author.id,
+                    { time: '60000' }
+                  );
+                  results = results.first().content;
+                  word.results.inCategory = results;
+                  message.author.send(
+                    new MessageEmbed()
+                      .setColor('GREEN')
+                      .setTitle(
+                        'Please provide a short definition of your word.'
+                      )
+                      .setFooter(
+                        'For the interest of time, you have three minutes'
+                      )
+                  );
+                  results = await msg.channel.awaitMessages(
+                    (msg) => msg.author.id === message.author.id,
+                    { time: '180000' }
+                  );
+                  results = results.first().content;
+                  word.results.definition = results;
+                  message.author.send(
+                    `Please refer back to Team Jamp to watch ${target.username} try to guess your word!`
+                  );
+                })
+                .catch(() => {
+                  message.author.send(
+                    "You didn't respond in the alloted time! Game canceled."
+                  );
+                  message.channel.send(
+                    `${message.author.username} didn't pick a word in the alloted time. Game canceled.`
+                  );
+                });
             });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           message.channel.send(
             `${target.username} didn't respond in 30 seconds. Game canceled. <@${message.author.id}>, please make sure a user is online before you request to play with them t prevent spam.`
           );
@@ -228,9 +247,7 @@ module.exports = {
               ? message.channel.send(
                   `Congratulations; You win!\n\n**Finished Word:** \`${game.hiddenWord.join(
                     ''
-                  )}\`\n**Word Definition:** ${toFirstUpperCase(
-                    word.results.definition
-                  )}\n**Guessed Letters:** \`${game.guessedLetters.join(
+                  )}\`\n**Word Definition:** ${word.results.definition.toFirstUpperCase()}\n**Guessed Letters:** \`${game.guessedLetters.join(
                     ', '
                   )}\`\n**Incorrect Guesses:** ${
                     game.failedGuesses
@@ -241,9 +258,7 @@ module.exports = {
                     ' '
                   )}\`\n**Actual Word:** \`${
                     word.word
-                  }\`\n**Word Definition:** ${toFirstUpperCase(
-                    word.results.definition
-                  )}\n**Guessed Letters:** \`${game.guessedLetters.join(
+                  }\`\n**Word Definition:** ${word.results.definition.toFirstUpperCase()}\n**Guessed Letters:** \`${game.guessedLetters.join(
                     ', '
                   )}\``
                 );
@@ -251,9 +266,7 @@ module.exports = {
             .send(
               `**Hangman Word So Far:** \`${game.hiddenWord.join(' ')}\`${
                 game.failedGuesses > 2
-                  ? `\n**Word Category:** ${toFirstUpperCase(
-                      word.results.inCategory
-                    )}`
+                  ? `\n**Word Category:** ${word.results.inCategory.toFirstUpperCase()}`
                   : ''
               }\n**Part of Speech:** ${
                 word.results.partOfSpeech
@@ -264,11 +277,11 @@ module.exports = {
               }\n\n**Please respond with a letter!** Respond \`cancel\` at any time.`
             )
             .then(async (msg) => {
-              var results = await getNextMessage(
-                message.channel,
-                message.author,
-                '5m'
+              var results = await message.channel.awaitMessages(
+                (msg) => msg.author.id === message.author.id,
+                { time: '300000' }
               );
+              results = results.first().content;
               while (true) {
                 if (results === 'cancel')
                   return message.channel.send('Game canceled.');
@@ -282,16 +295,15 @@ module.exports = {
               }
               play(game.guess(results), msg);
             })
-            .catch((err) => {
-              console.log(err);
-              message.channel.send('You did not play a letter in time!');
-            });
+            .catch(() =>
+              message.channel.send('You did not play a letter in time!')
+            );
         }
-        var results = await getNextMessage(
-          message.channel,
-          message.author,
-          '5m'
+        var results = await message.channel.awaitMessages(
+          (msg) => msg.author.id === message.author.id,
+          { time: '300000' }
         );
+        results = results.first().content;
         while (true) {
           if (results === 'cancel')
             return message.channel.send('Game canceled.');
@@ -304,9 +316,6 @@ module.exports = {
         }
         play(game.guess(results), msg);
       })
-      .catch((err) => {
-        console.log(err);
-        message.channel.send('You did not play a letter in time!');
-      });
+      .catch(() => message.channel.send('You did not play a letter in time!'));
   },
 };

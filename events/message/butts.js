@@ -1,5 +1,4 @@
 const whiteChannels = require('../../data/whiteChannels.json');
-const { getRandomInt } = require('../../utils/functions');
 
 module.exports = async (message) => {
   const args = message.content.split(' ');
@@ -10,9 +9,9 @@ module.exports = async (message) => {
     args.length > 4
   ) {
     var number = 0;
-    const numberOf = getRandomInt(1, args.length / 1.5);
+    const numberOf = Math.inRange(1, args.length / 1.5);
     while (numberOf > number) {
-      const wordNumber = getRandomInt(1, args.length);
+      const wordNumber = Math.inRange(1, args.length);
       args[wordNumber - 1] = 'jamp';
       number++;
     }

@@ -1,12 +1,10 @@
-const { getRandomArrElement, getUser } = require('../../utils/functions');
-
 module.exports = {
   name: 'compliment',
   blacklist: true,
   category: 'fun',
   usage: '!compliment @user',
   description: 'Compliments a user <3',
-  execute(message, args) {
+  async execute(message, args) {
     const compliments = [
       'Your smile is contagious',
       'You look great today',
@@ -102,7 +100,8 @@ module.exports = {
       "You're a gift to those around you",
     ];
     const user =
-      message.mentions.users.first() || getUser(args[0], message.client);
+      message.mentions.users.first() ||
+      (await message.client.users.fetch(args[0]));
     if (!user)
       return message.channel.send('❌ Tag someone to send them a compliment!');
 
@@ -112,9 +111,7 @@ module.exports = {
       );
     }
     return message.channel.send(
-      `**${user.username}**, ${getRandomArrElement(
-        compliments
-      ).toLowerCase()} :heart:`
+      `**${user.username}**, ${compliments.sample().toLowerCase()} :heart:`
     );
   },
 };

@@ -1,10 +1,8 @@
-const botter = require('../../models/botter');
-
 module.exports = {
   name: 'rejectbot',
   helpIgnore: true,
   modOnly: true,
-  async execute(message, args, log) {
+  async execute(message, args) {
     if (!args[0])
       return message.channel.send('Please specify a bot ID to reject.');
     let reason = args.slice(1).join(' ');
@@ -12,8 +10,8 @@ module.exports = {
     const bot = await message.client.users.fetch(args[0], false, true);
     if (!bot) return message.channel.send('This is not a valid ID.');
     if (!bot.bot) return message.channel.send('This user is not a bot.');
-    botter.findOne({ BotID: bot.id }, (err, data) => {
-      if (err) console.log(err);
+    require('../../models/botter').findOne({ BotID: bot.id }, (err, data) => {
+      if (err) throw err;
       if (!data) return message.channel.send("You can't reject this bot!");
       message.client.channels.cache
         .get('745787042478292993')

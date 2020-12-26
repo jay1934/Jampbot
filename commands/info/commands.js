@@ -1,16 +1,9 @@
-const Discord = require('discord.js');
-const {
-  toFirstUpperCase,
-  hasRole,
-  getGuild,
-  arrMove,
-} = require('../../utils/functions');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   name: 'commands',
   helpIgnore: true,
-  async execute(message, args) {
-    const guilds = require('../../models/guilds');
+  async execute(message) {
     const { commands } = message.client;
 
     /* command object example:
@@ -25,11 +18,8 @@ module.exports = {
 
     var cat = commands
       .filter((command) => command.category)
-      .map((command) => command.category);
-
-    cat = Array.from(new Set(cat));
-
-    cat = arrMove(cat, cat.indexOf('moderation'), cat.length - 1);
+      .map((command) => command.category)
+      .cleanse();
 
     for (var category of cat) {
       const funData = commands
@@ -42,15 +32,18 @@ module.exports = {
             !command.exclusive &&
             command.usage &&
             command.description &&
-            guilds.findOne({ GuildID: message.guild.id }, (err, res) => {
-              return !res.Disabled.includes(command.name);
-            })
+            require('../../models/guilds').findOne(
+              { GuildID: message.guild.id },
+              (err, res) => {
+                return !res.Disabled.includes(command.name);
+              }
+            )
         )
         .map(
           (command) =>
-            `**${toFirstUpperCase(command.name)}**\n\`\`${command.usage}\`\`\n${
-              command.description
-            }`
+            `**${command.name.toFirstUpperCase()}**\n\`\`${
+              command.usage
+            }\`\`\n${command.description}`
         )
         .sort()
         .join('\n\n')
@@ -67,8 +60,8 @@ module.exports = {
           funSplit[y] = funData[i];
         }
       }
-      var embed = new Discord.MessageEmbed()
-        .setTitle(`${toFirstUpperCase(category)} Commands`)
+      var embed = new MessageEmbed()
+        .setTitle(`${category.toFirstUpperCase()} Commands`)
         .setColor('RANDOM')
         .setFooter(
           'Everything within <> is necessary, anything in [] is optional. Do not include the symbols in the command.'
@@ -76,12 +69,7 @@ module.exports = {
       if (
         category !== 'moderation' ||
         (category === 'moderation' &&
-          hasRole(
-            getGuild('Team Jamp', message.client).members.cache.get(
-              message.author.id
-            ),
-            'Jampolice'
-          ))
+          message.member.roles.cache.has('699669246476812288'))
       ) {
         for (var l = 0; funSplit[l]; l++) {
           embed.setDescription(funSplit[l]);
@@ -93,7 +81,7 @@ module.exports = {
         }
       }
     }
-    const dEmbed = new Discord.MessageEmbed()
+    const dEmbed = new MessageEmbed()
       .setColor('RANDOM')
       .setTitle('Jampbot Deluxe Commands')
       .setDescription(

@@ -1,6 +1,3 @@
-const Levels = require('discord-xp');
-const { getEmoji } = require('../../utils/functions');
-
 module.exports = {
   name: 'setxp',
   aliases: ['setexp'],
@@ -12,12 +9,13 @@ module.exports = {
     const xp = parseInt(args[1]);
     if (!xp)
       return message.channel.send("You didn't specify an amount of EXP!");
-    Levels.setXp(user.id, message.guild.id, xp)
+    require('discord-xp')
+      .setXp(user.id, message.guild.id, xp)
       .then(() =>
         message.channel.send(
           `**${user.username}** now has **${xp} EXP** points.`
         )
       )
-      .catch((err) => console.log(err));
+      .catch(console.error);
   },
 };

@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const config = require('../../config.json');
 
 module.exports = {
   name: 'warn',
@@ -21,14 +20,16 @@ module.exports = {
       );
     const warnEmbed = new Discord.MessageEmbed()
       .setColor('RED')
-      .setThumbnail(config.thumbnails.sad)
+      .setThumbnail(
+        'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+      )
       .setDescription(`✅ **${user.username}** has been successfully warned!`)
       .addField('Moderator:', message.author.username)
       .addField('Warning:', args.slice(1).join(' '));
     warns.findOne(
       { Guild: message.guild.id, User: user.id },
       async (err, data) => {
-        if (err) console.log(err);
+        if (err) throw err;
         if (!data) {
           const newWarns = new warns({
             User: user.id,

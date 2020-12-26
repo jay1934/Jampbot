@@ -3,13 +3,9 @@ const botter = require('../../models/botter');
 module.exports = async (message) => {
   if (message.channel.id !== '745440162787622992' || message.author.bot) return;
   const args = message.content.split(/ +/);
-  async function error(message, error) {
-    message.channel.send(error).then((err) =>
-      setTimeout(() => {
-        err.delete();
-      }, 5000)
-    );
-  }
+  const error = (message, error) =>
+    message.channel.send(error).then((err) => err.delete({ timeout: 5000 }));
+
   message.delete();
   if (!/<@[&!]?\d+>/.test(args[1]))
     return error(
@@ -62,14 +58,14 @@ module.exports = async (message) => {
         ],
       })
       .then((channel) => {
-        error(message, `<#${channel.id}> has been created!`);
+        error(message, `${channel} has been created!`);
         message.client.channels.cache
           .get('745787042478292993')
           .send(
-            `<#${channel.id}> has been created for ${bot.username}, ${message.author.username}'s bot!`
+            `${channel} has been created for ${bot.tag}, ${message.author.tag}'s bot!`
           );
         channel.send(
-          `<@${message.author.id}>, welcome to your private testing channel!`
+          `${message.author}, welcome to your private testing channel!`
         );
       });
     data.hasChannel = true;

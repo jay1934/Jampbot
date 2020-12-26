@@ -1,7 +1,5 @@
 const Discord = require('discord.js');
 const ms = require('ms');
-const config = require('../../config.json');
-const { getRole, getChannel } = require('../../utils/functions');
 
 module.exports = {
   name: 'lockdown',
@@ -12,16 +10,19 @@ module.exports = {
     '!lockdown [reason]\n!unlock [reason]\n!templd <duration(10s, 12h, etc)> [reason]',
   description: 'Restricts message-sending permissions in channel',
   async execute(message, args, log) {
-    const { channel } = message;
     const reason = args.slice(0).join(' ') || 'No Reason Specified';
-    const Member = getRole('Member', message.guild);
+    const Member = message.guild.roles.cache.get('699232048644227115');
 
     if (message.content.includes('!unlock')) {
-      channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
+      message.channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
       const deLDembed = new Discord.MessageEmbed()
         .setColor('RED')
-        .setThumbnail(config.thumbnails.sad)
-        .setDescription(`✅ **${channel}** has been successfully unlocked!`)
+        .setThumbnail(
+          'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+        )
+        .setDescription(
+          `✅ **${message.channel}** has been successfully unlocked!`
+        )
         .addField(
           'Moderator:',
           `${message.author.username}#${message.author.discriminator}`
@@ -33,11 +34,15 @@ module.exports = {
       });
       if (log) log.send(deLDembed);
     } else if (message.content.includes('!lockdown')) {
-      channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
+      message.channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
       const LDembed = new Discord.MessageEmbed()
         .setColor('RED')
-        .setThumbnail(config.thumbnails.sad)
-        .setDescription(`✅ **${channel}** has been successfully locked!`)
+        .setThumbnail(
+          'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+        )
+        .setDescription(
+          `✅ **${message.channel}** has been successfully locked!`
+        )
         .addField(
           'Moderator:',
           `${message.author.username}#${message.author.discriminator}`
@@ -56,14 +61,19 @@ module.exports = {
         return message.channel.send(
           `❌ Please specify a value followed by ``s, m, or h`` to signify the time period this channel will be locked.${usage}`
         );
-      channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
+      message.channel.updateOverwrite(Member, { SEND_MESSAGES: false }, reason);
       const tempLDembed = new Discord.MessageEmbed()
         .setColor('RED')
-        .setThumbnail(config.thumbnails.sad)
+        .setThumbnail(
+          'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+        )
         .setDescription(
-          `✅ **${channel}** has been temporarily locked for ${ms(ms(time), {
-            long: true,
-          })}!`
+          `✅ **${message.channel}** has been temporarily locked for ${ms(
+            ms(time),
+            {
+              long: true,
+            }
+          )}!`
         )
         .addField(
           'Moderator:',
@@ -75,12 +85,20 @@ module.exports = {
       });
       if (log) log.send(tempLDembed);
       setTimeout(function () {
-        channel.updateOverwrite(Member, { SEND_MESSAGES: true }, reason);
+        message.channel.updateOverwrite(
+          Member,
+          { SEND_MESSAGES: true },
+          reason
+        );
         const deLDembed = new Discord.MessageEmbed()
           .setColor('RED')
-          .setThumbnail(config.thumbnails.sad)
+          .setThumbnail(
+            'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+          )
           .setFooter(`Channel was locked for ${ms(ms(time), { long: true })}`)
-          .setDescription(`✅ **${channel}** has been successfully unlocked!`)
+          .setDescription(
+            `✅ **${message.channel}** has been successfully unlocked!`
+          )
           .addField(
             'Original Moderator:',
             `${message.author.username}#${message.author.discriminator}`

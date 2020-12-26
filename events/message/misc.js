@@ -1,47 +1,44 @@
-const config = require('../../config.json');
-const { getChannel } = require('../../utils/functions');
-
 module.exports = (message) => {
-  if (
-    !message.author.id === '381490382183333899' &&
-    /^[A-Z]$/.test(message.content)
-  ) {
-    message.channel.send(
-      'As written in section 48, line 12, of *Lioness please stop being immature*, all-caps messages are banned.'
-    );
-  }
-  const newTimeCounter = new Set();
   if (message.channel.type === 'dm' && !message.author.bot)
-    getChannel('tyv', message.client).send(
-      `${message.content}\n*Sent by ${message.author.tag}*`,
-      {
+    message.client.channels.cache
+      .find((channel) => channel.name === 'tyv')
+      .send(`${message.content}\n*Sent by ${message.author.tag}*`, {
         split: true,
-      }
-    );
+      });
   if (
     message.type === 'PINS_ADD' &&
-    message.channel.id === config.channelID.notes
+    message.channel.id === '731248690550800406'
   )
     message.delete();
 
   if (
     message.channel.id === '699221277008855071' &&
-    message.author.id === config.deluxe
+    message.author.id === '666085542085001246'
   ) {
     message
       .react('699436048693985321')
       .then(() => message.react('717925533265952832'));
   }
-  if (message.content.toLowerCase() === 'jampbot yes')
-    message.channel.send(':)');
-  if (message.content.toLowerCase() === 'jampbot no') {
-    if (Math.random() > 0.3) message.channel.send(':(');
-    else message.channel.send('sleep with one eye open');
-  }
-  if (message.content.toLowerCase() === 'jampbot why')
-    message.channel.send('O_o');
-  if (message.content.toLowerCase() === 'jampbot pls')
-    message.channel.send(';)');
+  /*  switch (message.content.toLowerCase().match(/^jampbot (\w{2,3})/)[0]) {
+    case 'yes': {
+      message.channel.send(':)');
+      break;
+    }
+    case 'no': {
+      if (Math.random() > 0.3) message.channel.send(':(');
+      else message.channel.send('sleep with one eye open');
+      break;
+    }
+    case 'why': {
+      message.channel.send('O_o');
+      break;
+    }
+    case 'pls': {
+      message.channel.send(';)');
+      break;
+    }
+    default:
+  } */
   if (message.content.includes('(╯°□°）╯︵ ┻━┻'))
     return message.channel.send(
       'NONONO the poor table\n\n┬─┬ ノ( ゜-゜ノ)\n\nThere you go 🙂'
@@ -50,19 +47,10 @@ module.exports = (message) => {
     message.channel.type !== 'dm' &&
     message.guild.id === '699220238801174558'
   ) {
-    // if message includes some form of 'im' bored, send a remind that *you can use !rps to play rock paper scissors* ;)
-    const found = message.content
-      .toLowerCase()
-      .match(/i.{0,10}b+\s*o+\s*r+\s*e+\s*d/);
-    if (found && !newTimeCounter.has('cooldown')) {
-      // eslint-disable-next-line no-redeclare
-      newTimeCounter.add('cooldown');
+    if (/i.{0,10}b+ *o+ *r+\s*e+ *d/i.test(message.content)) {
       message.channel.send(
-        `Are you bored? Try using \`\`!rps\`\` or \`\`!quag\`\` in <#${config.channelID.spam}> <:BuzzyGoodMan:727242865322754139>`
+        `Are you bored? Try using \`\`!rps\`\` or \`\`!quag\`\` in <#699612856018272289> <:BuzzyGoodMan:727242865322754139>`
       );
-      setTimeout(() => {
-        newTimeCounter.delete('cooldown');
-      }, 1800000);
     }
   }
 };

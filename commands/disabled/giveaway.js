@@ -1,8 +1,5 @@
-// This command is not in use, but it was fun to make, so I'm keeping it just in case I need to look back on it later
-
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const ms = require('ms');
-const ownerid = require('../../config.json');
 
 module.exports = {
   name: 'giveaway',
@@ -24,7 +21,7 @@ module.exports = {
       );
     const prize = args.slice(1).join(' ');
     if (!prize) return message.channel.send(`❌ No prize specified!`);
-    const Embed = new Discord.MessageEmbed()
+    const Embed = new MessageEmbed()
       .setTitle(`🎉🎉 New giveaway! 🎉🎉`)
       .setDescription(
         `A giveaway has been started for the prize of **${prize}!**\nThe giveaway will end in **${ms(
@@ -50,7 +47,7 @@ module.exports = {
         .get('🎉')
         .users.cache.filter((u) => !u.bot)
         .random();
-      const winnerE = new Discord.MessageEmbed()
+      const winnerE = new MessageEmbed()
         .setColor('GREEN')
         .setTitle('🎉🎉 A winner has been chosen 🎉🎉')
         .setDescription(

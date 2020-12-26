@@ -1,6 +1,3 @@
-const Levels = require('discord-xp');
-const { getEmoji } = require('../../utils/functions');
-
 module.exports = {
   name: 'promote',
   ownerOnly: true,
@@ -13,14 +10,17 @@ module.exports = {
       return message.channel.send(
         "You didn't specify how many EXP levels to award!"
       );
-    Levels.appendLevel(message.author.id, message.guild.id, xp)
+    require('discord-xp')
+      .appendLevel(message.author.id, message.guild.id, xp)
       .then(() =>
         message.channel.send(
           `**${xp} Levels** have been awarded to **${
             user.username
-          }** ${getEmoji('PikaPls', message.client)}`
+          }** ${message.guild.emojis.cache.find(
+            (emoji) => emoji.name === 'PikaPls'
+          )}`
         )
       )
-      .catch((err) => console.log(err));
+      .catch(console.error);
   },
 };

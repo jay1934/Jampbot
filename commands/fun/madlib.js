@@ -1,11 +1,4 @@
-const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
-const { progressbar } = require('discord.js-utility');
-const {
-  getNextMessage,
-  getRandomInt,
-  arrMove,
-} = require('../../utils/functions');
 
 module.exports = {
   name: 'madlib',
@@ -16,7 +9,7 @@ module.exports = {
   usage: 'madlib',
   blacklist: true,
   description: 'Fill out a madlib on Discord!',
-  async execute(message, args) {
+  async execute(message) {
     const options = [
       {
         title: 'Albert Einstein',
@@ -109,9 +102,8 @@ module.exports = {
     ];
     var filled = [],
       canceled,
-      secondPlus,
       i = 0,
-      lib = getRandomInt(0, options.length - 1);
+      lib = Math.inRange(0, options.length - 1);
 
     async function newWord() {
       const msg = await message.channel.send(
@@ -122,10 +114,12 @@ module.exports = {
             "Do not use 'cancel' as a madlib word; it will cancel the game."
           )
           .setDescription(
-            `${progressbar(filled.length, options[lib].blanks.length, 12, [
-              '<:green:740590536343158844>',
-              '<:red:740591576505385050>',
-            ])} done`
+            `${require('discord.js-utility').progressbar(
+              filled.length,
+              options[lib].blanks.length,
+              12,
+              ['<:green:740590536343158844>', '<:red:740591576505385050>']
+            )} done`
           )
       );
       await message.channel

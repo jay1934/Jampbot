@@ -1,18 +1,16 @@
-const Levels = require('discord-xp');
-
 module.exports = {
   name: 'rep',
   category: 'EXP',
   usage: '!rep [@user]',
   blacklist: true,
   description: 'View your reputation, or the reputation of another user',
-  async execute(message, args, log) {
+  async execute(message, args) {
     const target =
       message.mentions.users.first() ||
       message.client.users.cache.get(args[0]) ||
       message.author;
 
-    const user = await Levels.fetch(target.id, message.guild.id);
+    const user = await require('discord-xp').fetch(target.id, message.guild.id);
     if (target === message.author) {
       if (!user) return message.channel.send("You haven't earned any EXP!");
       if (!user.rep) user.rep = 0;

@@ -1,14 +1,6 @@
 /* eslint-disable no-eval */
-const Discord = require('discord.js');
-const fetch = require('node-fetch');
-const request = require('request');
-const moment = require('moment');
-const f = require('../../utils/functions');
-const levels = require('../../models/levels');
-const guilds = require('../../models/guilds');
-const { getNextMessage } = require('../../utils/functions');
+const { MessageEmbed } = require('discord.js');
 
-getNextMessage();
 module.exports = {
   name: 'eval',
   ownerOnly: true,
@@ -23,20 +15,23 @@ module.exports = {
     };
     try {
       const code = args.join(' ');
-      let evaled = eval(code);
-
-      if (typeof evaled !== 'string') evaled = require('util').inspect(evaled);
 
       message.channel.send(
-        new Discord.MessageEmbed()
+        new MessageEmbed()
           .setColor('GREEN')
           .setAuthor("Lioness' Eval Results", message.author.displayAvatarURL())
           .addField('Input:', `\`\`\`js\n${args.join(' ')}\n\`\`\``)
-          .addField('Output:', `\`\`\`js\n${clean(evaled)}\n\`\`\``)
+          .addField(
+            'Output:',
+            `\`\`\`js\n${clean(
+              typeof eval(code) === 'string'
+                ? require('util').inspect(eval(code))
+                : eval(code)
+            )}\n\`\`\``
+          )
       );
     } catch (err) {
-      message.channel.send(`Err: ${err}`);
-      console.log(err);
+      console.error(err);
     }
   },
 };

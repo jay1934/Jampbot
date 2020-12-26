@@ -1,6 +1,4 @@
-const Levels = require('discord-xp');
-const { MessageEmbed } = require('discord.js');
-const { getDifferenceInDHMS, getRandomInt } = require('../../utils/functions');
+const { fetch, appendXp } = require('discord-xp');
 
 module.exports = {
   name: 'daily',
@@ -9,40 +7,36 @@ module.exports = {
   usage: '!daily',
   disabled: true,
   description: 'Collect a daily amount of EXP',
-  async execute(message, args) {
-    var user = Levels.fetch(message.author.id, message.guild.id);
+  async execute(message) {
+    var user = await fetch(message.author.id, message.guild.id);
     if (!user.streak) user.streak = 0;
     if (user.lastDaily) {
-      if (getDifferenceInDHMS(user.lastDaily, new Date(), 'hour') < 24) {
+      if (Math.getDifferenceInDHMS(user.lastDaily, new Date(), 'hour') < 24) {
         return message.channel.send(
           `You've already used this command today! Please wait **${Math.round(
-            getDifferenceInDHMS(
+            Math.getDifferenceInDHMS(
               24,
-              getDifferenceInDHMS(user.lastDaily, new Date(), 'hour'),
+              Math.getDifferenceInDHMS(user.lastDaily, new Date(), 'hour'),
               'hour'
             )
           )} hours** and **${Math.round(
-            getDifferenceInDHMS(
+            Math.getDifferenceInDHMS(
               24,
-              getDifferenceInDHMS(user.lastDaily, new Date(), 'hour'),
+              Math.getDifferenceInDHMS(user.lastDaily, new Date(), 'hour'),
               'hour'
             ) / 60
           )} minutes**`
         );
       }
       // eslint-disable-next-line no-unused-expressions
-      getDifferenceInDHMS(user.lastDaily, new Date(), 'hour') < 48
-        ? (user.streak += 1)
+      Math.getDifferenceInDHMS(user.lastDaily, new Date(), 'hour') < 48
+        ? user.streak++
         : (user.streak = 0);
     }
 
-    const amount = getRandomInt(200, 350) + user.streak * 30;
-    const up = await Levels.appendXp(
-      message.author.id,
-      message.guild.id,
-      amount
-    );
-    const daily = new MessageEmbed()
+    const amount = Math.inRange(200, 350) + user.streak * 30;
+    const up = await appendXp(message.author.id, message.guild.id, amount);
+    const daily = new (require('discord.js').MessageEmbed)()
       .setColor('GREEN')
       .setAuthor(`Streak: ${user.streak} (+${user.streak * 30} bonus)`)
       .setTitle('Daily Reward Collected!')

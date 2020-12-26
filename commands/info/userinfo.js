@@ -1,6 +1,4 @@
-const Discord = require('discord.js');
 const moment = require('moment');
-const Levels = require('discord-xp');
 
 module.exports = {
   name: 'userinfo',
@@ -11,30 +9,43 @@ module.exports = {
   usage: '!userinfo [@user]',
   descriptions: "Gets a user's info",
   async execute(message, args) {
-    const target = message.mentions.members.first() || message.member;
-    const user = await Levels.fetch(target.id, message.guild.id);
-    const createdAt = moment(target.user.createdAt).format(
-      'D MMM YYYY, h:mm a'
+    const member =
+      message.mentions.members.first() ||
+      message.guild.members.cache.get(args[0]) ||
+      message.member;
+    message.channel.send(
+      new (require('discord.js').MessageEmbed)()
+        .setColor(member.displayColor)
+        .setThumbnail(member.user.displayAvatarURL())
+        .addFields(
+          { name: '**Username**', value: `**${member.username}**` },
+          {
+            name: '**Account Created**',
+            value: `**${moment(member.user.createdAt).format(
+              'D MMM YYYY, h:mm a'
+            )}**`,
+          },
+          {
+            name: '**Joined Server**',
+            value: `**${moment(member.joinedAt).format(
+              'D MMM YYYY, h:mm a'
+            )}**`,
+          },
+          {
+            name: '**EXP Level**',
+            value: `**${
+              (await require('discord-xp').fetch(member.id, message.guild.id)
+                .level) || 0
+            }**`,
+          },
+          {
+            name: '**Jamper Rank**',
+            value: `**${
+              member.roles.cache.find((x) => /J[au]mper/.test(x.name)).name
+            }**`,
+          }
+        )
+        .setTimestamp()
     );
-    const joinedAt = moment(target.joinedAt).format('D MMM YYYY, h:mm a');
-
-    const embed = new Discord.MessageEmbed()
-      .setColor(target.displayColor)
-      .setThumbnail(target.user.displayAvatarURL())
-      .addField('**Username**', `**${target.user.username}**`, false)
-      .addField('**Account Created**', `**${createdAt}**`, false)
-      .addField('**Joined Server**', `**${joinedAt}**`, false)
-      .addField('**EXP Level**', `**${user.level || 0}**`)
-      .addField(
-        '**Jamper Rank**',
-        `**${message.member.roles.cache
-          .filter((x) => /J[au]mper/.test(x.name))
-          .map((r) => r.name)
-          .join('')}**`,
-        false
-      )
-      .setTimestamp();
-
-    message.channel.send(embed);
   },
 };

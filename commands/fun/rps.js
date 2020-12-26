@@ -1,9 +1,4 @@
-const Discord = require('discord.js');
-const {
-  getRandomArrElement,
-  getReactions,
-  getNextMessage,
-} = require('../../utils/functions');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   name: 'rps',
@@ -22,9 +17,9 @@ module.exports = {
         "Well that doesn't seem like much fun, does it <:polite:699433623962648576>"
       );
     if (!player2) {
-      const result = getRandomArrElement(replies);
+      const result = replies.sample();
 
-      const embed = new Discord.MessageEmbed()
+      const embed = new MessageEmbed()
         .setColor('RED')
         .setTitle('You have been challenged to a game of\nRock Paper Scissors')
         .setDescription(
@@ -57,7 +52,7 @@ module.exports = {
               )}\`. Game canceled.`
             );
 
-          const rpsTie = new Discord.MessageEmbed()
+          const rpsTie = new MessageEmbed()
             .setColor('YELLOW')
             .setTitle('Good Game. We Tied.')
             .setDescription(
@@ -65,7 +60,7 @@ module.exports = {
             )
             .setFooter('Thanks for playing!');
           if (answer === result) return message.channel.send(rpsTie);
-          const rpsWin = new Discord.MessageEmbed()
+          const rpsWin = new MessageEmbed()
             .setColor('GREEN')
             .setTitle('Congratulations! You Win!')
             .setDescription(
@@ -74,7 +69,7 @@ module.exports = {
             )
             .setFooter('Thanks for playing!');
 
-          const rpsLose = new Discord.MessageEmbed()
+          const rpsLose = new MessageEmbed()
             .setColor('RED')
             .setTitle('Darn! You Lost!')
             .setDescription(
@@ -117,18 +112,24 @@ module.exports = {
         .send(
           `**${message.author.username}** has challenged you to a game of **rock, paper, scissors**! Would you like to accept?`
         )
-        .catch((err) => {
-          return message.channel.send(
+        .catch(() =>
+          message.channel.send(
             "It seems I can't DM this user <:hairBotS:733296095022546985>"
-          );
-        })
+          )
+        )
         .then(async (msg) => {
-          const emoji = await getReactions(msg, player2, '30s', ['👍', '👎']);
+          await msg.react('👍');
+          await msg.react('👎');
+          const collected = await msg.awaitReactions(msg, player2, '30000', [
+            '👍',
+            '👎',
+          ]);
+          const emoji = collected.first().emoji.name;
           if (emoji === '👍') {
             const msg = await message.channel.send(
               `**${player2.username}** has accepted your challenge! Please check your DMs to continue <:PikaPls:718985469337010206>`
             );
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
               .setColor('RED')
               .setTitle(
                 'You have been challenged to a game of\nRock Paper Scissors'
@@ -138,7 +139,7 @@ module.exports = {
               );
             await message.author
               .send(embed)
-              .catch((err) => {
+              .catch(() => {
                 message.reply(
                   "it seems I can't DM you <:botS:719916354609872926>"
                 );
@@ -151,13 +152,13 @@ module.exports = {
                 player2.send(
                   `Please be patient while **${message.author.username}** makes their move.`
                 );
-                const results = await getNextMessage(
-                  msg.channel,
-                  message.author,
-                  '30s'
+                var results = await msg.channel.awaitMessages(
+                  (msg) => msg.author.id === message.author.id,
+                  { time: '30000' }
                 );
+                results = results.first().content.toLowerCase();
 
-                if (!replies.includes(results.toLowerCase())) {
+                if (!replies.includes(results)) {
                   message.author.send(
                     `❌ Only these responses are accepted: \`${replies.join(
                       ', '
@@ -170,14 +171,12 @@ module.exports = {
                     `**${message.author.username}** didn't answer correctly; game canceled <:botS:719916354609872926>`
                   );
                 }
-                player1Result = results.toLowerCase();
+                player1Result = results;
                 message.author.send(
-                  `You have played **${results.toLowerCase()}**. Please be patient while **${
-                    player2.username
-                  }** makes their move.`
+                  `You have played **${results}**. Please be patient while **${player2.username}** makes their move.`
                 );
               })
-              .catch((err) => {
+              .catch(() => {
                 message.author.send(
                   '❌ No answer after 30 seconds, game canceled.'
                 );
@@ -191,13 +190,13 @@ module.exports = {
             await player2
               .send(embed)
               .then(async (msg) => {
-                const results = await getNextMessage(
-                  msg.channel,
-                  player2,
-                  '30s'
+                var results = await msg.channel.awaitMessages(
+                  (msg) => msg.author.id === player2.id,
+                  { time: '30000' }
                 );
+                results = results.first().content.toLowerCase();
 
-                if (!replies.includes(results.toLowerCase())) {
+                if (!replies.includes(results)) {
                   player2.send(
                     `❌ Only these responses are accepted: \`${replies.join(
                       ', '
@@ -210,10 +209,10 @@ module.exports = {
                     `**${player2.username}** didn't answer correctly; game canceled <:botS:719916354609872926>`
                   );
                 }
-                player2Result = results.toLowerCase();
-                player2.send(`You have played **${results.toLowerCase()}**.`);
+                player2Result = results;
+                player2.send(`You have played **${results}**.`);
               })
-              .catch((err) => {
+              .catch(() => {
                 player2.send('❌ No answer after 30 seconds, game canceled.');
                 message.channel.send(
                   `**${message.author.username}** gave no answer after 30 seconds, game canceled.`
@@ -223,7 +222,7 @@ module.exports = {
                 );
               });
 
-            const rpsTie = new Discord.MessageEmbed()
+            const rpsTie = new MessageEmbed()
               .setColor('YELLOW')
               .setTitle('Good Game. You Tied.')
               .setDescription(
@@ -231,7 +230,7 @@ module.exports = {
               )
               .setFooter('Thanks for playing!');
 
-            const rpsWin1 = new Discord.MessageEmbed()
+            const rpsWin1 = new MessageEmbed()
               .setColor('GREEN')
               .setTitle('Congratulations! You Win!')
               .setDescription(
@@ -239,7 +238,7 @@ module.exports = {
               )
               .setFooter('Thanks for playing!');
 
-            const rpsWin2 = new Discord.MessageEmbed()
+            const rpsWin2 = new MessageEmbed()
               .setColor('GREEN')
               .setTitle('Congratulations! You Win!')
               .setDescription(
@@ -247,7 +246,7 @@ module.exports = {
               )
               .setFooter('Thanks for playing!');
 
-            const rpsWin3 = new Discord.MessageEmbed()
+            const rpsWin3 = new MessageEmbed()
               .setColor('GREEN')
               .setTitle(`${message.author.username} won!`)
               .setDescription(
@@ -255,7 +254,7 @@ module.exports = {
               )
               .setFooter('Good game to both of you!');
 
-            const rpsWin4 = new Discord.MessageEmbed()
+            const rpsWin4 = new MessageEmbed()
               .setColor('GREEN')
               .setTitle(`${player2.username} won!`)
               .setDescription(
@@ -263,7 +262,7 @@ module.exports = {
               )
               .setFooter('Good game to both of you!');
 
-            const rpsLose1 = new Discord.MessageEmbed()
+            const rpsLose1 = new MessageEmbed()
               .setColor('RED')
               .setTitle('Darn! You Lost!')
               .setDescription(
@@ -271,7 +270,7 @@ module.exports = {
               )
               .setFooter('Thanks for playing!');
 
-            const rpsLose2 = new Discord.MessageEmbed()
+            const rpsLose2 = new MessageEmbed()
               .setColor('RED')
               .setTitle('Darn! You Lost!')
               .setDescription(
@@ -320,16 +319,16 @@ module.exports = {
 
               default:
             }
-          } else if (emoji === '👎') {
+          } else {
             player2.send(
               `You have rejected ${message.author.username}'s request.`
             );
             message.reply(
               `${player2.username} has rejected your request <:NotLikeThis:717575061468610560>`
             );
-          } else console.log(emoji);
+          }
         })
-        .catch((err) => {
+        .catch(() => {
           player2.send('❌ No answer after 30 seconds, game canceled.');
           message.channel.send(
             `**${player2.username}** gave no answer after 30 seconds, game canceled.`

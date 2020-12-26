@@ -1,6 +1,3 @@
-const Levels = require('discord-xp');
-const { getEmoji } = require('../../utils/functions');
-
 module.exports = {
   name: 'subtractxp',
   aliases: ['subtractexp', 'subxp', 'subexp'],
@@ -14,14 +11,17 @@ module.exports = {
       return message.channel.send(
         "You didn't specify an amount of EXP to subtract!"
       );
-    Levels.subtractXp(user.id, message.guild.id, xp)
+    require('discord-xp')
+      .subtractXp(user.id, message.guild.id, xp)
       .then(() =>
         message.channel.send(
           `**${xp} EXP** points have been subtracted from **${
             user.username
-          }** ${getEmoji('SadPog', message.client)}`
+          }** ${message.guild.emojis.cache.find(
+            (emoji) => emoji.name === 'SadPog'
+          )}`
         )
       )
-      .catch((err) => console.log(err));
+      .catch(console.error);
   },
 };

@@ -33,7 +33,7 @@ module.exports = {
       message.channel.send(
         'Something went wrong. Please double check the URL you gave'
       );
-      console.log(err);
+      throw err;
     }
   },
 };

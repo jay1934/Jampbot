@@ -1,6 +1,4 @@
 const Discord = require('discord.js');
-const config = require('../../config.json');
-const { getChannel, getGuild } = require('../../utils/functions');
 
 module.exports = {
   name: 'ban',
@@ -35,11 +33,13 @@ module.exports = {
       return message.channel.send(
         "❌ smh you can't ban me **I made you** <:mi_emote_o:717925349299585035>"
       );
-    if (message.mentions.users.first().id === config.ownerid)
+    if (message.mentions.users.first().id === message.client.owner.id)
       return message.channel.send("You can't ban my Developer :wink:");
     const banDM = new Discord.MessageEmbed()
       .setColor('RED')
-      .setThumbnail(config.thumbnails.sad)
+      .setThumbnail(
+        'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+      )
       .setTitle('You have been banned from Team Jamp :confused:')
       .addField('Reason', reason)
       .setFooter(
@@ -54,14 +54,15 @@ module.exports = {
         user.send({ embed: banDM });
         console.log(`Successfully sent ban message to ${user.tag}`);
       })
-      .catch((err) => {
-        console.log(err);
-        console.log(`Unsuccessfully sent ban message to ${user.tag}`);
-      });
+      .catch(() =>
+        console.log(`Unsuccessfully sent ban message to ${user.tag}`)
+      );
 
     const banConfirmationEmbed = new Discord.MessageEmbed()
       .setColor('RED')
-      .setThumbnail(config.thumbnails.sad)
+      .setThumbnail(
+        'https://cdn.discordapp.com/attachments/699230720392167482/715882589986226276/1590749817205_1_600x600.png'
+      )
       .setDescription(`✅ **${user.tag}** has been successfully banned!`)
       .addField(
         'Moderator:',

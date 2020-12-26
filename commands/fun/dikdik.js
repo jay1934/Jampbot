@@ -1,5 +1,4 @@
-const Discord = require('discord.js');
-const { getRandomArrElement } = require('../../utils/functions');
+const { MessageEmbed } = require('discord.js');
 
 const dikdik = [
   'https://cdn.discordapp.com/attachments/699612856018272289/735301972420329530/266px-Dik-dik.png',
@@ -11,14 +10,12 @@ module.exports = {
   name: 'dikdik',
   blacklist: true,
   helpIgnore: true,
-  async execute(message, args) {
+  async execute(message) {
     if (
       message.author.id === '592950968354865162' ||
       message.author.id === '591923920261873677'
     ) {
-      const lol = new Discord.MessageEmbed().setImage(
-        getRandomArrElement(dikdik)
-      );
+      const lol = new MessageEmbed().setImage(dikdik.sample());
       message.channel.send(lol);
     }
   },

@@ -1,6 +1,4 @@
-const Discord = require('discord.js');
-
-const prefix = '!';
+const { MessageEmbed } = require('discord.js');
 // bot-spam = <#701599142782304266>
 // important-links = <#701858631221772329>
 // level-rules = <#699220818374295633>
@@ -15,7 +13,7 @@ module.exports = {
   description: 'Sends answers and examples for FAQs',
   execute(message, args) {
     // these are the different embeds that will be referenced in the commands
-    const registerEmbed = new Discord.MessageEmbed()
+    const registerEmbed = new MessageEmbed()
       .setColor('RED')
       .setTitle('How to register in Team Jamp')
       .setDescription(
@@ -25,7 +23,7 @@ module.exports = {
         'https://cdn.discordapp.com/attachments/699939038601150510/713438819269083167/InShot_20200522_130748930.jpg'
       );
 
-    const websiteEmbed = new Discord.MessageEmbed()
+    const websiteEmbed = new MessageEmbed()
       .setColor('RED')
       .setTitle("How to login and use Team Jamp's website")
       .setDescription(
@@ -35,7 +33,7 @@ module.exports = {
         'https://cdn.discordapp.com/attachments/699230720392167482/714805202602950747/InShot_20200526_074033748.jpg'
       );
 
-    const clearsEmbed = new Discord.MessageEmbed()
+    const clearsEmbed = new MessageEmbed()
       .setColor('RED')
       .setTitle('How to submit clears')
       .setDescription(
@@ -45,7 +43,7 @@ module.exports = {
         'https://cdn.discordapp.com/attachments/699230720392167482/715284483208642580/Screenshot_20200527-152247.png'
       );
 
-    const levelsEmbed = new Discord.MessageEmbed()
+    const levelsEmbed = new MessageEmbed()
       .setColor('RED')
       .setTitle('How to submit levels')
       .setDescription(
@@ -55,7 +53,7 @@ module.exports = {
         'https://cdn.discordapp.com/attachments/699230720392167482/715289245178265740/Screenshot_20200527-154113.png'
       );
 
-    const pendingEmbed = new Discord.MessageEmbed()
+    const pendingEmbed = new MessageEmbed()
       .setColor('RED')
       .setTitle('What is a pending level')
       .setDescription(
@@ -66,20 +64,28 @@ module.exports = {
       );
 
     // this will be referenced in a command which will show every other FAQ command for ease of navigation
-    const menuEmbed = new Discord.MessageEmbed()
+    const menuEmbed = new MessageEmbed()
       .setColor('RED')
       .setTitle('FAQ Command Menu')
       .setThumbnail(
         'https://cdn.discordapp.com/attachments/699230720392167482/715303228383690853/1588435006903.png'
       )
-      .addField('__**faq 1 / faq register**__', 'How to register in Team Jamp')
-      .addField(
-        '__**faq 2 / faq website**__',
-        "How to login and use Team Jamp's website"
-      )
-      .addField('__**faq 3 / faq clears**__', 'How to submit clears')
-      .addField('__**faq 4 / faq levels**__', 'How to submit levels')
-      .addField('__**faq 5 / faq pending**__', 'What are pending levels');
+      .addFields(
+        {
+          name: '__**faq 1 / faq register**__',
+          value: 'How to register in Team Jamp',
+        },
+        {
+          name: '__**faq 2 / faq website**__',
+          value: "How to login and use Team Jamp's website",
+        },
+        { name: '__**faq 3 / faq clears**__', value: 'How to submit clears' },
+        { name: '__**faq 4 / faq levels**__', value: 'How to submit levels' },
+        {
+          name: '__**faq 5 / faq pending**__',
+          value: 'What are pending levels',
+        }
+      );
 
     // if there is nothing after !faq, cancel the command and return an error message
     if (!args[0])

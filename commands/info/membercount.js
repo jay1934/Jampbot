@@ -1,13 +1,11 @@
-const { getGuild } = require('../../utils/functions');
-
 module.exports = {
   name: 'membercount',
   blacklist: true,
   helpIgnore: true,
-  async execute(message, args) {
+  async execute(message) {
     message.channel.send(
-      `Team Jamp has \`\`${
-        getGuild('Team Jamp', message.client).memberCount
+      `${message.guild.name} has \`\`${
+        message.client.guilds.cache.get('699220238801174558').memberCount
       }\`\` members <a:PogJamper:704670075667611648>`
     );
   },

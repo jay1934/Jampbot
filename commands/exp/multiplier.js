@@ -1,5 +1,4 @@
 const { MessageEmbed } = require('discord.js');
-const Levels = require('discord-xp');
 
 module.exports = {
   name: 'multiplier',
@@ -8,40 +7,34 @@ module.exports = {
   usage: '!multiplier',
   description: 'View your EXP multiplier(s)',
   blacklist: true,
-  async execute(message, args) {
-    const user = await Levels.fetch(message.author.id, message.guild.id);
-    var multi = 0;
+  async execute(message) {
+    const user = await require('discord-xp').fetch(
+      message.author.id,
+      message.guild.id
+    );
     var active = [];
     if (!user) {
       message.channel.send("You don't have any exp yet!");
     } else {
-      if (user.boosted.bool) {
-        multi += user.boosted.multi;
+      if (user.boosted.bool)
         active.push(
           `**Server Booster:** ${
             ((user.boosted.multi - 1) / 1) * 100
           }% EXP Bonus`
         );
-      }
 
-      if (user.pog.bool) {
-        multi += user.pog.multi;
+      if (user.pog.bool)
         active.push(
           `**PogJamper:** ${((user.pog.multi - 1) / 1) * 100}% EXP Bonus`
         );
-      }
 
-      if (user.jamper.bool) {
-        multi += user.jamper.multi;
+      if (user.jamper.bool)
         active.push(`**Part of the Jamp Squad:** 20% EXP Bonus`);
-      }
 
-      if (user.early.bool) {
-        multi += user.early.multi;
+      if (user.early.bool)
         active.push(
           `**Day 1 Jamper:** ${((user.early.multi - 1) / 1) * 100}% EXP Bonus`
         );
-      }
 
       if (user.rep > 0)
         active.push(

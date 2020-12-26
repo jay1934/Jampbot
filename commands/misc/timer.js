@@ -1,5 +1,5 @@
 const ms = require('ms');
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   name: 'timer',
@@ -28,7 +28,7 @@ module.exports = {
         `${ms(ms(Timer), { long: true })}`
     );
 
-    const embed = new Discord.MessageEmbed()
+    const embed = new MessageEmbed()
       .setColor('GREEN')
       .setThumbnail(
         'https://media.discordapp.net/attachments/719694477027180544/721930494828347432/1592192036830.png'

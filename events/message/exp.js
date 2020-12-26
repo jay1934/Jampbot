@@ -1,9 +1,7 @@
 const Levels = require('discord-xp');
-const { models } = require('mongoose');
 const moment = require('moment');
 const levels = require('../../models/levels');
 const guilds = require('../../models/guilds');
-const { getRandomInt, hasRole, getGuild } = require('../../utils/functions');
 
 const newTimeCounter = new Set();
 module.exports = async (message) => {
@@ -24,20 +22,23 @@ module.exports = async (message) => {
     !data.EXP
   )
     return;
-  var multi = 0;
-  const user = await levels.findOneAndUpdate(
+  var multi = 0,
+    level;
+  await levels.findOneAndUpdate(
     { userID: message.author.id, guildID: message.guild.id },
     {
       boosted: {
-        bool: !!hasRole(message.member, '702529904188719165'),
+        bool: message.member.roles.cache.has('702529904188719165'),
         multi: 2,
       },
       pog: {
-        bool: !!hasRole(message.member, '699582087598047372'),
+        bool: message.member.roles.cache.some((r) =>
+          r.name.endsWith('PogJamper')
+        ),
         multi: 1.5,
       },
       jamper: {
-        bool: !!hasRole(message.member, '699221309237755905'),
+        bool: message.member.roles.cache.has('699221309237755905'),
         multi: 1.2,
       },
       early: {
@@ -48,20 +49,22 @@ module.exports = async (message) => {
       },
     },
     (err, user) => {
-      if (err) console.log(err);
+      if (err) throw err;
       if (user) {
+        user.lastUpdated = new Date();
         if (user.boosted.bool) multi += user.boosted.multi;
         if (user.pog.bool) multi += user.pog.multi;
         if (user.jamper.bool) multi += user.jamper.multi;
         if (user.early.bool) multi += user.early.multi;
         if (user.rep) multi += user.rep / 1000 + 1;
+        level = user.level;
         user.save();
       }
     }
   );
   multi = multi < 1 ? 1 : multi;
   newTimeCounter.add(message.author.id);
-  var randomAmountOfXp = getRandomInt(1, 30) * Math.round(multi);
+  var randomAmountOfXp = Math.inRange(1, 30) * Math.round(multi);
   const hasLeveledUp = await Levels.appendXp(
     message.author.id,
     message.guild.id,
@@ -72,7 +75,7 @@ module.exports = async (message) => {
       `Congratulations <@${
         message.author.id
       }>! You have leveled up to **level ${
-        user.level + 1
+        level + 1
       }** <:JuzHype:717925533265952832>`
     );
   }

@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { compareDependencies } = require('mathjs');
 
 module.exports = {
   name: 'reload',
@@ -35,7 +34,7 @@ module.exports = {
       const newCommand = require(`../${folder}/${command.name}.js`);
       message.client.commands.set(newCommand.name, newCommand);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       message.channel.send(
         `❌ There was an error while reloading a command \`${command.name}\`:\n\`${error.message}\``
       );

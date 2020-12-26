@@ -1,12 +1,12 @@
-const Levels = require('discord-xp');
-const { getChannel, toFirstUpperCase } = require('../utils/functions');
-
 module.exports = async (client) => {
-  getChannel('tyv', client).send('Online');
-  client.mongoose = require('../utils/mongoose');
-  await Levels.setURL(process.env.MONGO)
-    .then(() => console.log('EXP Module Connected'))
-    .catch((err) => console.log(err));
-  await client.mongoose.init();
+  require('../utils/functions.js')(client);
+
+  client.channels.cache.get('722174152357707776').send('Online');
+
+  await require('discord-xp')
+    .setURL(process.env.MONGO)
+    .then(() => console.log('EXP Module Connected'));
+
+  await require('../utils/mongoose')();
   console.log("Everything's Connected! ");
 };

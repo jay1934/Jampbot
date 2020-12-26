@@ -1,29 +1,24 @@
 const Discord = require('discord.js');
 const Levels = require('discord-xp');
 const ms = require('ms');
-const { hasRole } = require('../../utils/functions');
 const guilds = require('../../models/guilds');
 
 module.exports = async (message) => {
+  const args = message.content.slice(1).split(/ +/);
+
   if (message.guild)
     var guild = await guilds.findOne({ GuildID: message.guild.id });
 
   const cooldowns = new Discord.Collection();
 
-  const config = require('../../config.json');
-
   const blockedChannels = require('../../data/channelBlocks.json');
 
   const blockedUsers = require('../../data/userBlocks.json');
 
-  const whiteChannels = require('../../data/whiteChannels.json');
-
-  const args = message.content.slice(config.prefix.length).split(/ +/);
-
   const commandName = args.shift().toLowerCase();
 
   if (
-    !message.content.startsWith(config.prefix) ||
+    !/^!/.test(message.content) ||
     blockedUsers.includes(message.author.id) ||
     message.author.bot
   )
@@ -50,32 +45,25 @@ module.exports = async (message) => {
 
   if (
     command.rolePermission &&
-    !hasRole(message.member, command.rolePermission) &&
-    message.guild.roles.cache.some(
+    !message.member.roles.cache.some(
       (role) =>
         role.name === command.rolePermission ||
-        role.id === command.rolePermission
+        role.id === command.rolePermisision
     )
   )
     return message.channel.send('❌ Insufficient permissions');
 
-  if (command.ownerOnly && message.author.id !== '381490382183333899')
+  if (command.ownerOnly && message.author.id !== message.client.owner.id)
     return message.channel.send('❌ Insufficient permissions');
 
   if (command.guildOnly && message.channel.type !== 'text')
     return message.reply("❌ I can't execute that command inside DMs!");
-
   if (
     command.modOnly &&
     !message.member.hasPermission('MANAGE_GUILD') &&
     !command.rolePermission
   )
     return message.channel.send('❌ Insufficient permissions');
-
-  const isReq = (string) => {
-    const matched = string.match(/^<(.+)>$/);
-    return matched ? matched[1] : false;
-  };
 
   if (command.disabled) return;
 

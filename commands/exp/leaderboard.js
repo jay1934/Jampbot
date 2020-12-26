@@ -1,4 +1,4 @@
-const Levels = require('discord-xp');
+const { fetchLeaderboard, computeLeaderboard } = require('discord-xp');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -8,12 +8,9 @@ module.exports = {
   aliases: ['lb'],
   blacklist: true,
   description: 'Shows guildXPleaderboard.',
-  async execute(message, args) {
-    const rawLeaderboard = await Levels.fetchLeaderboard(message.guild.id, 5);
-    const leaderboard = Levels.computeLeaderboard(
-      message.client,
-      rawLeaderboard
-    );
+  async execute(message) {
+    const rawLeaderboard = await fetchLeaderboard(message.guild.id, 5);
+    const leaderboard = computeLeaderboard(message.client, rawLeaderboard);
 
     const data = new MessageEmbed()
       .setColor('GREEN')
@@ -25,14 +22,6 @@ module.exports = {
         `**Level:** ${lb.level}\n**EXP:** ${lb.xp.toString()}`
       );
     }
-    /* const lb = leaderboard.map(
-      (e) =>
-        `**${e.position}.** ${e.username}#${e.discriminator}\n**Level:** \`\`${
-          e.level
-        }\`\`\n**XP:** \`\`${e.xp.toLocaleString()}\`\``
-    ); */
-
-    // message.channel.send(`**EXP Leaderboard**:\n\n${lb.join('\n\n')}`);
     message.channel.send(data);
   },
 };

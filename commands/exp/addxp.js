@@ -1,6 +1,3 @@
-const Levels = require('discord-xp');
-const { getEmoji } = require('../../utils/functions');
-
 module.exports = {
   name: 'addxp',
   aliases: ['addexp'],
@@ -14,14 +11,17 @@ module.exports = {
       return message.channel.send(
         "You didn't specify an amount of EXP to add!"
       );
-    Levels.appendXp(user.id, message.guild.id, xp)
-      .then(() =>
+    require('discord-xp')
+      .appendXp(user.id, message.guild.id, xp)
+      .then((bool) =>
         message.channel.send(
-          `**${xp} EXP** points have been added to **${
-            user.username
-          }** ${getEmoji('PikaPls', message.client)}`
+          `**${xp} EXP** points have been added to **${user.username}** ${
+            bool ? 'and they leveled up!' : ''
+          } ${message.guild.emojis.cache.find(
+            (emoji) => emoji.name === 'PikaPls'
+          )}`
         )
       )
-      .catch((err) => console.log(err));
+      .catch(console.error);
   },
 };
